@@ -1,0 +1,9 @@
+{
+  "name": "Processor B",
+  "num_qubits": 9,
+  "coupling_edges_undirected": [[0, 1], [1, 2], [1, 6], [2, 3], [2, 6], [2, 5], [3, 4], [4, 5], [5, 6], [6, 7], [6, 8], [8, 0]],
+  "basis_gates": ["rz", "sx", "x", "cx"],
+  "noise_status": "NOT_CONFIGURED",
+  "noise_note": "Do not infer official noise parameters from this topology file. Load them only from the organizer's authoritative Challenge Kit.",
+  "source_note": "Topology transcribed from Processor_AB_Benchmark_Configuration_FINAL.pdf supplied by the participant."
+}

@@ -1,0 +1,7 @@
+# Baseline verified against current official Qiskit 2.x API documentation.
+qiskit~=2.5.2
+qiskit-aer~=0.17.2
+numpy>=2.0,<3.0
+scipy>=1.14,<2.0
+matplotlib>=3.9,<4.0
+networkx>=3.4,<4.0

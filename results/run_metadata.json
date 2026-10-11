@@ -1,0 +1,10 @@
+{
+  "problem_code": "O2",
+  "source_status": "SYNTHETIC_DEMO_NOT_OFFICIAL",
+  "source_note": "Team-defined synthetic risk matrix scaled by 0.01 for the current development run; not organizer-provided.",
+  "penalty_weight": 14.646,
+  "risk_matrix_min_eigenvalue": 0.01319485618161854,
+  "optimizer": "Nelder-Mead multi-start with exact Statevector expectations",
+  "simulation": "ideal Aer shot sampling after topology-constrained transpilation; no noise model configured",
+  "reproducibility_seed": 2026
+}

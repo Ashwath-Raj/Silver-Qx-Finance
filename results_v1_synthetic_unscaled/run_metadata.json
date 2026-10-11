@@ -1,0 +1,10 @@
+{
+  "problem_code": "O2",
+  "source_status": "SYNTHETIC_DEMO_NOT_OFFICIAL",
+  "source_note": "Development fixture only. The uploaded Problem Statement Details PDF gives the example returns [5, 3, 4, 2], risk weight lambda=2, and k=2, but does not contain numeric entries for the 4x4 risk matrix. Replace this matrix with organizer-supplied data if provided; otherwise document that this synthetic test instance was chosen by the team.",
+  "penalty_weight": 22.4,
+  "risk_matrix_min_eigenvalue": 1.3194856181618542,
+  "optimizer": "Nelder-Mead multi-start with exact Statevector expectations",
+  "simulation": "ideal Aer shot sampling after topology-constrained transpilation; no noise model configured",
+  "reproducibility_seed": 2026
+}

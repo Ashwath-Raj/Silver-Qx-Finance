@@ -1,0 +1,3 @@
+processor,processor_qubits,compiled_qubits,physical_qubits_touched,shots,depth,cx_count,swap_count_basic_routing,valid_portfolio_probability,optimal_portfolio_probability,sampled_expected_utility,exact_optimal_utility,best_sampled_valid_utility,optimality_gap,best_sampled_objective_ratio,layout_method,routing_method,optimization_level
+Processor A,5,5,4,4096,53,27,5,0.72705078125,0.113525390625,,-2.1999999999999993,-2.1999999999999993,0.0,,trivial,basic,0
+Processor B,9,9,4,4096,56,36,8,0.7275390625,0.1201171875,,-2.1999999999999993,-2.1999999999999993,0.0,,trivial,basic,0

@@ -1,0 +1,68 @@
+{
+  "gamma": 0.2522560593818759,
+  "beta": 1.2925695192887916,
+  "best_expected_scaled_cost": 1.1264712884448325,
+  "best_restart": 1,
+  "restarts": [
+    {
+      "restart": 0,
+      "gamma": 1.0866406249999971,
+      "beta": 0.0,
+      "expected_scaled_cost": 2.418032786885243,
+      "success": true,
+      "message": "Optimization terminated successfully.",
+      "iterations": 35,
+      "function_evaluations": 78
+    },
+    {
+      "restart": 1,
+      "gamma": 0.2522560593818759,
+      "beta": 1.2925695192887916,
+      "expected_scaled_cost": 1.1264712884448325,
+      "success": true,
+      "message": "Optimization terminated successfully.",
+      "iterations": 49,
+      "function_evaluations": 96
+    },
+    {
+      "restart": 2,
+      "gamma": 1.955779615386362,
+      "beta": 1.756536416174519,
+      "expected_scaled_cost": 1.9427356712911563,
+      "success": true,
+      "message": "Optimization terminated successfully.",
+      "iterations": 33,
+      "function_evaluations": 64
+    },
+    {
+      "restart": 3,
+      "gamma": 2.1045732400616206,
+      "beta": 3.141592653589793,
+      "expected_scaled_cost": 2.4180327868852434,
+      "success": true,
+      "message": "Optimization terminated successfully.",
+      "iterations": 22,
+      "function_evaluations": 59
+    },
+    {
+      "restart": 4,
+      "gamma": 5.642146339763237,
+      "beta": 0.14557153413363427,
+      "expected_scaled_cost": 2.3992391090319014,
+      "success": true,
+      "message": "Optimization terminated successfully.",
+      "iterations": 35,
+      "function_evaluations": 68
+    },
+    {
+      "restart": 5,
+      "gamma": 6.283185307179586,
+      "beta": 1.144296026263039,
+      "expected_scaled_cost": 1.475670149310975,
+      "success": true,
+      "message": "Optimization terminated successfully.",
+      "iterations": 27,
+      "function_evaluations": 47
+    }
+  ]
+}

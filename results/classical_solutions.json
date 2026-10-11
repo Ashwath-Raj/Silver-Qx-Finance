@@ -1,0 +1,292 @@
+{
+  "all_solutions": [
+    {
+      "bits": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "bitstring": "0000",
+      "selected_assets": [],
+      "selected_count": 0,
+      "feasible": false,
+      "utility": -0.0,
+      "cost": 58.584
+    },
+    {
+      "bits": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "bitstring": "0001",
+      "selected_assets": [
+        "Asset_1"
+      ],
+      "selected_count": 1,
+      "feasible": false,
+      "utility": 4.92,
+      "cost": 9.726
+    },
+    {
+      "bits": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "bitstring": "0010",
+      "selected_assets": [
+        "Asset_2"
+      ],
+      "selected_count": 1,
+      "feasible": false,
+      "utility": 2.94,
+      "cost": 11.706000000000001
+    },
+    {
+      "bits": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "bitstring": "0011",
+      "selected_assets": [
+        "Asset_1",
+        "Asset_2"
+      ],
+      "selected_count": 2,
+      "feasible": true,
+      "utility": 7.82,
+      "cost": -7.82
+    },
+    {
+      "bits": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "bitstring": "0100",
+      "selected_assets": [
+        "Asset_3"
+      ],
+      "selected_count": 1,
+      "feasible": false,
+      "utility": 3.96,
+      "cost": 10.686
+    },
+    {
+      "bits": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "bitstring": "0101",
+      "selected_assets": [
+        "Asset_1",
+        "Asset_3"
+      ],
+      "selected_count": 2,
+      "feasible": true,
+      "utility": 8.848,
+      "cost": -8.848
+    },
+    {
+      "bits": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "bitstring": "0110",
+      "selected_assets": [
+        "Asset_2",
+        "Asset_3"
+      ],
+      "selected_count": 2,
+      "feasible": true,
+      "utility": 6.876,
+      "cost": -6.876
+    },
+    {
+      "bits": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "bitstring": "0111",
+      "selected_assets": [
+        "Asset_1",
+        "Asset_2",
+        "Asset_3"
+      ],
+      "selected_count": 3,
+      "feasible": false,
+      "utility": 11.724,
+      "cost": 2.9220000000000006
+    },
+    {
+      "bits": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "bitstring": "1000",
+      "selected_assets": [
+        "Asset_4"
+      ],
+      "selected_count": 1,
+      "feasible": false,
+      "utility": 1.97,
+      "cost": 12.676
+    },
+    {
+      "bits": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "bitstring": "1001",
+      "selected_assets": [
+        "Asset_1",
+        "Asset_4"
+      ],
+      "selected_count": 2,
+      "feasible": true,
+      "utility": 6.874,
+      "cost": -6.874
+    },
+    {
+      "bits": [
+        0,
+        1,
+        0,
+        1
+      ],
+      "bitstring": "1010",
+      "selected_assets": [
+        "Asset_2",
+        "Asset_4"
+      ],
+      "selected_count": 2,
+      "feasible": true,
+      "utility": 4.89,
+      "cost": -4.89
+    },
+    {
+      "bits": [
+        1,
+        1,
+        0,
+        1
+      ],
+      "bitstring": "1011",
+      "selected_assets": [
+        "Asset_1",
+        "Asset_2",
+        "Asset_4"
+      ],
+      "selected_count": 3,
+      "feasible": false,
+      "utility": 9.754,
+      "cost": 4.892000000000001
+    },
+    {
+      "bits": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "bitstring": "1100",
+      "selected_assets": [
+        "Asset_3",
+        "Asset_4"
+      ],
+      "selected_count": 2,
+      "feasible": true,
+      "utility": 5.918,
+      "cost": -5.918
+    },
+    {
+      "bits": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "bitstring": "1101",
+      "selected_assets": [
+        "Asset_1",
+        "Asset_3",
+        "Asset_4"
+      ],
+      "selected_count": 3,
+      "feasible": false,
+      "utility": 10.79,
+      "cost": 3.8560000000000016
+    },
+    {
+      "bits": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "bitstring": "1110",
+      "selected_assets": [
+        "Asset_2",
+        "Asset_3",
+        "Asset_4"
+      ],
+      "selected_count": 3,
+      "feasible": false,
+      "utility": 8.814,
+      "cost": 5.832000000000001
+    },
+    {
+      "bits": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "bitstring": "1111",
+      "selected_assets": [
+        "Asset_1",
+        "Asset_2",
+        "Asset_3",
+        "Asset_4"
+      ],
+      "selected_count": 4,
+      "feasible": false,
+      "utility": 13.646,
+      "cost": 44.938
+    }
+  ],
+  "exact_optimum": {
+    "bits": [
+      1,
+      0,
+      1,
+      0
+    ],
+    "bitstring": "0101",
+    "selected_assets": [
+      "Asset_1",
+      "Asset_3"
+    ],
+    "selected_count": 2,
+    "feasible": true,
+    "utility": 8.848,
+    "cost": -8.848
+  }
+}
