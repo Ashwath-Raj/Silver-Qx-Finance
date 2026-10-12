@@ -3,12 +3,3 @@ __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 *.egg-info/
-results/*.qasm
-
-# Local-only migration helper and superseded experiments
-/qff_master_guide_bcd.py
-/publish_to_github.sh
-/publish_to_github.sh.before-safe-publish
-/experiments/legacy_synthetic/
-
-/main.py.before-csv-fix

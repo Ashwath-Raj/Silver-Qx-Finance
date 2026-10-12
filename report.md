@@ -42,4 +42,4 @@
 
 ## Reproducibility
 
-Run `python -m unittest discover -s tests -v`, then `python main.py --q <chosen-positive-q>`. Results are regenerated under `results/`.
+Run every code cell in `main.ipynb` from the repository root after setting `Q` in the configuration cell. Tables are regenerated under `results/tables/`, figures under `results/figures/`, and the report at `report.md`.

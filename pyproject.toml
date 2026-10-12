@@ -1,8 +1,0 @@
-[project]
-name = "qff-o2-portfolio-phase1"
-version = "0.2.0"
-description = "QFF 2026 Phase 1 Master Guide PS-O2 QUBO/QAOA processor benchmark"
-requires-python = ">=3.12,<3.15"
-
-[tool.unittest]
-test-directory = "tests"
