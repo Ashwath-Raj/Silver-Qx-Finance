@@ -1,164 +1,122 @@
-"""Classical portfolio objective and QUBO/Ising conversion helpers.
-
-The functions in this module deliberately use NumPy only so the problem
-formulation can be validated independently of the Qiskit installation.
-"""
+"""PS-O2 mathematical model from the QFF Phase 1 Master Guide."""
 from __future__ import annotations
-
-import itertools
 import json
 from pathlib import Path
 from typing import Any
-
 import numpy as np
 
+MASTER_GUIDE_MU = [0.12, 0.18, 0.10, 0.22]
+MASTER_GUIDE_SIGMA = [
+    [0.04, 0.01, 0.02, 0.01],
+    [0.01, 0.09, 0.01, 0.03],
+    [0.02, 0.01, 0.05, 0.02],
+    [0.01, 0.03, 0.02, 0.08],
+]
 
 def load_instance(path: str | Path) -> dict[str, Any]:
-    """Load and validate the problem instance from JSON."""
     with Path(path).open("r", encoding="utf-8") as f:
         data = json.load(f)
-
     assets = data.get("assets")
-    returns = np.asarray(data.get("expected_returns"), dtype=float)
-    risk = np.asarray(data.get("risk_matrix"), dtype=float)
-    k = int(data.get("selected_assets_k"))
-    lam = float(data.get("risk_weight_lambda"))
-
-    if not isinstance(assets, list) or len(assets) == 0:
-        raise ValueError("'assets' must be a non-empty list.")
-    n = len(assets)
-    if returns.shape != (n,):
-        raise ValueError(f"expected_returns must have shape ({n},); got {returns.shape}.")
-    if risk.shape != (n, n):
-        raise ValueError(f"risk_matrix must have shape ({n}, {n}); got {risk.shape}.")
-    if not np.allclose(risk, risk.T, atol=1e-10):
-        raise ValueError("risk_matrix must be symmetric.")
-    if np.linalg.eigvalsh(risk).min() < -1e-8:
-        raise ValueError("risk_matrix must be positive semidefinite for this covariance-style model.")
-    if not (0 <= k <= n):
-        raise ValueError("selected_assets_k must be between 0 and the number of assets.")
-    if lam < 0:
-        raise ValueError("risk_weight_lambda must be non-negative.")
-
-    data["n_assets"] = n
-    data["expected_returns"] = returns.tolist()
-    data["risk_matrix"] = risk.tolist()
+    mu = np.asarray(data.get("expected_returns"), dtype=float)
+    sigma = np.asarray(data.get("risk_matrix"), dtype=float)
+    if not isinstance(assets, list) or len(assets) != 4:
+        raise ValueError("PS-O2 Master Guide requires exactly four assets.")
+    if mu.shape != (4,) or sigma.shape != (4, 4):
+        raise ValueError("PS-O2 inputs must have a 4-element return vector and a 4x4 risk matrix.")
+    if not np.allclose(sigma, sigma.T, atol=1e-10):
+        raise ValueError("Risk matrix must be symmetric.")
+    if float(np.linalg.eigvalsh(sigma).min()) < -1e-8:
+        raise ValueError("Risk matrix must be positive semidefinite.")
+    k = int(data.get("selected_assets_k", 2))
+    if k != 2:
+        raise ValueError("Master Guide PS-O2 requires k=2.")
+    q = data.get("q")
+    if q is not None and float(q) <= 0:
+        raise ValueError("q must be positive.")
+    a = float(data.get("cardinality_penalty_A", 20.0))
+    if a <= 0:
+        raise ValueError("Cardinality penalty A must be positive.")
+    data["expected_returns"] = mu.tolist()
+    data["risk_matrix"] = sigma.tolist()
     data["selected_assets_k"] = k
-    data["risk_weight_lambda"] = lam
-    data["risk_matrix_min_eigenvalue"] = float(np.linalg.eigvalsh(risk).min())
-    if data.get("penalty_weight") is not None:
-        data["penalty_weight"] = float(data["penalty_weight"])
+    data["q"] = None if q is None else float(q)
+    data["cardinality_penalty_A"] = a
+    data["risk_matrix_min_eigenvalue"] = float(np.linalg.eigvalsh(sigma).min())
+    data["n_assets"] = 4
     return data
 
+def bitvector_from_int(index: int, n: int = 4) -> np.ndarray:
+    return np.asarray([(int(index) >> i) & 1 for i in range(n)], dtype=int)
 
-def bitvector_from_int(index: int, n: int) -> np.ndarray:
-    """Convert an integer basis-state index to x_0,...,x_(n-1) bits.
+def base_cost(x: np.ndarray, mu: np.ndarray, sigma: np.ndarray, q: float) -> float:
+    """Master Guide objective to minimize: x.T Sigma x - q * mu.T x."""
+    xx = np.asarray(x, dtype=float)
+    return float(xx @ sigma @ xx - q * (mu @ xx))
 
-    Qiskit basis-state indexing is little-endian: qubit 0 is bit 0.
-    """
-    return np.asarray([(index >> i) & 1 for i in range(n)], dtype=int)
+def utility(x: np.ndarray, mu: np.ndarray, sigma: np.ndarray, q: float) -> float:
+    """Unpenalized objective on the maximization orientation: q*return - risk."""
+    return -base_cost(x, mu, sigma, q)
 
+def full_cost(x: np.ndarray, mu: np.ndarray, sigma: np.ndarray, q: float,
+              k: int, penalty_a: float) -> float:
+    xx = np.asarray(x, dtype=int)
+    return base_cost(xx, mu, sigma, q) + penalty_a * (int(xx.sum()) - k) ** 2
 
-def base_cost(x: np.ndarray, returns: np.ndarray, risk: np.ndarray, risk_weight: float) -> float:
-    """Unconstrained cost to minimize: -return + risk_weight * portfolio risk."""
-    x_float = np.asarray(x, dtype=float)
-    return float(-returns @ x_float + risk_weight * (x_float @ risk @ x_float))
-
-
-def utility(x: np.ndarray, returns: np.ndarray, risk: np.ndarray, risk_weight: float) -> float:
-    """Return-risk utility to maximize, before the cardinality penalty."""
-    return -base_cost(x, returns, risk, risk_weight)
-
-
-def choose_penalty_weight(
-    returns: np.ndarray, risk: np.ndarray, risk_weight: float, n: int
-) -> float:
-    """Choose P larger than the complete range of the unpenalized objective.
-
-    This ensures any infeasible cardinality choice cannot beat every feasible
-    choice in this finite instance. It is a principled baseline, not a universal
-    optimal QAOA penalty; overly large penalties can still make parameter
-    optimization harder.
-    """
-    values = [base_cost(bitvector_from_int(i, n), returns, risk, risk_weight) for i in range(2**n)]
-    span = max(values) - min(values)
-    return float(max(1.0, span + 1.0))
-
-
-def full_cost(
-    x: np.ndarray,
-    returns: np.ndarray,
-    risk: np.ndarray,
-    risk_weight: float,
-    k: int,
-    penalty: float,
-) -> float:
-    """QUBO cost to minimize, including an exact-cardinality penalty."""
-    x_arr = np.asarray(x, dtype=int)
-    return base_cost(x_arr, returns, risk, risk_weight) + penalty * (int(x_arr.sum()) - k) ** 2
-
-
-def enumerate_solutions(instance: dict[str, Any], penalty: float) -> list[dict[str, Any]]:
-    """Enumerate all 2**n selections and return objective and feasibility data."""
-    returns = np.asarray(instance["expected_returns"], dtype=float)
-    risk = np.asarray(instance["risk_matrix"], dtype=float)
-    lam = float(instance["risk_weight_lambda"])
+def enumerate_solutions(instance: dict[str, Any], penalty_a: float | None = None) -> list[dict[str, Any]]:
+    mu = np.asarray(instance["expected_returns"], dtype=float)
+    sigma = np.asarray(instance["risk_matrix"], dtype=float)
+    q = float(instance["q"])
     k = int(instance["selected_assets_k"])
-    n = len(returns)
-    solutions: list[dict[str, Any]] = []
-    for idx in range(2**n):
-        x = bitvector_from_int(idx, n)
-        selected = [instance["assets"][i] for i, bit in enumerate(x) if bit]
-        solutions.append({
+    a = float(penalty_a if penalty_a is not None else instance["cardinality_penalty_A"])
+    out = []
+    for idx in range(1 << len(mu)):
+        x = bitvector_from_int(idx, len(mu))
+        selected = [instance["assets"][i] for i, b in enumerate(x) if b]
+        out.append({
             "bits": x.tolist(),
             "bitstring": "".join(str(int(v)) for v in x[::-1]),
             "selected_assets": selected,
             "selected_count": int(x.sum()),
             "feasible": bool(int(x.sum()) == k),
-            "utility": utility(x, returns, risk, lam),
-            "cost": full_cost(x, returns, risk, lam, k, penalty),
+            "return_component": float(q * (mu @ x)),
+            "risk": float(x @ sigma @ x),
+            "utility": utility(x, mu, sigma, q),
+            "cost": full_cost(x, mu, sigma, q, k, a),
         })
-    return solutions
+    return out
 
-
-def qubo_coefficients(
-    returns: np.ndarray,
-    risk: np.ndarray,
-    risk_weight: float,
-    k: int,
-    penalty: float,
-) -> tuple[np.ndarray, dict[tuple[int, int], float], float]:
-    """Return QUBO coefficients for cost = c + sum(a_i x_i) + sum(b_ij x_i x_j).
-
-    Only i < j pair coefficients are returned. The constant has no effect on
-    QAOA's phase separator, but it is returned for validation/reporting.
-    """
-    returns = np.asarray(returns, dtype=float)
-    risk = np.asarray(risk, dtype=float)
-    n = len(returns)
-    linear = -returns + risk_weight * np.diag(risk) + penalty * (1 - 2 * k)
-    pair: dict[tuple[int, int], float] = {}
-    for i in range(n):
-        for j in range(i + 1, n):
-            # x.T @ risk @ x contains 2 * risk[i,j] * x_i*x_j for symmetric risk.
-            pair[(i, j)] = float(2 * risk_weight * risk[i, j] + 2 * penalty)
-    constant = float(penalty * k * k)
+def qubo_coefficients(mu: np.ndarray, sigma: np.ndarray, q: float, k: int,
+                      penalty_a: float) -> tuple[np.ndarray, dict[tuple[int, int], float], float]:
+    """Cost = c + sum_i a_i x_i + sum_{i<j} b_ij x_i x_j."""
+    mu = np.asarray(mu, dtype=float)
+    sigma = np.asarray(sigma, dtype=float)
+    linear = np.diag(sigma) - q * mu + penalty_a * (1 - 2 * k)
+    pair = {(i, j): float(2 * sigma[i, j] + 2 * penalty_a)
+            for i in range(len(mu)) for j in range(i + 1, len(mu))}
+    constant = float(penalty_a * k * k)
     return linear.astype(float), pair, constant
 
+def qubo_matrix(instance: dict[str, Any]) -> tuple[np.ndarray, float]:
+    """Return symmetric Q and c for C(x)=x.T Q x + c."""
+    mu = np.asarray(instance["expected_returns"], dtype=float)
+    sigma = np.asarray(instance["risk_matrix"], dtype=float)
+    q = float(instance["q"])
+    k = int(instance["selected_assets_k"])
+    a = float(instance["cardinality_penalty_A"])
+    Q = sigma.copy()
+    Q[np.diag_indices_from(Q)] = np.diag(sigma) - q * mu + a * (1 - 2 * k)
+    for i in range(len(mu)):
+        for j in range(i + 1, len(mu)):
+            Q[i, j] = Q[j, i] = sigma[i, j] + a
+    return Q, float(a * k * k)
 
-def ising_coefficients(
-    linear: np.ndarray, pair: dict[tuple[int, int], float]
-) -> tuple[np.ndarray, dict[tuple[int, int], float], float]:
-    """Convert QUBO coefficients to H = constant + sum(h_i Z_i) + sum(J_ij Z_i Z_j).
-
-    Uses x_i = (1 - Z_i)/2. The returned constant is irrelevant to the QAOA
-    state, but keeping it makes the conversion independently testable.
-    """
+def ising_coefficients(linear: np.ndarray, pair: dict[tuple[int, int], float],
+                       qubo_constant: float = 0.0):
+    """Convert binary QUBO coefficients using x_i=(1-Z_i)/2."""
     linear = np.asarray(linear, dtype=float)
-    n = len(linear)
     h = -linear / 2.0
-    constant = float(np.sum(linear) / 2.0)
-    j_coeffs: dict[tuple[int, int], float] = {}
+    constant = float(qubo_constant + np.sum(linear) / 2.0)
+    j_coeffs = {}
     for (i, j), value in pair.items():
         value = float(value)
         h[i] -= value / 4.0
@@ -167,30 +125,25 @@ def ising_coefficients(
         constant += value / 4.0
     return h, j_coeffs, constant
 
-
-def validate_qubo_conversion(instance: dict[str, Any], penalty: float, atol: float = 1e-8) -> None:
-    """Assert expanded QUBO agrees with direct cost evaluation for all bitstrings."""
-    returns = np.asarray(instance["expected_returns"], dtype=float)
-    risk = np.asarray(instance["risk_matrix"], dtype=float)
-    lam = float(instance["risk_weight_lambda"])
-    k = int(instance["selected_assets_k"])
-    n = len(returns)
-    linear, pair, constant = qubo_coefficients(returns, risk, lam, k, penalty)
-    for idx in range(2**n):
+def validate_qubo_conversion(instance: dict[str, Any], atol: float = 1e-8) -> None:
+    mu = np.asarray(instance["expected_returns"], dtype=float)
+    sigma = np.asarray(instance["risk_matrix"], dtype=float)
+    q = float(instance["q"]); k = int(instance["selected_assets_k"])
+    a = float(instance["cardinality_penalty_A"]); n = len(mu)
+    linear, pair, c = qubo_coefficients(mu, sigma, q, k, a)
+    h, j, ising_c = ising_coefficients(linear, pair, c)
+    Q, c_matrix = qubo_matrix(instance)
+    for idx in range(1 << n):
         x = bitvector_from_int(idx, n).astype(float)
-        q = constant + float(linear @ x)
-        q += sum(value * x[i] * x[j] for (i, j), value in pair.items())
-        direct = full_cost(x, returns, risk, lam, k, penalty)
-        if not np.isclose(q, direct, atol=atol, rtol=0):
-            raise AssertionError(f"QUBO mismatch for x={x.tolist()}: expanded={q}, direct={direct}")
-
-    h, j_coeffs, ising_constant = ising_coefficients(linear, pair)
-    for idx in range(2**n):
-        x = bitvector_from_int(idx, n)
-        z = 1 - 2 * x
-        energy = (ising_constant + constant) + float(h @ z)
-        energy += sum(v * z[i] * z[j] for (i, j), v in j_coeffs.items())
-        direct = constant + float(linear @ x)
-        direct += sum(v * x[i] * x[j] for (i, j), v in pair.items())
-        if not np.isclose(energy, direct, atol=atol, rtol=0):
-            raise AssertionError(f"Ising conversion mismatch for x={x.tolist()}: Ising={energy}, QUBO={direct}")
+        z = 1.0 - 2.0 * x
+        expanded = c + float(linear @ x) + sum(v*x[i]*x[k2] for (i,k2),v in pair.items())
+        direct = full_cost(x, mu, sigma, q, k, a)
+        matrix_cost = float(x @ Q @ x + c_matrix)
+        ising_energy = float(ising_c + h @ z + sum(v*z[i]*z[k2] for (i,k2),v in j.items()))
+        if not (np.isclose(expanded, direct, atol=atol, rtol=0) and
+                np.isclose(matrix_cost, direct, atol=atol, rtol=0) and
+                np.isclose(ising_energy, direct, atol=atol, rtol=0)):
+            raise AssertionError(
+                f"QUBO/Ising mismatch for x={x.tolist()}: direct={direct}, "
+                f"expanded={expanded}, matrix={matrix_cost}, ising={ising_energy}"
+            )

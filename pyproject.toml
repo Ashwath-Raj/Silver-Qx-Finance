@@ -1,8 +1,8 @@
 [project]
 name = "qff-o2-portfolio-phase1"
-version = "0.1.0"
-description = "QFF 2026 Phase 1 O2 constrained portfolio optimization and processor architecture benchmarking"
-requires-python = ">=3.12,<3.14"
+version = "0.2.0"
+description = "QFF 2026 Phase 1 Master Guide PS-O2 QUBO/QAOA processor benchmark"
+requires-python = ">=3.12,<3.15"
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+[tool.unittest]
+test-directory = "tests"

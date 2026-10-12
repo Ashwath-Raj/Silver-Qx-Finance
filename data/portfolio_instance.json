@@ -1,8 +1,8 @@
 {
-  "problem_code": "O2",
-  "problem_name": "Constrained Portfolio Optimization",
-  "source_status": "SYNTHETIC_DEMO_NOT_OFFICIAL",
-  "source_note": "Team-defined synthetic development instance. The original synthetic test matrix was scaled by 0.01 for a return-risk scale sensitivity run after initial pipeline validation; not organizer-provided data.",
+  "problem_code": "PS-O2",
+  "problem_name": "Portfolio Optimization Under Budget Constraints",
+  "source_status": "MASTER_GUIDE_INPUTS_Q_UNSET",
+  "source_document": "QFF_Phase_1_Master_Guide.pdf, page 4",
   "assets": [
     "Asset_1",
     "Asset_2",
@@ -10,43 +10,56 @@
     "Asset_4"
   ],
   "expected_returns": [
-    5.0,
-    3.0,
-    4.0,
-    2.0
+    0.12,
+    0.18,
+    0.1,
+    0.22
   ],
   "risk_matrix": [
     [
       0.04,
       0.01,
-      0.008,
-      0.004
+      0.02,
+      0.01
+    ],
+    [
+      0.01,
+      0.09,
+      0.01,
+      0.03
+    ],
+    [
+      0.02,
+      0.01,
+      0.05,
+      0.02
     ],
     [
       0.01,
       0.03,
-      0.006,
-      0.005
-    ],
-    [
-      0.008,
-      0.006,
       0.02,
-      0.003
-    ],
-    [
-      0.004,
-      0.005,
-      0.003,
-      0.015
+      0.08
     ]
   ],
-  "risk_weight_lambda": 2.0,
+  "q": 1.0,
+  "q_selection_status": "participant-selected CLI value; QFF Master Guide does not state q",
   "selected_assets_k": 2,
+  "cardinality_penalty_A": 20.0,
+  "penalty_source_note": "A=20 was included in an earlier organizer clarification but is not restated in the Master Guide PS-O2 entry; verify before official submission.",
   "qaoa_depth_p": 1,
   "shots": 4096,
   "classical_restarts": 6,
   "optimizer_maxiter": 300,
-  "random_seed": 2026,
-  "penalty_weight": null
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "optimization_level": 1,
+  "layout_method": "sabre",
+  "routing_method": "sabre",
+  "seed_transpiler": 42,
+  "risk_matrix_min_eigenvalue": 0.023635844264637156,
+  "n_assets": 4
 }

@@ -1,5 +1,5 @@
 {
-  "all_solutions": [
+  "solutions": [
     {
       "bits": [
         0,
@@ -11,8 +11,10 @@
       "selected_assets": [],
       "selected_count": 0,
       "feasible": false,
+      "return_component": 0.0,
+      "risk": 0.0,
       "utility": -0.0,
-      "cost": 58.584
+      "cost": 80.0
     },
     {
       "bits": [
@@ -27,8 +29,10 @@
       ],
       "selected_count": 1,
       "feasible": false,
-      "utility": 4.92,
-      "cost": 9.726
+      "return_component": 0.12,
+      "risk": 0.04,
+      "utility": 0.07999999999999999,
+      "cost": 19.92
     },
     {
       "bits": [
@@ -43,8 +47,10 @@
       ],
       "selected_count": 1,
       "feasible": false,
-      "utility": 2.94,
-      "cost": 11.706000000000001
+      "return_component": 0.18,
+      "risk": 0.09,
+      "utility": 0.09,
+      "cost": 19.91
     },
     {
       "bits": [
@@ -60,8 +66,10 @@
       ],
       "selected_count": 2,
       "feasible": true,
-      "utility": 7.82,
-      "cost": -7.82
+      "return_component": 0.3,
+      "risk": 0.15,
+      "utility": 0.15,
+      "cost": -0.15
     },
     {
       "bits": [
@@ -76,8 +84,10 @@
       ],
       "selected_count": 1,
       "feasible": false,
-      "utility": 3.96,
-      "cost": 10.686
+      "return_component": 0.1,
+      "risk": 0.05,
+      "utility": 0.05,
+      "cost": 19.95
     },
     {
       "bits": [
@@ -93,8 +103,10 @@
       ],
       "selected_count": 2,
       "feasible": true,
-      "utility": 8.848,
-      "cost": -8.848
+      "return_component": 0.22,
+      "risk": 0.13,
+      "utility": 0.09,
+      "cost": -0.09
     },
     {
       "bits": [
@@ -110,8 +122,10 @@
       ],
       "selected_count": 2,
       "feasible": true,
-      "utility": 6.876,
-      "cost": -6.876
+      "return_component": 0.28,
+      "risk": 0.16,
+      "utility": 0.12000000000000002,
+      "cost": -0.12000000000000002
     },
     {
       "bits": [
@@ -128,8 +142,10 @@
       ],
       "selected_count": 3,
       "feasible": false,
-      "utility": 11.724,
-      "cost": 2.9220000000000006
+      "return_component": 0.4,
+      "risk": 0.26,
+      "utility": 0.14,
+      "cost": 19.86
     },
     {
       "bits": [
@@ -144,8 +160,10 @@
       ],
       "selected_count": 1,
       "feasible": false,
-      "utility": 1.97,
-      "cost": 12.676
+      "return_component": 0.22,
+      "risk": 0.08,
+      "utility": 0.14,
+      "cost": 19.86
     },
     {
       "bits": [
@@ -161,8 +179,10 @@
       ],
       "selected_count": 2,
       "feasible": true,
-      "utility": 6.874,
-      "cost": -6.874
+      "return_component": 0.33999999999999997,
+      "risk": 0.14,
+      "utility": 0.19999999999999996,
+      "cost": -0.19999999999999996
     },
     {
       "bits": [
@@ -178,8 +198,10 @@
       ],
       "selected_count": 2,
       "feasible": true,
-      "utility": 4.89,
-      "cost": -4.89
+      "return_component": 0.4,
+      "risk": 0.22999999999999998,
+      "utility": 0.17000000000000004,
+      "cost": -0.17000000000000004
     },
     {
       "bits": [
@@ -196,8 +218,10 @@
       ],
       "selected_count": 3,
       "feasible": false,
-      "utility": 9.754,
-      "cost": 4.892000000000001
+      "return_component": 0.52,
+      "risk": 0.31,
+      "utility": 0.21000000000000002,
+      "cost": 19.79
     },
     {
       "bits": [
@@ -213,8 +237,10 @@
       ],
       "selected_count": 2,
       "feasible": true,
-      "utility": 5.918,
-      "cost": -5.918
+      "return_component": 0.32,
+      "risk": 0.17,
+      "utility": 0.15,
+      "cost": -0.15
     },
     {
       "bits": [
@@ -231,8 +257,10 @@
       ],
       "selected_count": 3,
       "feasible": false,
-      "utility": 10.79,
-      "cost": 3.8560000000000016
+      "return_component": 0.44,
+      "risk": 0.27,
+      "utility": 0.16999999999999998,
+      "cost": 19.83
     },
     {
       "bits": [
@@ -249,8 +277,10 @@
       ],
       "selected_count": 3,
       "feasible": false,
-      "utility": 8.814,
-      "cost": 5.832000000000001
+      "return_component": 0.5,
+      "risk": 0.34,
+      "utility": 0.15999999999999998,
+      "cost": 19.84
     },
     {
       "bits": [
@@ -268,25 +298,29 @@
       ],
       "selected_count": 4,
       "feasible": false,
-      "utility": 13.646,
-      "cost": 44.938
+      "return_component": 0.62,
+      "risk": 0.45999999999999996,
+      "utility": 0.16000000000000003,
+      "cost": 79.84
     }
   ],
   "exact_optimum": {
     "bits": [
       1,
       0,
-      1,
-      0
+      0,
+      1
     ],
-    "bitstring": "0101",
+    "bitstring": "1001",
     "selected_assets": [
       "Asset_1",
-      "Asset_3"
+      "Asset_4"
     ],
     "selected_count": 2,
     "feasible": true,
-    "utility": 8.848,
-    "cost": -8.848
+    "return_component": 0.33999999999999997,
+    "risk": 0.14,
+    "utility": 0.19999999999999996,
+    "cost": -0.19999999999999996
   }
 }

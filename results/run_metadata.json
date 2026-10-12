@@ -1,10 +1,53 @@
 {
-  "problem_code": "O2",
-  "source_status": "SYNTHETIC_DEMO_NOT_OFFICIAL",
-  "source_note": "Team-defined synthetic risk matrix scaled by 0.01 for the current development run; not organizer-provided.",
-  "penalty_weight": 14.646,
-  "risk_matrix_min_eigenvalue": 0.01319485618161854,
-  "optimizer": "Nelder-Mead multi-start with exact Statevector expectations",
-  "simulation": "ideal Aer shot sampling after topology-constrained transpilation; no noise model configured",
-  "reproducibility_seed": 2026
+  "problem_code": "PS-O2",
+  "instance_source": "QFF_Phase_1_Master_Guide.pdf page 4 inputs",
+  "expected_returns": [
+    0.12,
+    0.18,
+    0.1,
+    0.22
+  ],
+  "risk_matrix": [
+    [
+      0.04,
+      0.01,
+      0.02,
+      0.01
+    ],
+    [
+      0.01,
+      0.09,
+      0.01,
+      0.03
+    ],
+    [
+      0.02,
+      0.01,
+      0.05,
+      0.02
+    ],
+    [
+      0.01,
+      0.03,
+      0.02,
+      0.08
+    ]
+  ],
+  "q": 1.0,
+  "q_status": "participant-selected CLI value; QFF Master Guide does not state q",
+  "cardinality_k": 2,
+  "cardinality_penalty_A": 20.0,
+  "penalty_source_note": "A=20 was included in an earlier organizer clarification but is not restated in the Master Guide PS-O2 entry; verify before official submission.",
+  "shots": 4096,
+  "optimization_level": 1,
+  "layout_method": "sabre",
+  "routing_method": "sabre",
+  "seed_transpiler": 42,
+  "noise_model": {
+    "one_qubit_depolarizing": 0.001,
+    "cx_depolarizing": 0.005,
+    "readout_bitflip": 0.01
+  },
+  "noise_note": "Master Guide synthetic noise model; ideal and noisy results separated",
+  "qaoa_depth_p": 1
 }

@@ -1,7 +1,64 @@
 {
-  "gamma": 1.28694986,
-  "beta": 1.31752548,
-  "best_expected_scaled_cost": -0.05141988,
-  "best_restart": 1,
-  "source_status": "SYNTHETIC_DEMO_NOT_OFFICIAL"
+  "gamma": 0.24593572973028976,
+  "beta": 2.8591143411047106,
+  "best_restart": 3,
+  "best_expected_scaled_cost": 0.5899172241343844,
+  "restarts": [
+    {
+      "restart": 0,
+      "gamma": 0.7862356575092494,
+      "beta": 0.0,
+      "expected_scaled_cost": 1.9840239640539166,
+      "success": true,
+      "iterations": 32,
+      "message": "Optimization terminated successfully."
+    },
+    {
+      "restart": 1,
+      "gamma": 4.469508181660565,
+      "beta": 1.2883779861595164,
+      "expected_scaled_cost": 0.5903343262608538,
+      "success": true,
+      "iterations": 34,
+      "message": "Optimization terminated successfully."
+    },
+    {
+      "restart": 2,
+      "gamma": 6.041341734547448,
+      "beta": 1.8532008667017625,
+      "expected_scaled_cost": 0.5907105703165223,
+      "success": true,
+      "iterations": 51,
+      "message": "Optimization terminated successfully."
+    },
+    {
+      "restart": 3,
+      "gamma": 0.24593572973028976,
+      "beta": 2.8591143411047106,
+      "expected_scaled_cost": 0.5899172241343844,
+      "success": true,
+      "iterations": 55,
+      "message": "Optimization terminated successfully."
+    },
+    {
+      "restart": 4,
+      "gamma": 4.469537751075677,
+      "beta": 2.859155594750367,
+      "expected_scaled_cost": 0.5904913433558661,
+      "success": true,
+      "iterations": 33,
+      "message": "Optimization terminated successfully."
+    },
+    {
+      "restart": 5,
+      "gamma": 1.3259258562814191,
+      "beta": 1.2883652995239092,
+      "expected_scaled_cost": 0.5899417864697402,
+      "success": true,
+      "iterations": 35,
+      "message": "Optimization terminated successfully."
+    }
+  ],
+  "q": 1.0,
+  "penalty_A": 20.0
 }

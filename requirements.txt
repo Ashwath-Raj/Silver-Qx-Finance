@@ -1,4 +1,3 @@
-# Baseline verified against current official Qiskit 2.x API documentation.
 qiskit~=2.5.2
 qiskit-aer~=0.17.2
 numpy>=2.0,<3.0
