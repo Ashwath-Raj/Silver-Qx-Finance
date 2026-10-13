@@ -49,11 +49,11 @@
 Run every code cell in `main.ipynb` from the repository root after setting `Q` in the configuration cell. Tables are regenerated under `results/tables/`, figures under `results/figures/`, and the report at `report.md`.
 
 
-## Supplementary experiment: topology, robustness, and parameter sensitivity
+## Supplementary experiments: reference robustness and parameter sensitivity
 
-These are supplementary participant experiments. The four reference A/B × ideal/noisy rows above remain the required baseline and are not replaced by these results.
+The four Processor A/B × ideal/noisy rows above remain the required Master Guide reference baseline. The supplementary robustness experiment uses the same two reference coupling maps and ten simulator seeds per processor; it does not include participant-designed alternative topologies.
 
-### Topology structure and compiled-resource comparison
+### Reference topology and compiled-resource comparison
 
 | Processor | Topology | Mode | Edges | Diameter | Avg. shortest path | Depth | CX | SWAP diagnostic | Valid probability | Optimal probability |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -61,55 +61,39 @@ These are supplementary participant experiments. The four reference A/B × ideal
 | Processor A | Master Guide reference | noisy | 4 | 3 | 1.800 | 43 | 18 | 2 | 0.5266 | 0.1338 |
 | Processor B | Master Guide reference | ideal | 12 | 4 | 1.944 | 35 | 15 | 1 | 0.5403 | 0.1455 |
 | Processor B | Master Guide reference | noisy | 12 | 4 | 1.944 | 35 | 15 | 1 | 0.5266 | 0.1401 |
-| Processor A | Alternative: alternative linear chain | ideal | 4 | 4 | 2.000 | 38 | 21 | 3 | 0.5476 | 0.1450 |
-| Processor A | Alternative: alternative linear chain | noisy | 4 | 4 | 2.000 | 38 | 21 | 3 | 0.5327 | 0.1362 |
-| Processor B | Alternative: alternative balanced ring with chords | ideal | 12 | 3 | 1.861 | 43 | 18 | 2 | 0.5422 | 0.1382 |
-| Processor B | Alternative: alternative balanced ring with chords | noisy | 12 | 3 | 1.861 | 43 | 18 | 2 | 0.5234 | 0.1296 |
 
-![Reference and alternative coupling graphs](results/figures/topology_alternatives.png)
+![Reference Processor A and B coupling graphs](results/figures/processor_topologies.png)
 
 ### Noisy-seed robustness
 
-The following intervals summarize ten simulator seeds (7, 21, 42, 84, 126, 168, 210, 252, 294, 336), with 4096 shots per run. These are exploratory Monte Carlo intervals for the simulator, not hardware uncertainty estimates.
+These summaries use simulator seeds (7, 21, 42, 84, 126, 168, 210, 252, 294, 336), with 4096 shots per run. Intervals describe this simulator experiment, not hardware uncertainty.
 
-| Processor | Topology | Mean valid probability | SD across seeds | 95% t interval (valid probability) | Mean optimal probability | SD across seeds |
-|---|---|---:|---:|---:|---:|---:|
-| Processor A | Master Guide reference | 0.5218 | 0.0081 | [0.5160, 0.5276] | 0.1299 | 0.0046 |
-| Processor A | Alternative: alternative linear chain | 0.5180 | 0.0077 | [0.5125, 0.5236] | 0.1306 | 0.0043 |
-| Processor B | Master Guide reference | 0.5207 | 0.0068 | [0.5158, 0.5256] | 0.1329 | 0.0042 |
-| Processor B | Alternative: alternative balanced ring with chords | 0.5193 | 0.0068 | [0.5144, 0.5241] | 0.1311 | 0.0036 |
+| Processor | Seeds | Mean valid probability | SD across seeds | 95% t interval (valid probability) | Mean optimal probability | SD across seeds |
+|---|---:|---:|---:|---:|---:|---:|
+| Processor A | 10 | 0.5218 | 0.0081 | [0.5160, 0.5276] | 0.1299 | 0.0046 |
+| Processor B | 10 | 0.5207 | 0.0068 | [0.5158, 0.5256] | 0.1329 | 0.0042 |
 
-### Paired robustness comparisons using common simulator seeds
+### Paired robustness comparisons between reference processors
 
-Each difference is comparison minus baseline, paired by the same ten simulator seeds. Intervals are exploratory 95% paired t intervals across those fixed seeds; they are not hardware uncertainty intervals, and they are not adjusted for multiple comparisons.
+Each difference is Processor B minus Processor A, paired by the same ten simulator seeds. The 95% paired t intervals are exploratory simulator intervals, not hardware uncertainty intervals.
 
 | Comparison | Metric | Mean paired difference (95% CI) | Seed pairs |
 |---|---|---:|---:|
 | Processor B reference minus Processor A reference | Valid-portfolio probability | -0.11 pp [-0.76, +0.54] | 10 |
 | Processor B reference minus Processor A reference | Optimal-portfolio probability | +0.30 pp [-0.04, +0.64] | 10 |
 | Processor B reference minus Processor A reference | Mean utility among valid samples | +0.00032 [-0.00051, +0.00115] | 10 |
-| Processor A chain minus Processor A reference | Valid-portfolio probability | -0.38 pp [-1.12, +0.37] | 10 |
-| Processor A chain minus Processor A reference | Optimal-portfolio probability | +0.07 pp [-0.40, +0.53] | 10 |
-| Processor A chain minus Processor A reference | Mean utility among valid samples | +0.00016 [-0.00052, +0.00084] | 10 |
-| Processor B alternative minus Processor B reference | Valid-portfolio probability | -0.14 pp [-0.39, +0.11] | 10 |
-| Processor B alternative minus Processor B reference | Optimal-portfolio probability | -0.18 pp [-0.60, +0.24] | 10 |
-| Processor B alternative minus Processor B reference | Mean utility among valid samples | -0.00040 [-0.00145, +0.00065] | 10 |
 
-![Paired robustness differences](results/figures/paired_robustness_differences.png)
+![Paired robustness differences for reference Processor A vs B](results/figures/paired_robustness_differences.png)
 
 ### Findings and architecture interpretation
 
-The Master Guide reference Processor B compiles this p=1 circuit to depth 35 with 15 CX gates and 1 diagnostic SWAP, versus depth 43, 18 CX gates, and 2 diagnostic SWAPs for Processor A. Under this instance and these transpiler settings, B has lower compiled-resource counts despite its larger physical-qubit budget.
+For this p=1 instance and these transpiler settings, reference Processor B compiles to depth 35 with 15 CX gates and 1 diagnostic SWAP, versus depth 43, 18 CX gates, and 2 diagnostic SWAPs for reference Processor A.
 
-The participant-designed Processor A chain lowers depth from 43 to 38 but increases CX count from 18 to 21 and SWAP diagnostics from 2 to 3. This is a depth-versus-gate/routing trade-off, not a universal improvement.
-
-The participant-designed Processor B graph has a smaller diameter (3 versus 4) but compiles to depth 43, 18 CX gates, and 2 diagnostic SWAPs, compared with 35, 15, and 1 for the reference graph. Graph diameter alone is not sufficient to predict the compiled cost of this circuit; the logical interaction pattern and SABRE layout/routing choices also matter.
-
-All nine predeclared paired-seed 95% t intervals include zero. Across ten fixed simulator seeds, these experiments do not establish a statistically clear performance advantage for Processor B or either alternative topology. The intervals are exploratory, unadjusted for multiple comparisons, and are not hardware uncertainty estimates.
+All three paired-seed 95% t intervals for the reference A/B comparison include zero. Across ten fixed simulator seeds, these results do not establish a statistically clear performance difference. These findings are limited to this circuit, parameter choice, simulator noise model, and seed set.
 
 ### Exact sensitivity to the unspecified q
 
-The Master Guide does not prescribe q. The grid below is a participant-created sensitivity analysis, not an attempt to infer the official value.
+The Master Guide does not prescribe q. The following is a participant-created exact classical sensitivity analysis, not an inferred official value.
 
 | q | Exact optimal feasible portfolio(s) | Best feasible utility |
 |---:|---|---:|
@@ -144,9 +128,8 @@ For the current provisional q=1, exact enumeration gives a strict-feasibility th
 
 ### Reproducibility and limitations
 
-- All topology alternatives keep the A/B qubit budget and edge count fixed and use the same logical p=1 QAOA parameters as the reference baseline.
-- The reference `processors/processor_A.json` and `processors/processor_B.json` files are unchanged. Alternative edges are explicitly exported in `results/tables/topology_experiment_metadata.json`.
-- Ten seeds are a useful robustness check but are not a claim of hardware-level confidence or generalization to other circuits.
+- Only the documented Master Guide reference coupling graphs are used; no participant-designed alternative-topology experiment is included.
+- Ten seeds provide a supplementary simulator robustness check, not hardware-level confidence or generalization to other circuits.
 - q remains provisional pending organizer confirmation; A is a participant-selected and documented penalty, not an organizer-prescribed value.
-- These are simulator results for a 4-variable, 16-state problem. No quantum-advantage claim is made.
+- These are simulator results for a four-variable, 16-state problem. No quantum-advantage claim is made.
 - Generative AI assisted with code drafting/review and documentation organization; the participant is responsible for verifying the final code and claims, subject to the event policy.

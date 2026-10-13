@@ -88,7 +88,7 @@ The implementation interprets each `x_i` as a binary asset-selection indicator (
 
 ## Supplementary experiments
 
-The notebook preserves the required Master Guide reference A/B × ideal/noisy comparison. It additionally runs a separately labelled topology experiment using an A linear-chain alternative and a B balanced ring-with-chords alternative, each with the same qubit budget and edge count as its reference. Ten-seed noisy robustness results, exact q sensitivity, and exact cardinality-penalty sensitivity are exported under `results/tables/`; figures are exported under `results/figures/`. These studies do not replace the required baseline.
+The notebook preserves the required Master Guide reference A/B × ideal/noisy comparison. Supplementary experiments assess ten-seed noisy robustness for these same reference processors, along with exact classical sensitivity to q and the cardinality penalty. The reference coupling maps are kept unchanged; no participant-designed alternative-topology experiment is included. Tables are exported under `results/tables/` and figures under `results/figures/`.
 
 ## AI assistance disclosure
 

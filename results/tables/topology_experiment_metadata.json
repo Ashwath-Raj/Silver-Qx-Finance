@@ -1,5 +1,5 @@
 {
-  "status": "SUPPLEMENTARY_EXPERIMENT_NOT_A_REPLACEMENT_FOR_REQUIRED_BASELINE",
+  "status": "REFERENCE_TOPOLOGIES_ONLY_NO_PARTICIPANT_DESIGNED_ALTERNATIVES",
   "q": 1.0,
   "q_status": "Provisional participant-selected q pending organizer confirmation; Master Guide does not prescribe a numerical q.",
   "cardinality_penalty_A": 0.02,
@@ -62,46 +62,6 @@
           "average_shortest_path_length": 1.8,
           "connected": true
         }
-      },
-      "alternative": {
-        "label": "alternative linear chain",
-        "edges": [
-          [
-            0,
-            1
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            3,
-            4
-          ]
-        ],
-        "metrics": {
-          "num_qubits": 5,
-          "edge_count": 4,
-          "degree_sequence_by_node": [
-            1,
-            2,
-            2,
-            2,
-            1
-          ],
-          "minimum_degree": 1,
-          "maximum_degree": 2,
-          "degree_mean": 1.6,
-          "degree_std_population": 0.4898979485566356,
-          "diameter": 4,
-          "average_shortest_path_length": 2.0,
-          "connected": true
-        },
-        "rationale": "Same 5 nodes and 4 edges as the reference tree; tests the effect of a chain versus branching connectivity."
       }
     },
     {
@@ -180,84 +140,8 @@
           "average_shortest_path_length": 1.9444444444444444,
           "connected": true
         }
-      },
-      "alternative": {
-        "label": "alternative balanced ring with chords",
-        "edges": [
-          [
-            0,
-            1
-          ],
-          [
-            0,
-            4
-          ],
-          [
-            0,
-            8
-          ],
-          [
-            1,
-            2
-          ],
-          [
-            1,
-            5
-          ],
-          [
-            2,
-            3
-          ],
-          [
-            2,
-            6
-          ],
-          [
-            3,
-            4
-          ],
-          [
-            4,
-            5
-          ],
-          [
-            5,
-            6
-          ],
-          [
-            6,
-            7
-          ],
-          [
-            7,
-            8
-          ]
-        ],
-        "metrics": {
-          "num_qubits": 9,
-          "edge_count": 12,
-          "degree_sequence_by_node": [
-            3,
-            3,
-            3,
-            2,
-            3,
-            3,
-            3,
-            2,
-            2
-          ],
-          "minimum_degree": 2,
-          "maximum_degree": 3,
-          "degree_mean": 2.6666666666666665,
-          "degree_std_population": 0.4714045207910317,
-          "diameter": 3,
-          "average_shortest_path_length": 1.8611111111111112,
-          "connected": true
-        },
-        "rationale": "Same 9 nodes and 12 edges as the reference graph, with a more balanced degree profile and shorter graph diameter in the structural check."
       }
     }
   ],
-  "note": "All variants have the same qubit budget and the same undirected edge count as their corresponding reference. Compare as a supplementary graph-design experiment; do not merge these rows into the required baseline table."
+  "note": "Only the official Master Guide reference coupling maps are evaluated. No participant-designed alternative topology is included."
 }

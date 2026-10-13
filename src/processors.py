@@ -43,25 +43,6 @@ def build_synthetic_noise_model() -> NoiseModel:
     return model
 
 
-# Supplementary participant-designed topologies. These never replace the Master Guide
-# reference processor JSON files or the required baseline result table.
-ALTERNATIVE_TOPOLOGIES = {
-    "Processor A": {
-        "label": "alternative linear chain",
-        "edges": [(0, 1), (1, 2), (2, 3), (3, 4)],
-        "rationale": "Same 5 nodes and 4 edges as the reference tree; tests the effect of a chain versus branching connectivity.",
-    },
-    "Processor B": {
-        "label": "alternative balanced ring with chords",
-        "edges": [
-            (0, 1), (1, 2), (2, 3), (3, 4), (4, 5),
-            (5, 6), (6, 7), (7, 8), (0, 8),
-            (0, 4), (1, 5), (2, 6),
-        ],
-        "rationale": "Same 9 nodes and 12 edges as the reference graph, with a more balanced degree profile and shorter graph diameter in the structural check.",
-    },
-}
-
 def topology_metrics(processor: dict[str, Any]) -> dict[str, Any]:
     """Return deterministic graph-structure metrics for a processor configuration."""
     graph = nx.Graph()

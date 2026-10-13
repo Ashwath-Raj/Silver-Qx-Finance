@@ -12,10 +12,10 @@ def load_trials():
         return list(csv.DictReader(stream))
 
 
-def test_paired_seed_analysis_has_three_contrasts_and_three_metrics_each():
+def test_paired_seed_analysis_has_one_reference_contrast_and_three_metrics():
     summaries = paired_comparison_rows(load_trials())
-    assert len(summaries) == 9
-    assert len({row["comparison"] for row in summaries}) == 3
+    assert len(summaries) == 3
+    assert len({row["comparison"] for row in summaries}) == 1
     assert all(row["n_pairs"] == 10 for row in summaries)
     for row in summaries:
         assert len(row["paired_seeds"].split(",")) == 10
@@ -26,7 +26,7 @@ def test_paired_seed_analysis_has_three_contrasts_and_three_metrics_each():
 def test_paired_seed_analysis_rejects_missing_seed_pair():
     rows = load_trials()
     filtered = [row for row in rows if not (
-        row["processor_family"] == "Processor B"
+        row["processor_family"] == "Processor A"
         and row["topology_label"] == "Master Guide reference"
         and int(row["simulator_seed"]) == 336
     )]

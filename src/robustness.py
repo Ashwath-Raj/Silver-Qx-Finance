@@ -25,21 +25,10 @@ COMPARISONS = (
         "baseline": ("Processor A", "Master Guide reference"),
         "comparison": ("Processor B", "Master Guide reference"),
     },
-    {
-        "label": "Processor A chain minus Processor A reference",
-        "baseline": ("Processor A", "Master Guide reference"),
-        "comparison": ("Processor A", "Alternative: alternative linear chain"),
-    },
-    {
-        "label": "Processor B alternative minus Processor B reference",
-        "baseline": ("Processor B", "Master Guide reference"),
-        "comparison": ("Processor B", "Alternative: alternative balanced ring with chords"),
-    },
 )
 
-
 def paired_comparison_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Summarize three predeclared, same-seed contrasts for each robustness metric.
+    """Summarize the predeclared reference-processor contrast for each robustness metric.
 
     The delta convention is comparison minus baseline. All compared groups must
     have exactly the same unique seed set; silently unpaired comparisons are rejected.
@@ -102,16 +91,8 @@ def plot_paired_differences(rows: list[dict[str, Any]], output: str | Path) -> N
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    comparison_keys = [
-        "Processor B reference minus Processor A reference",
-        "Processor A chain minus Processor A reference",
-        "Processor B alternative minus Processor B reference",
-    ]
-    display_labels = [
-        "B reference − A reference",
-        "A chain − A reference",
-        "B alternative − B reference",
-    ]
+    comparison_keys = ["Processor B reference minus Processor A reference"]
+    display_labels = ["B reference − A reference"]
     metric_info = (
         ("valid_portfolio_probability", "Valid-portfolio probability difference (pp)"),
         ("optimal_portfolio_probability", "Optimal-portfolio probability difference (pp)"),

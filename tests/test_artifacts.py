@@ -32,16 +32,18 @@ def test_problem_and_benchmark_metadata_are_consistent():
 def test_required_and_supplementary_tables_have_expected_shapes():
     expected_rows = {
         "results/tables/processor_comparison.csv": 4,
-        "results/tables/topology_experiment.csv": 8,
-        "results/tables/robustness_trials.csv": 40,
-        "results/tables/robustness_summary.csv": 4,
-        "results/tables/paired_robustness_comparison.csv": 9,
+        "results/tables/topology_experiment.csv": 4,
+        "results/tables/robustness_trials.csv": 20,
+        "results/tables/robustness_summary.csv": 2,
+        "results/tables/paired_robustness_comparison.csv": 3,
         "results/tables/q_sensitivity.csv": 7,
         "results/tables/penalty_sensitivity.csv": 10,
     }
     for filename, expected in expected_rows.items():
         rows = table_rows(filename)
         assert len(rows) == expected, f"{filename} expected {expected} rows; got {len(rows)}"
+    topology_rows = table_rows("results/tables/topology_experiment.csv")
+    assert all(row["topology_label"] == "Master Guide reference" for row in topology_rows)
 
 
 def test_baseline_probabilities_and_gate_metrics_are_valid():
@@ -79,9 +81,11 @@ def test_paired_robustness_figure_exists():
     figure = ROOT / "results/figures/paired_robustness_differences.png"
     assert figure.is_file() and figure.stat().st_size > 10_000
 
-def test_report_interprets_architecture_tradeoffs_and_paired_evidence():
+def test_report_covers_reference_architecture_tradeoffs_without_alternative_topologies():
     report = (ROOT / "report.md").read_text(encoding="utf-8").lower()
     assert "findings and architecture interpretation" in report
-    assert "graph diameter alone is not sufficient" in report
-    assert "do not establish a statistically clear performance advantage" in report
-    assert "all nine predeclared paired-seed 95% t intervals include zero" in report
+    assert "reference processor b compiles to depth 35" in report
+    assert "do not establish a statistically clear performance difference" in report
+    assert "all three paired-seed 95% t intervals" in report
+    assert "alternative linear chain" not in report
+    assert "balanced ring with chords" not in report
