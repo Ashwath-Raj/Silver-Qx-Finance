@@ -153,10 +153,6 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 - [paired_robustness_comparison.csv](results/tables/paired_robustness_comparison.csv) — paired ten-seed Processor B minus A comparisons
 - [q_sensitivity.csv](results/tables/q_sensitivity.csv) and [penalty_sensitivity.csv](results/tables/penalty_sensitivity.csv) — exact parameter sensitivity tables
 
-## AI assistance disclosure
-
-Generative AI assisted with code drafting and review, debugging, and documentation organization. Team members remain responsible for understanding and validating the implementation, assumptions, methods, and results. This disclosure should be reviewed against the Hackathon & Competitions Cell's official AI-use policy.
-
 ---
 
 ## Team Coughing Baby
