@@ -6,9 +6,9 @@ This repository implements the four-asset PS-O2 portfolio benchmark and a contro
 ## Processor connectivity maps
 
 <p align="center">
-  <img src="assets/processor_topology_animation.gif" alt="Animated QFF Processor A (5 qubits, 4 couplings) and Processor B (9 qubits, 12 couplings) connectivity maps" width="100%">
+  <img src="assets/processor_topology_animation.gif" alt="Animation of actual Qiskit-transpiled p=1 QAOA gate layers on reference Processor A and Processor B. Directed arrows show emitted CX control-to-target operations; highlighted nodes show emitted single-qubit gates or measurements." width="100%">
 </p>
-<p align="center"><sub>Reference coupling maps · Moving pulses highlight direct CX connectivity</sub></p>
+<p align="center"><sub>Gate layers are reconstructed from the actual transpiled circuit using per-qubit dependency scheduling. Arrows show real CX control → target directions; node tags show real single-qubit gates or measurement. This is a gate-layer visualization, not a hardware pulse trace or quantum-state trajectory. The machine-readable events are in results/tables/processor_gate_schedule.csv.</sub></p>
 
 ## Repository structure
 
@@ -71,6 +71,7 @@ Open `main.ipynb` from the repository root, select the `.venv` Python kernel, se
 ## Outputs
 
 - `results/tables/processor_comparison.csv`
+- `results/tables/processor_gate_schedule.csv` — gate-by-gate schedule used by the README animation
 - `results/tables/qubo_matrix.csv` and `qubo_matrix.json`
 - `results/tables/classical_solutions.json`
 - `results/tables/qaoa_parameters.json`
