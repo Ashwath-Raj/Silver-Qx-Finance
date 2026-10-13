@@ -97,6 +97,16 @@ Each difference is comparison minus baseline, paired by the same ten simulator s
 
 ![Paired robustness differences](results/figures/paired_robustness_differences.png)
 
+### Findings and architecture interpretation
+
+The Master Guide reference Processor B compiles this p=1 circuit to depth 35 with 15 CX gates and 1 diagnostic SWAP, versus depth 43, 18 CX gates, and 2 diagnostic SWAPs for Processor A. Under this instance and these transpiler settings, B has lower compiled-resource counts despite its larger physical-qubit budget.
+
+The participant-designed Processor A chain lowers depth from 43 to 38 but increases CX count from 18 to 21 and SWAP diagnostics from 2 to 3. This is a depth-versus-gate/routing trade-off, not a universal improvement.
+
+The participant-designed Processor B graph has a smaller diameter (3 versus 4) but compiles to depth 43, 18 CX gates, and 2 diagnostic SWAPs, compared with 35, 15, and 1 for the reference graph. Graph diameter alone is not sufficient to predict the compiled cost of this circuit; the logical interaction pattern and SABRE layout/routing choices also matter.
+
+All nine predeclared paired-seed 95% t intervals include zero. Across ten fixed simulator seeds, these experiments do not establish a statistically clear performance advantage for Processor B or either alternative topology. The intervals are exploratory, unadjusted for multiple comparisons, and are not hardware uncertainty estimates.
+
 ### Exact sensitivity to the unspecified q
 
 The Master Guide does not prescribe q. The grid below is a participant-created sensitivity analysis, not an attempt to infer the official value.

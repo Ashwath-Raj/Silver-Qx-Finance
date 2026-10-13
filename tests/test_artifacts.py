@@ -78,3 +78,10 @@ def test_notebook_execution_and_report_provenance_are_clean():
 def test_paired_robustness_figure_exists():
     figure = ROOT / "results/figures/paired_robustness_differences.png"
     assert figure.is_file() and figure.stat().st_size > 10_000
+
+def test_report_interprets_architecture_tradeoffs_and_paired_evidence():
+    report = (ROOT / "report.md").read_text(encoding="utf-8").lower()
+    assert "findings and architecture interpretation" in report
+    assert "graph diameter alone is not sufficient" in report
+    assert "do not establish a statistically clear performance advantage" in report
+    assert "all nine predeclared paired-seed 95% t intervals include zero" in report
