@@ -82,6 +82,4 @@ The notebook preserves the required Master Guide reference A/B × ideal/noisy co
 
 ## AI assistance disclosure
 
-Generative AI tools assisted with code drafting/review, debugging, and documentation organization for this project. The participant remains responsible for understanding and verifying all methods, assumptions, and results. This statement should be checked and adjusted to match the Hackathon & Competitions Cell's official AI-use policy and the assistance actually used.
-
-AI assistance was used during development and documentation. The participant is responsible for understanding and validating the implementation and results.
+Generative AI tools assisted with code drafting and review, debugging, and documentation organization. The participant remains responsible for understanding and validating the implementation, assumptions, methods, and results. This disclosure should be reviewed against the Hackathon & Competitions Cell's official AI-use policy before submission.

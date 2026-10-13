@@ -7,7 +7,7 @@
 - Risk matrix minimum eigenvalue: `0.02363584`
 - q: `1.0` — participant-selected because the Master Guide's PS-O2 section does not prescribe a numeric value.
 - Cardinality: exactly 2 assets.
-- Penalty A: 0.02 (participant-selected; no numeric A is prescribed by the Master Guide or organizer clarification). For provisional q=1.0, exact enumeration gives a strict-feasibility threshold A>0.01 for this instance; the selected A=0.02 exceeds it. Recalculate if q changes.
+- Penalty A: `0.02` — provisional participant-selected assumption pending organizer confirmation; the Master Guide PS-O2 entry does not specify A.
 - Formulation: minimize `x.T @ Sigma @ x - q * mu.T @ x + A * (sum(x)-2)^2`.
 - Reported economic objective: `q * mu.T @ x - x.T @ Sigma @ x`, only on feasible portfolios.
 
