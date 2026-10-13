@@ -158,20 +158,16 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 
 ---
 
-## Team Coughing Baby
+## ✦ C O U G H I N G &nbsp; B A B Y ✦
 
-<p>
-  <img src="https://img.shields.io/badge/SRM_University--AP-Team_Lead-B32025?style=flat-square" alt="SRM University-AP team lead">
-  <img src="https://img.shields.io/badge/VIT_University_AP-Team_Members-0057B8?style=flat-square" alt="VIT University AP team members">
-</p>
+<p><sub>QFF SRM AP 2026 · QUANTUM OPTIMIZATION · PS-O2</sub></p>
 
-| Member | Role | Institution |
-|---|---|---|
-| **Ashwath Raj** | Team Lead | <img src="https://img.shields.io/badge/SRM_University--AP-B32025?style=flat-square" alt="SRM University-AP"> |
-| Jammu Venkata Satyam … | Team Member | <img src="https://img.shields.io/badge/VIT_University_AP-0057B8?style=flat-square" alt="VIT University AP"> |
-| Bhamidimarry Venkata S… | Team Member | <img src="https://img.shields.io/badge/VIT_University_AP-0057B8?style=flat-square" alt="VIT University AP"> |
-| Pagoti Kalyan Vivek | Team Member | <img src="https://img.shields.io/badge/VIT_University_AP-0057B8?style=flat-square" alt="VIT University AP"> |
+| Team member | Role | Year | Institution | Email |
+|---|---|:---:|---|---|
+| **Ashwath Raj** | **Team Lead** | <img src="assets/branding/year-2.svg" width="22" alt="Year 2"> | <img src="https://img.shields.io/badge/SRM_University--AP-B32025?style=flat-square" alt="SRM University-AP"> | [ashwathraj2007@gmail.com](mailto:ashwathraj2007@gmail.com) |
+| **Bhamidimarry Venkata Shaileesh** | Team Member | <img src="assets/branding/year-1.svg" width="22" alt="Year 1"> | <img src="https://img.shields.io/badge/VIT_University_AP-0057B8?style=flat-square" alt="VIT University AP"> | [bvshailesh7@gmail.com](mailto:bvshailesh7@gmail.com) |
+| **Jammu Venkata Satyam (JVS)** | Team Member | <img src="assets/branding/year-1.svg" width="22" alt="Year 1"> | <img src="https://img.shields.io/badge/VIT_University_AP-0057B8?style=flat-square" alt="VIT University AP"> | [jammuabhi957@gmail.com](mailto:jammuabhi957@gmail.com) |
+| **Pagoti Kalyan Vivek** | Team Member | <img src="assets/branding/year-2.svg" width="22" alt="Year 2"> | <img src="https://img.shields.io/badge/VIT_University_AP-0057B8?style=flat-square" alt="VIT University AP"> | [kalyanvivekpagoti@gmail.com](mailto:kalyanvivekpagoti@gmail.com) |
 
-<sub>Roster status in the supplied screenshot: 4 confirmed members out of a 2–6 member team. Two teammate display names are shown with ellipses because the screenshot truncates them; their full registered names should replace these shortened labels when confirmed.</sub>
-
-<p align="center"><sub>QFF SRM AP 2026 · Quantum Optimization · PS-O2</sub></p>
+<p align="center">
+  <sub>Built by Team Coughing Baby · SRM University-AP × VIT University AP</sub>
