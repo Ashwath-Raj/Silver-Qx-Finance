@@ -2,6 +2,14 @@
 
 This repository implements the four-asset PS-O2 portfolio benchmark and a controlled Processor A/B comparison using p=1 QAOA, exact classical enumeration, QUBO/Ising validation, Qiskit transpilation, and ideal plus synthetic-noise Aer simulation.
 
+<!-- QFF_PROCESSOR_ANIMATION -->
+## Processor connectivity maps
+
+<p align="center">
+  <img src="assets/processor_topology_animation.gif" alt="Animated QFF Processor A (5 qubits, 4 couplings) and Processor B (9 qubits, 12 couplings) connectivity maps" width="100%">
+</p>
+<p align="center"><sub>Reference coupling maps · Moving pulses highlight direct CX connectivity</sub></p>
+
 ## Repository structure
 
 ```text
@@ -27,6 +35,7 @@ project/
 │   └── figures/
 ├── report.md
 └── assets/
+    ├── processor_topology_animation.gif
     └── qff_phase1_latex_images/
 ```
 
