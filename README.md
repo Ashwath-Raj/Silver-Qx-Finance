@@ -11,14 +11,9 @@
   </tr>
 </table>
 
-<p><sub>QFF SRM AP 2026 · QUANTUM OPTIMIZATION</sub></p>
-
-<h1>Portfolio Optimization with QAOA</h1>
-<h3>PS-O2 · Phase 1 Benchmark</h3>
-
-<h2>✦ C O U G H I N G &nbsp; B A B Y ✦</h2>
-
-<p><sub>TEAM PROJECT · SRM UNIVERSITY-AP × VIT-AP</sub></p>
+<p align="center">
+  <img src="assets/branding/portfolio-qaoa-heading.png" alt="QFF SRM AP 2026 — Portfolio Optimization with QAOA, PS-O2 Phase 1 Benchmark" width="100%">
+</p>
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white" alt="Python 3.12">
