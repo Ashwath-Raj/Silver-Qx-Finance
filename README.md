@@ -34,8 +34,8 @@ project/
 
 - The expected returns and covariance matrix are transcribed from **QFF Phase 1 Master Guide.pdf, page 4**.
 - The objective is to minimize `x.T @ Sigma @ x - q * mu.T @ x`, subject to exactly two selected assets.
-- The Master Guide does **not** assign a numeric `q`. Change `Q` in the first configuration cell of `main.ipynb` and document the rationale. `Q=1.0` is an example participant-selected value, not an organizer-prescribed value.
-- The `A=20` cardinality penalty came from an earlier organizer clarification but is not restated in the Master Guide PS-O2 entry; its status remains disclosed in the report.
+- The Master Guide does **not** assign a numeric `q`. The current `Q=1.0` is provisional and pending organizer confirmation; it is not presented as an official value. The notebook exports an exact classical sensitivity analysis over alternative q values.
+- The current `A=0.02` cardinality penalty is a participant-selected implementation choice. For provisional `q=1.0`, exact enumeration gives a strict-feasibility threshold `A > 0.01` for this instance under the squared-cardinality penalty. This is instance- and q-specific, not an organizer-prescribed value.
 - The 5-qubit and 9-qubit coupling maps are reference architectures, not mandatory topologies.
 
 ## Setup
@@ -70,3 +70,18 @@ Open `main.ipynb` from the repository root, select the `.venv` Python kernel, se
 - `report.md` — provenance, metrics, interpretation, and limitations
 
 The four-variable problem has only 16 bitstrings and is exactly enumerable classically. This is a comparison of solution quality, topology, routing, resource metrics, and synthetic-noise sensitivity; no quantum-advantage claim is made.
+
+
+## Decision-variable interpretation
+
+The implementation interprets each `x_i` as a binary asset-selection indicator (`x_i ∈ {0,1}`), with exactly `k=2` selected assets. The Master Guide describes a four-asset selection problem, but a continuous-weight portfolio would be a different model; confirm this interpretation if the organizers intend continuous weights.
+
+## Supplementary experiments
+
+The notebook preserves the required Master Guide reference A/B × ideal/noisy comparison. It additionally runs a separately labelled topology experiment using an A linear-chain alternative and a B balanced ring-with-chords alternative, each with the same qubit budget and edge count as its reference. Ten-seed noisy robustness results, exact q sensitivity, and exact cardinality-penalty sensitivity are exported under `results/tables/`; figures are exported under `results/figures/`. These studies do not replace the required baseline.
+
+## AI assistance disclosure
+
+Generative AI tools assisted with code drafting/review, debugging, and documentation organization for this project. The participant remains responsible for understanding and verifying all methods, assumptions, and results. This statement should be checked and adjusted to match the Hackathon & Competitions Cell's official AI-use policy and the assistance actually used.
+
+AI assistance was used during development and documentation. The participant is responsible for understanding and validating the implementation and results.

@@ -34,20 +34,23 @@
     ]
   ],
   "q": 1.0,
-  "q_status": "participant-selected CLI value; QFF Master Guide does not state q",
+  "q_status": "Provisional participant-selected q pending organizer confirmation; Master Guide does not prescribe a numerical q.",
   "cardinality_k": 2,
-  "cardinality_penalty_A": 20.0,
-  "penalty_source_note": "A=20 was included in an earlier organizer clarification but is not restated in the Master Guide PS-O2 entry; verify before official submission.",
+  "cardinality_penalty_A": 0.02,
+  "penalty_source_note": "A=0.02 is a participant-selected penalty, not an organizer-fixed value. For provisional q=1.0, exact enumeration gives a strict-feasibility threshold A>0.01 for this instance under the squared-cardinality penalty. Recalculate the threshold if q changes.",
   "shots": 4096,
   "optimization_level": 1,
   "layout_method": "sabre",
   "routing_method": "sabre",
   "seed_transpiler": 42,
+  "seed_simulator": 42,
   "noise_model": {
     "one_qubit_depolarizing": 0.001,
     "cx_depolarizing": 0.005,
     "readout_bitflip": 0.01
   },
   "noise_note": "Master Guide synthetic noise model; ideal and noisy results separated",
-  "qaoa_depth_p": 1
+  "qaoa_depth_p": 1,
+  "optimizer_restarts": 20,
+  "optimizer_maxiter": 500
 }

@@ -33,7 +33,9 @@ def load_instance(path: str | Path) -> dict[str, Any]:
     q = data.get("q")
     if q is not None and float(q) <= 0:
         raise ValueError("q must be positive.")
-    a = float(data.get("cardinality_penalty_A", 20.0))
+    if "cardinality_penalty_A" not in data:
+        raise ValueError("Set the participant-selected cardinality penalty A explicitly.")
+    a = float(data["cardinality_penalty_A"])
     if a <= 0:
         raise ValueError("Cardinality penalty A must be positive.")
     data["expected_returns"] = mu.tolist()
@@ -197,12 +199,12 @@ def optimize_qaoa(instance: dict[str,Any], restarts: int=6, maxiter: int=300, se
             "best_expected_scaled_cost":best["expected_scaled_cost"],"restarts":runs,"cost_model":model}
 
 def sample_processor(instance: dict[str,Any], params: dict[str,Any], processor: dict[str,Any],
-                     mode: str="ideal", noise_model=None, shots: int=SHOTS) -> dict[str,Any]:
+                     mode: str="ideal", noise_model=None, shots: int=SHOTS, seed_simulator: int=TRANSPILER_SEED) -> dict[str,Any]:
     logical=build_qaoa_circuit(params["gamma"],params["beta"],params["cost_model"],measured=True)
     swap_count=swap_diagnostic(logical,processor)
     compiled=compile_circuit(logical,processor)
     simulator=AerSimulator(noise_model=noise_model) if mode=="noisy" else AerSimulator()
-    result=simulator.run(compiled,shots=int(shots),seed_simulator=TRANSPILER_SEED).result()
+    result=simulator.run(compiled,shots=int(shots),seed_simulator=int(seed_simulator)).result()
     counts=result.get_counts(compiled); total=sum(counts.values())
     mu=np.asarray(instance["expected_returns"],float); sigma=np.asarray(instance["risk_matrix"],float)
     q=float(instance["q"]); k=int(instance["selected_assets_k"]); n=len(mu)
@@ -224,7 +226,7 @@ def sample_processor(instance: dict[str,Any], params: dict[str,Any], processor: 
     ratio=(bestu/exact) if bestu is not None and exact>1e-12 and bestu>=0 else None
     return {"processor":processor["name"],"mode":mode,"processor_qubits":int(processor["num_qubits"]),
             **circuit_metrics(compiled),"shots":int(shots),"layout_method":"sabre","routing_method":"sabre",
-            "optimization_level":OPTIMIZATION_LEVEL,"seed_transpiler":TRANSPILER_SEED,
+            "optimization_level":OPTIMIZATION_LEVEL,"seed_transpiler":TRANSPILER_SEED,"seed_simulator":int(seed_simulator),
             "swap_count_diagnostic":int(swap_count),"valid_portfolio_probability":valid/total,
             "optimal_portfolio_probability":optimal/total,"sampled_expected_utility_all_outcomes":float(util_all),
             "sampled_expected_utility_given_valid":float(util_valid/valid) if valid else None,

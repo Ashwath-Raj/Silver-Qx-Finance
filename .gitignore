@@ -3,3 +3,7 @@ __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 *.egg-info/
+
+# Local safety backups
+*.before-penalty-update
+main.ipynb.before-penalty-fix-*

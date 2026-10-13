@@ -14,7 +14,7 @@
       "return_component": 0.0,
       "risk": 0.0,
       "utility": -0.0,
-      "cost": 80.0
+      "cost": 0.08
     },
     {
       "bits": [
@@ -32,7 +32,7 @@
       "return_component": 0.12,
       "risk": 0.04,
       "utility": 0.07999999999999999,
-      "cost": 19.92
+      "cost": -0.059999999999999984
     },
     {
       "bits": [
@@ -50,7 +50,7 @@
       "return_component": 0.18,
       "risk": 0.09,
       "utility": 0.09,
-      "cost": 19.91
+      "cost": -0.06999999999999999
     },
     {
       "bits": [
@@ -87,7 +87,7 @@
       "return_component": 0.1,
       "risk": 0.05,
       "utility": 0.05,
-      "cost": 19.95
+      "cost": -0.030000000000000002
     },
     {
       "bits": [
@@ -145,7 +145,7 @@
       "return_component": 0.4,
       "risk": 0.26,
       "utility": 0.14,
-      "cost": 19.86
+      "cost": -0.12000000000000001
     },
     {
       "bits": [
@@ -163,7 +163,7 @@
       "return_component": 0.22,
       "risk": 0.08,
       "utility": 0.14,
-      "cost": 19.86
+      "cost": -0.12000000000000001
     },
     {
       "bits": [
@@ -221,7 +221,7 @@
       "return_component": 0.52,
       "risk": 0.31,
       "utility": 0.21000000000000002,
-      "cost": 19.79
+      "cost": -0.19000000000000003
     },
     {
       "bits": [
@@ -260,7 +260,7 @@
       "return_component": 0.44,
       "risk": 0.27,
       "utility": 0.16999999999999998,
-      "cost": 19.83
+      "cost": -0.15
     },
     {
       "bits": [
@@ -280,7 +280,7 @@
       "return_component": 0.5,
       "risk": 0.34,
       "utility": 0.15999999999999998,
-      "cost": 19.84
+      "cost": -0.13999999999999999
     },
     {
       "bits": [
@@ -301,7 +301,7 @@
       "return_component": 0.62,
       "risk": 0.45999999999999996,
       "utility": 0.16000000000000003,
-      "cost": 79.84
+      "cost": -0.08000000000000003
     }
   ],
   "exact_optimum": {
