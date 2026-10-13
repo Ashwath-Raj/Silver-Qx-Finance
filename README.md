@@ -1,21 +1,39 @@
 <div align="center">
 
+<<<<<<< HEAD
 <h1>QFF SRM AP 2026 · PS-O2</h1>
 <p><strong>Constraint-Aware Portfolio Optimization with QAOA</strong></p>
 <p><strong>Team Coughing Baby</strong></p>
+=======
+<table align="center" border="0" cellpadding="6">
+  <tr>
+    <td align="center" valign="middle" bgcolor="#F5F1E2">
+      <img src="assets/branding/srm-ap-logo.png" alt="SRM University-AP" width="190">
+    </td>
+    <td align="center" valign="middle" bgcolor="#F5F1E2">
+      <img src="assets/branding/qiskit-fall-fest-2026-badge-crop.png" alt="Qiskit Fall Fest 2026" width="88">
+    </td>
+  </tr>
+</table>
+
+<p><sub><strong>QFF SRM AP 2026 · QUANTUM OPTIMIZATION</strong></sub></p>
+<h1>Portfolio Optimization with QAOA</h1>
+<h3>PS-O2 · Phase 1 Benchmark</h3>
+<p><sub>TEAM PROJECT</sub></p>
+<h2>COUGHING BABY</h2>
+>>>>>>> 61ae161 (Polish README branding and equation visuals)
 
 <p>
-  <img src="https://github.com/Ashwath-Raj/silver-Qx-Finance/actions/workflows/ci.yml/badge.svg?branch=main" alt="Repository checks">
-  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.12">
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white" alt="Python 3.12">
   <img src="https://img.shields.io/badge/Qiskit-QAOA-6929C4?style=flat-square" alt="Qiskit QAOA">
   <img src="https://img.shields.io/badge/License-Apache%202.0-2F6F44?style=flat-square" alt="Apache 2.0 License">
 </p>
 
-<p><strong>Track:</strong> Quantum Optimization &nbsp;·&nbsp; <strong>Problem:</strong> PS-O2 &nbsp;·&nbsp; <strong>Stage:</strong> Phase 1</p>
-
 <p>
-A reproducible four-asset portfolio benchmark comparing the QAOA circuit compiled for two reference processor architectures, with exact classical validation and ideal/noisy simulation.
+  <img src="assets/processor_topology_animation.gif" alt="Animated gate schedule for actual Qiskit-transpiled QAOA circuits on reference Processor A and Processor B" width="100%">
 </p>
+
+<sub>Actual transpiled gate activity on the two reference processor architectures. Directed arrows show emitted CX control-to-target operations, and node labels show emitted single-qubit gates or measurements. This is a scheduled gate visualization, not a hardware pulse trace or quantum-state trajectory.</sub>
 
 </div>
 
@@ -33,16 +51,6 @@ A reproducible four-asset portfolio benchmark comparing the QAOA circuit compile
 | Validation | All 16 possible bitstrings enumerated exactly; QUBO/Ising consistency checks and automated tests |
 
 This is a small, controlled optimization study—not a claim of quantum advantage. Because the four-variable problem has only 16 possible bitstrings, its optimum is accessible by exact classical enumeration.
-
-## Processor gate activity
-
-The animation below is generated from the actual Qiskit-transpiled \(p=1\) circuits. It visualizes the compiled gate schedule on the two reference coupling maps.
-
-<!-- QFF_PROCESSOR_ANIMATION -->
-<p align="center">
-  <img src="assets/processor_topology_animation.gif" alt="Animated gate schedule for Qiskit-transpiled p=1 QAOA circuits on reference Processor A and Processor B" width="100%">
-</p>
-<p align="center"><sub>Arrows indicate emitted CX control-to-target directions; node tags show emitted single-qubit gates or measurement. This is a dependency-scheduled gate-layer visualization—not a hardware pulse trace or quantum-state trajectory. See <a href="results/tables/processor_gate_schedule.csv">the gate schedule CSV</a> for machine-readable events.</sub></p>
 
 ## Baseline results
 
@@ -65,24 +73,23 @@ See [report.md](report.md) for the full results, robustness intervals, sensitivi
 
 Each decision variable represents whether an asset is selected:
 
-\[
-x_i \in \{0,1\}, \qquad \sum_i x_i = 2
-\]
+<p align="center"><img src="assets/equations/decision_variables.png" alt="Binary selection variables with exactly two assets selected" width="100%"></p>
 
 The implemented QUBO objective is
 
-\[
-\min_x \quad x^\mathsf{T}\Sigma x - q\,\mu^\mathsf{T}x
-+ A\left(\sum_i x_i-2\right)^2
-\]
+<p align="center"><img src="assets/equations/qubo_objective.png" alt="QUBO objective with return, risk, and cardinality penalty terms" width="100%"></p>
 
 The reported economic utility for feasible portfolios is
 
-\[
-U(x)=q\,\mu^\mathsf{T}x-x^\mathsf{T}\Sigma x
-\]
+<p align="center"><img src="assets/equations/economic_utility.png" alt="Economic utility equals expected return contribution minus portfolio risk" width="100%"></p>
 
 The expected-return vector and covariance matrix are transcribed from **QFF SRM APPhase 1 Master Guide.pdf, page 4**. The numeric \(q\) and penalty \(A\) are experiment settings, not official values prescribed by the guide.
+
+Exact classical enumeration identifies **Asset 1 and Asset 4** as the optimal feasible portfolio at the current provisional parameters:
+
+<p align="center">
+  <img src="assets/equations/exact_optimum.png" alt="Exact optimum: select Asset 1 and Asset 4, utility 0.20" width="100%">
+</p>
 
 ## Method
 
