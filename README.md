@@ -1,27 +1,24 @@
 <div align="center">
 
-<<<<<<< HEAD
-<h1>QFF SRM AP 2026 · PS-O2</h1>
-<p><strong>Constraint-Aware Portfolio Optimization with QAOA</strong></p>
-<p><strong>Team Coughing Baby</strong></p>
-=======
 <table align="center" border="0" cellpadding="6">
   <tr>
     <td align="center" valign="middle" bgcolor="#F5F1E2">
-      <img src="assets/branding/srm-ap-logo.png" alt="SRM University-AP" width="190">
+      <img src="assets/branding/srm-ap-logo.png" alt="SRM University-AP" width="165">
     </td>
     <td align="center" valign="middle" bgcolor="#F5F1E2">
-      <img src="assets/branding/qiskit-fall-fest-2026-badge-crop.png" alt="Qiskit Fall Fest 2026" width="88">
+      <img src="assets/branding/qiskit-fall-fest-2026-badge-crop.png" alt="Qiskit Fall Fest 2026" width="82">
     </td>
   </tr>
 </table>
 
-<p><sub><strong>QFF SRM AP 2026 · QUANTUM OPTIMIZATION</strong></sub></p>
+<p><sub>QFF SRM AP 2026 · QUANTUM OPTIMIZATION</sub></p>
+
 <h1>Portfolio Optimization with QAOA</h1>
 <h3>PS-O2 · Phase 1 Benchmark</h3>
-<p><sub>TEAM PROJECT</sub></p>
-<h2>COUGHING BABY</h2>
->>>>>>> 61ae161 (Polish README branding and equation visuals)
+
+<h2>✦ C O U G H I N G &nbsp; B A B Y ✦</h2>
+
+<p><sub>TEAM PROJECT · SRM UNIVERSITY-AP × VIT-AP</sub></p>
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white" alt="Python 3.12">
@@ -30,13 +27,12 @@
 </p>
 
 <p>
-  <img src="assets/processor_topology_animation.gif" alt="Animated gate schedule for actual Qiskit-transpiled QAOA circuits on reference Processor A and Processor B" width="100%">
+  <img src="assets/processor_topology_animation.gif" alt="Animated QAOA gate schedule comparing reference Processor A and Processor B" width="100%">
 </p>
 
-<sub>Actual transpiled gate activity on the two reference processor architectures. Directed arrows show emitted CX control-to-target operations, and node labels show emitted single-qubit gates or measurements. This is a scheduled gate visualization, not a hardware pulse trace or quantum-state trajectory.</sub>
+<p><sub>Actual Qiskit-transpiled gate activity · Reference Processor A vs Processor B</sub></p>
 
 </div>
-
 ---
 
 ## At a glance
