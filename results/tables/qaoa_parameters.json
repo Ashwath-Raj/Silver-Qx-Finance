@@ -186,5 +186,8 @@
     }
   ],
   "q": 1.0,
-  "penalty_A": 0.02
+  "q_status": "Provisional participant-selected q pending organizer confirmation; Master Guide does not prescribe a numerical q.",
+  "penalty_A": 0.02,
+  "cardinality_penalty_A": 0.02,
+  "penalty_status": "PARTICIPANT_SELECTED_DOCUMENTED_NOT_ORGANIZER_PRESCRIBED"
 }

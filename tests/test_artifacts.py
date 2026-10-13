@@ -1,0 +1,80 @@
+import csv
+import json
+from pathlib import Path
+
+import nbformat
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def json_file(relative):
+    return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+
+def table_rows(relative):
+    with (ROOT / relative).open(newline="", encoding="utf-8") as stream:
+        return list(csv.DictReader(stream))
+
+
+def test_problem_and_benchmark_metadata_are_consistent():
+    instance = json_file("data/processed/portfolio_instance.json")
+    metadata = json_file("results/tables/run_metadata.json")
+    params = json_file("results/tables/qaoa_parameters.json")
+    topology = json_file("results/tables/topology_experiment_metadata.json")
+    assert instance["q"] == metadata["q"] == params["q"] == topology["q"] == 1.0
+    assert instance["cardinality_penalty_A"] == metadata["cardinality_penalty_A"] == params["penalty_A"] == topology["cardinality_penalty_A"] == 0.02
+    assert instance["penalty_status"] == "PARTICIPANT_SELECTED_DOCUMENTED_NOT_ORGANIZER_PRESCRIBED"
+    assert metadata["penalty_status"] == instance["penalty_status"]
+    assert params["penalty_status"] == instance["penalty_status"]
+    assert "pending organizer confirmation" in instance["q_selection_status"].lower()
+
+
+def test_required_and_supplementary_tables_have_expected_shapes():
+    expected_rows = {
+        "results/tables/processor_comparison.csv": 4,
+        "results/tables/topology_experiment.csv": 8,
+        "results/tables/robustness_trials.csv": 40,
+        "results/tables/robustness_summary.csv": 4,
+        "results/tables/paired_robustness_comparison.csv": 9,
+        "results/tables/q_sensitivity.csv": 7,
+        "results/tables/penalty_sensitivity.csv": 10,
+    }
+    for filename, expected in expected_rows.items():
+        rows = table_rows(filename)
+        assert len(rows) == expected, f"{filename} expected {expected} rows; got {len(rows)}"
+
+
+def test_baseline_probabilities_and_gate_metrics_are_valid():
+    rows = table_rows("results/tables/processor_comparison.csv")
+    assert {(row["processor"], row["mode"]) for row in rows} == {
+        ("Processor A", "ideal"), ("Processor A", "noisy"),
+        ("Processor B", "ideal"), ("Processor B", "noisy"),
+    }
+    for row in rows:
+        valid = float(row["valid_portfolio_probability"])
+        optimal = float(row["optimal_portfolio_probability"])
+        assert 0 <= optimal <= valid <= 1
+        assert int(row["shots"]) == 4096
+        assert int(row["swap_count_native"]) == 0
+
+
+def test_notebook_execution_and_report_provenance_are_clean():
+    notebook = nbformat.read(ROOT / "main.ipynb", as_version=4)
+    errors = [
+        output.get("ename", "unknown error")
+        for cell in notebook.cells if cell.cell_type == "code"
+        for output in cell.get("outputs", [])
+        if output.get("output_type") == "error"
+    ]
+    assert not errors, errors
+    all_sources = "\n".join(cell.source for cell in notebook.cells if cell.cell_type == "code")
+    assert 'PENALTY_A = 0.02' in all_sources
+    report = (ROOT / "report.md").read_text(encoding="utf-8").lower()
+    assert "organizer clarified" in report and "binary selection indicators" in report
+    assert "q remains provisional" in report
+    assert "paired robustness comparisons" in report
+
+
+def test_paired_robustness_figure_exists():
+    figure = ROOT / "results/figures/paired_robustness_differences.png"
+    assert figure.is_file() and figure.stat().st_size > 10_000

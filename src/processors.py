@@ -20,6 +20,11 @@ def load_processor(path: str | Path) -> dict[str, Any]:
         raise ValueError(f"{path}: duplicate coupling edge")
     if any(u < 0 or v >= n or u == v for u, v in edges):
         raise ValueError(f"{path}: edge outside {n}-qubit graph")
+    graph = nx.Graph()
+    graph.add_nodes_from(range(n))
+    graph.add_edges_from(edges)
+    if not nx.is_connected(graph):
+        raise ValueError(f"{path}: coupling graph must be connected")
     if item["name"] == "Processor A" and n != 5:
         raise ValueError("Processor A must contain 5 qubits")
     if item["name"] == "Processor B" and n != 9:

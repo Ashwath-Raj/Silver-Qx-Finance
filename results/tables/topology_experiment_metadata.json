@@ -3,7 +3,7 @@
   "q": 1.0,
   "q_status": "Provisional participant-selected q pending organizer confirmation; Master Guide does not prescribe a numerical q.",
   "cardinality_penalty_A": 0.02,
-  "penalty_status": "PROVISIONAL_PENDING_ORGANIZER_CONFIRMATION",
+  "penalty_status": "PARTICIPANT_SELECTED_DOCUMENTED_NOT_ORGANIZER_PRESCRIBED",
   "shared_logical_qaoa_parameters": {
     "gamma": 0.4380168788361942,
     "beta": 2.7684370898744666,

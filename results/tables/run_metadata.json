@@ -38,6 +38,8 @@
   "cardinality_k": 2,
   "cardinality_penalty_A": 0.02,
   "penalty_source_note": "A=0.02 is a participant-selected penalty, not an organizer-fixed value. For provisional q=1.0, exact enumeration gives a strict-feasibility threshold A>0.01 for this instance under the squared-cardinality penalty. Recalculate the threshold if q changes.",
+  "penalty_status": "PARTICIPANT_SELECTED_DOCUMENTED_NOT_ORGANIZER_PRESCRIBED",
+  "decision_variable_interpretation": "Binary asset-selection variables x_i in {0,1}; exactly k=2 assets are selected.",
   "shots": 4096,
   "optimization_level": 1,
   "layout_method": "sabre",

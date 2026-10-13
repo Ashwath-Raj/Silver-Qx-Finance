@@ -7,7 +7,7 @@
 - Risk matrix minimum eigenvalue: `0.02363584`
 - q: `1.0` — participant-selected because the Master Guide's PS-O2 section does not prescribe a numeric value.
 - Cardinality: exactly 2 assets.
-- Penalty A: `0.02` — provisional participant-selected assumption pending organizer confirmation; the Master Guide PS-O2 entry does not specify A.
+- Penalty A: `0.02` — participant-selected implementation choice; neither the Master Guide PS-O2 entry nor the organizer clarification prescribes a numeric A.
 - Formulation: minimize `x.T @ Sigma @ x - q * mu.T @ x + A * (sum(x)-2)^2`.
 - Reported economic objective: `q * mu.T @ x - x.T @ Sigma @ x`, only on feasible portfolios.
 
@@ -38,8 +38,8 @@
 - Four assets yield only 16 bitstrings and can be solved exactly classically; no quantum advantage is claimed.
 - The best-sampled objective ratio equals 1 when at least one sample reaches the exact optimum; interpret it alongside optimal-portfolio probability, not as an average-quality or success-probability metric.
 - The numeric q is not specified in the Master Guide and was selected provisionally for this run; obtain organizer confirmation before treating it as official.
-- Penalty A is a provisional participant-selected implementation choice; obtain organizer confirmation before treating it as official.
-- Decision variables are interpreted as binary asset-selection indicators; confirm this interpretation if continuous weights were intended.
+- Penalty A is participant-selected and documented, not organizer-prescribed; exact enumeration validates the selected value for this instance and current q.
+- Decision variables: the organizer clarified that x_i are binary selection indicators in {0,1}, with exactly k=2 selected assets. A continuous-weight allocation is a different model and is not used here.
 - Coupling graphs are reference architectures. The included A/B runs use the documented reference edges; any participant-designed topology must be reported separately.
 - The synthetic noise results are Aer simulation measurements, not hardware measurements.
 - Generative AI assisted code drafting/review and documentation organization; the participant remains responsible for checking every assumption and result, subject to the event AI-use policy.
@@ -78,6 +78,24 @@ The following intervals summarize ten simulator seeds (7, 21, 42, 84, 126, 168, 
 | Processor A | Alternative: alternative linear chain | 0.5180 | 0.0077 | [0.5125, 0.5236] | 0.1306 | 0.0043 |
 | Processor B | Master Guide reference | 0.5207 | 0.0068 | [0.5158, 0.5256] | 0.1329 | 0.0042 |
 | Processor B | Alternative: alternative balanced ring with chords | 0.5193 | 0.0068 | [0.5144, 0.5241] | 0.1311 | 0.0036 |
+
+### Paired robustness comparisons using common simulator seeds
+
+Each difference is comparison minus baseline, paired by the same ten simulator seeds. Intervals are exploratory 95% paired t intervals across those fixed seeds; they are not hardware uncertainty intervals, and they are not adjusted for multiple comparisons.
+
+| Comparison | Metric | Mean paired difference (95% CI) | Seed pairs |
+|---|---|---:|---:|
+| Processor B reference minus Processor A reference | Valid-portfolio probability | -0.11 pp [-0.76, +0.54] | 10 |
+| Processor B reference minus Processor A reference | Optimal-portfolio probability | +0.30 pp [-0.04, +0.64] | 10 |
+| Processor B reference minus Processor A reference | Mean utility among valid samples | +0.00032 [-0.00051, +0.00115] | 10 |
+| Processor A chain minus Processor A reference | Valid-portfolio probability | -0.38 pp [-1.12, +0.37] | 10 |
+| Processor A chain minus Processor A reference | Optimal-portfolio probability | +0.07 pp [-0.40, +0.53] | 10 |
+| Processor A chain minus Processor A reference | Mean utility among valid samples | +0.00016 [-0.00052, +0.00084] | 10 |
+| Processor B alternative minus Processor B reference | Valid-portfolio probability | -0.14 pp [-0.39, +0.11] | 10 |
+| Processor B alternative minus Processor B reference | Optimal-portfolio probability | -0.18 pp [-0.60, +0.24] | 10 |
+| Processor B alternative minus Processor B reference | Mean utility among valid samples | -0.00040 [-0.00145, +0.00065] | 10 |
+
+![Paired robustness differences](results/figures/paired_robustness_differences.png)
 
 ### Exact sensitivity to the unspecified q
 
@@ -119,6 +137,6 @@ For the current provisional q=1, exact enumeration gives a strict-feasibility th
 - All topology alternatives keep the A/B qubit budget and edge count fixed and use the same logical p=1 QAOA parameters as the reference baseline.
 - The reference `processors/processor_A.json` and `processors/processor_B.json` files are unchanged. Alternative edges are explicitly exported in `results/tables/topology_experiment_metadata.json`.
 - Ten seeds are a useful robustness check but are not a claim of hardware-level confidence or generalization to other circuits.
-- q and A still require organizer clarification; values used here are provisional participant choices.
+- q remains provisional pending organizer confirmation; A is a participant-selected and documented penalty, not an organizer-prescribed value.
 - These are simulator results for a 4-variable, 16-state problem. No quantum-advantage claim is made.
 - Generative AI assisted with code drafting/review and documentation organization; the participant is responsible for verifying the final code and claims, subject to the event policy.

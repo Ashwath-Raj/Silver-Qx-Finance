@@ -1,7 +1,7 @@
 {
   "problem_code": "PS-O2",
   "problem_name": "Portfolio Optimization Under Budget Constraints",
-  "source_status": "MASTER_GUIDE_INPUTS_WITH_PROVISIONAL_Q_AND_PENALTY_PENDING_ORGANIZER_CONFIRMATION",
+  "source_status": "MASTER_GUIDE_INPUTS_WITH_PROVISIONAL_Q_AND_PARTICIPANT_SELECTED_PENALTY",
   "source_document": "QFF_Phase_1_Master_Guide.pdf, page 4",
   "assets": [
     "Asset_1",
@@ -62,6 +62,6 @@
   "seed_transpiler": 42,
   "risk_matrix_min_eigenvalue": 0.023635844264637156,
   "n_assets": 4,
-  "penalty_status": "PROVISIONAL_PENDING_ORGANIZER_CONFIRMATION",
+  "penalty_status": "PARTICIPANT_SELECTED_DOCUMENTED_NOT_ORGANIZER_PRESCRIBED",
   "decision_variable_interpretation": "Binary asset-selection variables x_i in {0,1}; exactly k=2 assets are selected."
 }

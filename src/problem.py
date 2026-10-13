@@ -19,10 +19,14 @@ def load_instance(path: str | Path) -> dict[str, Any]:
     assets = data.get("assets")
     mu = np.asarray(data.get("expected_returns"), dtype=float)
     sigma = np.asarray(data.get("risk_matrix"), dtype=float)
-    if not isinstance(assets, list) or len(assets) != 4:
-        raise ValueError("PS-O2 Master Guide requires exactly four assets.")
+    if (not isinstance(assets, list) or len(assets) != 4
+            or any(not isinstance(asset, str) or not asset.strip() for asset in assets)
+            or len(set(assets)) != 4):
+        raise ValueError("PS-O2 requires four unique, non-empty asset names.")
     if mu.shape != (4,) or sigma.shape != (4, 4):
         raise ValueError("PS-O2 inputs must have a 4-element return vector and a 4x4 risk matrix.")
+    if not np.all(np.isfinite(mu)) or not np.all(np.isfinite(sigma)):
+        raise ValueError("Expected returns and risk matrix must contain only finite numbers.")
     if not np.allclose(sigma, sigma.T, atol=1e-10):
         raise ValueError("Risk matrix must be symmetric.")
     if float(np.linalg.eigvalsh(sigma).min()) < -1e-8:
@@ -31,13 +35,15 @@ def load_instance(path: str | Path) -> dict[str, Any]:
     if k != 2:
         raise ValueError("Master Guide PS-O2 requires k=2.")
     q = data.get("q")
-    if q is not None and float(q) <= 0:
-        raise ValueError("q must be positive.")
+    if q is not None:
+        q = float(q)
+        if not np.isfinite(q) or q <= 0:
+            raise ValueError("q must be finite and positive.")
     if "cardinality_penalty_A" not in data:
         raise ValueError("Set the participant-selected cardinality penalty A explicitly.")
     a = float(data["cardinality_penalty_A"])
-    if a <= 0:
-        raise ValueError("Cardinality penalty A must be positive.")
+    if not np.isfinite(a) or a <= 0:
+        raise ValueError("Cardinality penalty A must be finite and positive.")
     data["expected_returns"] = mu.tolist()
     data["risk_matrix"] = sigma.tolist()
     data["selected_assets_k"] = k
@@ -179,11 +185,15 @@ def build_qaoa_circuit(gamma: float, beta: float, cost_model: dict[str,Any], mea
     return qc
 
 def optimize_qaoa(instance: dict[str,Any], restarts: int=6, maxiter: int=300, seed: int=42) -> dict[str,Any]:
+    if int(restarts) < 1:
+        raise ValueError("restarts must be at least 1.")
+    if int(maxiter) < 1:
+        raise ValueError("maxiter must be at least 1.")
     model=prepare_cost_model(instance); mu=np.asarray(instance["expected_returns"],float); sigma=np.asarray(instance["risk_matrix"],float)
     q=float(instance["q"]); k=int(instance["selected_assets_k"]); a=float(instance["cardinality_penalty_A"]); n=len(mu)
     costs=np.asarray([full_cost(bitvector_from_int(i,n),mu,sigma,q,k,a) for i in range(2**n)],float)
     rng=np.random.default_rng(seed); runs=[]
-    for r in range(max(1,int(restarts))):
+    for r in range(int(restarts)):
         x0=np.asarray([0.7,0.4]) if r==0 else np.asarray([rng.uniform(0,2*np.pi),rng.uniform(0,np.pi)])
         def objective(params):
             circuit=build_qaoa_circuit(float(params[0]),float(params[1]),model)
@@ -194,12 +204,22 @@ def optimize_qaoa(instance: dict[str,Any], restarts: int=6, maxiter: int=300, se
         runs.append({"restart":r,"gamma":float(opt.x[0]),"beta":float(opt.x[1]),
                      "expected_scaled_cost":float(opt.fun),"success":bool(opt.success),
                      "iterations":int(getattr(opt,"nit",-1)),"message":str(opt.message)})
-    best=min(runs,key=lambda x:x["expected_scaled_cost"])
+    converged=[run for run in runs if run["success"] and np.isfinite(run["expected_scaled_cost"])
+               and np.all(np.isfinite([run["gamma"], run["beta"]]))]
+    if not converged:
+        raise RuntimeError("No QAOA optimizer restart converged to a finite solution.")
+    best=min(converged,key=lambda x:x["expected_scaled_cost"])
     return {"gamma":best["gamma"],"beta":best["beta"],"best_restart":best["restart"],
             "best_expected_scaled_cost":best["expected_scaled_cost"],"restarts":runs,"cost_model":model}
 
 def sample_processor(instance: dict[str,Any], params: dict[str,Any], processor: dict[str,Any],
                      mode: str="ideal", noise_model=None, shots: int=SHOTS, seed_simulator: int=TRANSPILER_SEED) -> dict[str,Any]:
+    if mode not in {"ideal", "noisy"}:
+        raise ValueError("mode must be either 'ideal' or 'noisy'.")
+    if int(shots) < 1:
+        raise ValueError("shots must be at least 1.")
+    if mode == "noisy" and noise_model is None:
+        raise ValueError("noisy mode requires an explicit noise_model.")
     logical=build_qaoa_circuit(params["gamma"],params["beta"],params["cost_model"],measured=True)
     swap_count=swap_diagnostic(logical,processor)
     compiled=compile_circuit(logical,processor)
