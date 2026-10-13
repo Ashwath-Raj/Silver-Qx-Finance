@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>QFF 2026 · PS-O2</h1>
+<h1>QFF SRM AP 2026 · PS-O2</h1>
 <p><strong>Constraint-Aware Portfolio Optimization with QAOA</strong></p>
 <p><strong>Team Coughing Baby</strong></p>
 
@@ -82,7 +82,7 @@ The reported economic utility for feasible portfolios is
 U(x)=q\,\mu^\mathsf{T}x-x^\mathsf{T}\Sigma x
 \]
 
-The expected-return vector and covariance matrix are transcribed from **QFF Phase 1 Master Guide.pdf, page 4**. The numeric \(q\) and penalty \(A\) are experiment settings, not official values prescribed by the guide.
+The expected-return vector and covariance matrix are transcribed from **QFF SRM APPhase 1 Master Guide.pdf, page 4**. The numeric \(q\) and penalty \(A\) are experiment settings, not official values prescribed by the guide.
 
 ## Method
 
@@ -171,4 +171,4 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 
 <sub>Roster status in the supplied screenshot: 4 confirmed members out of a 2–6 member team. Two teammate display names are shown with ellipses because the screenshot truncates them; their full registered names should replace these shortened labels when confirmed.</sub>
 
-<p align="center"><sub>QFF 2026 · Quantum Optimization · PS-O2</sub></p>
+<p align="center"><sub>QFF SRM AP 2026 · Quantum Optimization · PS-O2</sub></p>
