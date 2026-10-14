@@ -1,67 +1,56 @@
 # QFF 2026 Phase 1 — PS-O2 Portfolio Optimization
 
-## Benchmark provenance
+## Benchmark provenance and current assumptions
 
-- Inputs: QFF Phase 1 Master Guide, page 4.
-- Returns μ: `[0.12, 0.18, 0.1, 0.22]`
-- Risk matrix minimum eigenvalue: `0.02363584`
-- q: `1.0` — participant-selected because the Master Guide's PS-O2 section does not prescribe a numeric value.
-- Cardinality: exactly 2 assets.
-- Penalty A: `0.02` — participant-selected implementation choice; neither the Master Guide PS-O2 entry nor the organizer clarification prescribes a numeric A.
-- Formulation: minimize `x.T @ Sigma @ x - q * mu.T @ x + A * (sum(x)-2)^2`.
-- Reported economic objective: `q * mu.T @ x - x.T @ Sigma @ x`, only on feasible portfolios.
+- Source of the portfolio instance: QFF Phase 1 Master Guide, page 4.
+- Expected-return vector: \(\mu=[0.12,\;0.18,\;0.10,\;0.22]^{\mathsf T}\).
+- Risk/covariance matrix minimum eigenvalue: approximately `0.02363584`.
+- Decision variables are binary selection indicators: \(x_i\in\{0,1\}\), with exactly \(k=2\) of the four assets selected. The organizer clarified that the \(x_i\) are binary selection indicators; the project does not model continuous portfolio weights.
+- The Master Guide does not prescribe a numeric value for \(q\). This run uses participant-selected \(q=1.0\). The value q remains provisional pending organizer confirmation.
+- The cardinality penalty \(A=0.02\) is also participant-selected, not organizer-prescribed.
+- The official reference files `processors/processor_A.json` and `processors/processor_B.json` remain unchanged. PACA-5 and PACA-9 are separately labelled participant-designed supplementary topologies.
 
-## Exact classical reference
+## Mathematical formulation
 
-- Optimal portfolio: Asset_1, Asset_4
-- Bitstring (asset 4 … asset 1): `1001`
-- Best feasible unpenalized objective: `0.2000000000`
+Let \(x_i=1\) mean asset \(i\) is selected, and \(x_i=0\) otherwise. The required cardinality is
 
-## Mathematical formulation and variable definitions
-
-Let the four binary selection variables be
-
-\[
- x_i \in \{0,1\},\qquad i=1,\ldots,4,\qquad \sum_{i=1}^{4}x_i=2.
-\]
-
-Here, \(x_i=1\) means asset \(i\) is selected; \(x_i=0\) means it is not. The task selects exactly two assets—it is not a continuous portfolio-weight allocation.
+$$
+ x_i\in\{0,1\},\quad i=1,\ldots,4,\qquad \sum_{i=1}^{4}x_i=2.
+$$
 
 The implemented penalized QUBO minimizes
 
-\[
+$$
 \boxed{\min_{x\in\{0,1\}^{4}}\; x^{\mathsf T}\Sigma x-q\,\mu^{\mathsf T}x+A\left(\sum_{i=1}^{4}x_i-2\right)^2}
-\]
+$$
 
-where \(\mu\) is the expected-return vector, \(\Sigma\) is the risk/covariance matrix, \(q\) controls the return-versus-risk scaling, and \(A\) is the participant-selected penalty for violating the cardinality constraint. For feasible portfolios, the reported utility (maximization orientation) is
+where \(\mu\) is the expected-return vector, \(\Sigma\) is the risk/covariance matrix, \(q\) scales the return term against risk, and \(A\) penalizes violations of the cardinality constraint. The instance uses \(q=1.0\) and \(A=0.02\), both explicit experiment choices rather than official parameters.
 
-\[
-U(x)=q\,\mu^{\mathsf T}x-x^{\mathsf T}\Sigma x,\qquad \text{when }\sum_i x_i=2.
-\]
-
-The instance uses
-
-\[
-\mu=\begin{bmatrix}0.12&0.18&0.10&0.22\end{bmatrix}^{\mathsf T},\qquad q=1.0,\qquad A=0.02,
-\]
-
-with \(q=1.0\) provisional and \(A=0.02\) explicitly participant-selected, not organizer-prescribed. The risk matrix from the Master Guide is
-
-\[
+$$
+\mu=\begin{bmatrix}0.12&0.18&0.10&0.22\end{bmatrix}^{\mathsf T},\qquad
 \Sigma=\begin{bmatrix}
 0.04&0.01&0.02&0.01\\
 0.01&0.09&0.01&0.03\\
 0.02&0.01&0.05&0.02\\
 0.01&0.03&0.02&0.08
 \end{bmatrix}.
-\]
+$$
 
-Exact enumeration of all \(2^4=16\) bitstrings identifies Asset 1 + Asset 4 as the best feasible portfolio at the current provisional settings, with utility \(U=0.20\). The numeric \(q\) and penalty \(A\) remain visible experiment assumptions; the sensitivity tables below document how they affect the optimization formulation.
+For any bitstring, the code can calculate the unpenalized score
 
+$$
+U(x)=q\,\mu^{\mathsf T}x-x^{\mathsf T}\Sigma x.
+$$
+
+This score is interpreted as portfolio utility when \(\sum_i x_i=2\). For infeasible sampled bitstrings, it is a diagnostic score only; feasibility is reported separately.
+
+## Exact classical reference
+
+Exact enumeration of all \(2^4=16\) bitstrings identifies **Asset 1 + Asset 4** as the best feasible portfolio at the current provisional settings. With the report's bit order of Asset 4 through Asset 1, the bitstring is `1001`, and the feasible utility is `0.20`. Since the state space contains only 16 bitstrings, this is a classical exact benchmark, not evidence of quantum advantage.
 
 ## Controlled Processor A/B results
 
-The tables below separate compiled circuit resources, portfolio sampling probabilities, and sampled utility metrics. All probabilities are fractions of 4,096 simulator shots. The SWAP count is a separate diagnostic transpilation, not the literal SWAP count of the native-basis circuit.
+These four rows are the required Master Guide reference baseline. All probabilities below are fractions from 4,096 simulator shots. The SWAP diagnostic is obtained from a separate diagnostic transpilation that retains SWAP gates; it is not the literal SWAP count of the native-basis circuit, whose native SWAP count is zero.
 
 ### Compiled circuit resources
 
@@ -74,165 +63,187 @@ The tables below separate compiled circuit resources, portfolio sampling probabi
 
 ### Portfolio sampling probabilities
 
-| Processor | Mode | Valid portfolio probability | Optimal portfolio probability |
+| Processor | Mode | Valid-portfolio probability | Optimal-portfolio probability |
 |---|---|---:|---:|
 | Processor A | Ideal | 0.5396 | 0.1440 |
 | Processor A | Noisy | 0.5266 | 0.1338 |
 | Processor B | Ideal | 0.5403 | 0.1455 |
 | Processor B | Noisy | 0.5266 | 0.1401 |
 
-### Sampled utility and objective gap
+### Sampled utility and best-sample gap
 
-| Processor | Mode | Mean utility (all samples) | Mean utility (valid only) | Best sampled valid objective | Best-sample ratio | Gap |
+| Processor | Mode | Mean utility, all samples* | Mean utility, valid samples | Best sampled valid utility | Best-sample ratio | Optimality gap |
 |---|---|---:|---:|---:|---:|---:|
 | Processor A | Ideal | 0.16359619 | 0.15805430 | 0.20000000 | 1.000000 | 0.00000000 |
 | Processor A | Noisy | 0.16114746 | 0.15665276 | 0.20000000 | 1.000000 | 0.00000000 |
 | Processor B | Ideal | 0.16387695 | 0.15810212 | 0.20000000 | 1.000000 | 0.00000000 |
 | Processor B | Noisy | 0.16186768 | 0.15772833 | 0.20000000 | 1.000000 | 0.00000000 |
 
-## Supplementary experiment — PACA-5/PACA-9 custom topologies and layout mapping
+*The all-sample mean includes infeasible bitstrings and is reported as a diagnostic score. The valid-sample mean includes only bitstrings selecting exactly two assets. The best-sample ratio is 1 because each run sampled the exact best feasible state at least once; it is not an estimate of the probability of finding that state.
 
-This is an **extra participant-designed topology and mapping experiment**, not a replacement for the required Master Guide Processor A/B reference benchmark. The official `processors/processor_A.json` and `processors/processor_B.json` files are unchanged.
+## Findings and architecture interpretation
 
-<p align="center"><img src="assets/paca_topology_animation.gif" alt="PACA-5 and PACA-9 coupling maps labelled with physical qubit identifiers q0 through q8; white-and-blue model, map, compile and sample workflow" width="100%"></p>
+For this p=1 instance and the stated transpiler configuration, reference Processor B compiles to depth 35 with 15 CX gates and one diagnostic SWAP, compared with depth 43, 18 CX gates, and two diagnostic SWAPs for reference Processor A. The ten-seed paired robustness comparisons report that all three paired-seed 95% t intervals include zero; they do not establish a statistically clear performance difference between the reference processors.
 
-<p align="center"><sub>Workflow schematic with explicit physical-qubit IDs q0–q8. It does not depict quantum-state evolution or individual measurement shots. Full metrics and equations are provided in the following sections.</sub></p>
+The supplementary PACA graphs compile to depth 24 and 12 CX gates in the recorded automatic/fixed layout runs, but lower compiled resource counts do not guarantee a higher optimal-portfolio sampling probability. In the seed-42 noisy runs, PACA-5 with fixed K4 placement sampled the optimum at 13.75% versus 13.11% with automatic SABRE, while PACA-9 produced 13.75% with either layout. These are finite-shot observations from the stated synthetic-noise simulator, not statistically established layout gains or hardware results.
 
-### Graph design and structural metrics
+## Supplementary experiment: topology, robustness, and parameter sensitivity
+
+This section describes **additional participant-designed experiments**. They do not replace or alter the required Master Guide Processor A/B baseline. The topology and layout experiments use the same logical \(p=1\) QAOA parameters and compare ideal and noisy simulation separately.
+
+<p align="center"><img src="assets/paca_topology_animation.gif" alt="PACA-5 and PACA-9 white-and-blue workflow animation with physical qubit labels q0 through q8" width="100%"></p>
+
+<p align="center"><sub>Workflow schematic: model → map → compile → sample. The animation is not a quantum-state trajectory and does not display individual measurement shots.</sub></p>
+
+### Custom graph design and structural metrics
 
 | Graph | Physical qubits | Edges | Construction | Diameter | Average shortest path |
 |---|---:|---:|---|---:|---:|
 | Reference A | 5 | 4 | Master Guide reference graph | 3 | 1.800 |
-| PACA-5 | 5 | 8 | K4 core on physical qubits 0–3 + two peripheral links to qubit 4 | 2 | 1.200 |
+| PACA-5 | 5 | 8 | K4 core on physical qubits q0–q3; peripheral q4 linked to q0 and q2 | 2 | 1.200 |
 | Reference B | 9 | 12 | Master Guide reference graph | 4 | 1.944 |
-| PACA-9 | 9 | 16 | K4 core on physical qubits 0–3 + five-node peripheral ring and five core/ring links | 2 | 1.556 |
+| PACA-9 | 9 | 16 | K4 core on q0–q3; ring q4–q5–q6–q7–q8–q4; five links between core and ring | 2 | 1.556 |
 
-The four logical variables interact pairwise in the QUBO. Each PACA graph's K4 core therefore offers a physical subgraph containing all six pairwise connections among four mapped qubits. This is a structural design rationale; the fixed-layout run tests that mapping explicitly rather than assuming automatic SABRE chooses it.
+The four-variable QUBO has pairwise interactions among every pair of logical variables. A K4 physical subgraph therefore provides direct physical connectivity among four placed logical qubits. This motivates the design but does not imply that extra edges improve solution quality. In PACA-5, the two peripheral links are q0–q4 and q2–q4. In PACA-9, the ring has five edges and the core-to-ring links are q0–q4, q1–q5, q2–q6, q3–q7, and q0–q8.
 
-### Noisy layout comparison
+### Noisy automatic-versus-fixed K4 layout comparison
 
-The fixed-core strategy sets `initial_layout=[0, 1, 2, 3]`, mapping logical input qubits 0–3 onto physical core qubits 0–3. The automatic strategy delegates initial placement to SABRE. Both use the same logical p=1 QAOA parameters, optimization level 1, basis gates `{rz, sx, x, cx}`, transpiler seed 42, 4,096 shots, and the same synthetic noise model.
+The automatic configuration lets SABRE choose the layout. The fixed-K4 configuration explicitly sets `initial_layout=[0, 1, 2, 3]`, mapping logical input qubits 0–3 to physical qubits q0–q3. Both use the same logical circuit and parameters, optimization level 1, basis gates `{rz, sx, x, cx}`, transpiler seed 42, 4,096 shots, and the documented synthetic noise model.
 
-| Configuration | Layout | Qubits | Edges | Depth | CX | Valid portfolios | Optimal portfolio |
-|---|---|---:|---:|---:|---:|---:|---:|
-| Processor A · Master Guide reference | SABRE | 5 | 4 | 43 | 18 | 52.66% | 13.38% |
-| Custom (not reference): PACA-5 | PACA · automatic SABRE | 5 | 8 | 24 | 12 | 52.69% | 13.11% |
-| Custom (not reference): PACA-5 | PACA · fixed K4 core | 5 | 8 | 24 | 12 | 53.49% | 13.75% |
-| Processor B · Master Guide reference | SABRE | 9 | 12 | 35 | 15 | 52.66% | 14.01% |
-| Custom (not reference): PACA-9 | PACA · automatic SABRE | 9 | 16 | 24 | 12 | 53.49% | 13.75% |
-| Custom (not reference): PACA-9 | PACA · fixed K4 core | 9 | 16 | 24 | 12 | 53.49% | 13.75% |
+#### Compiled resources
 
-For the noisy runs, the fixed K4 layout raises PACA-5's observed optimal-portfolio probability from 13.11% to 13.75% (+0.64 percentage points) without changing its 24-depth/12-CX compiled-resource count. PACA-9's automatic and fixed layouts both yield 13.75% optimal-portfolio probability in this seed-42 run. These are finite-shot simulator observations—not a general claim that one layout or topology is universally superior.
+| Custom topology | Layout strategy | Mode | Physical qubits | Edges | Depth | CX gates |
+|---|---|---|---:|---:|---:|---:|
+| PACA-5 | Automatic SABRE | Ideal | 5 | 8 | 24 | 12 |
+| PACA-5 | Fixed K4 core | Ideal | 5 | 8 | 24 | 12 |
+| PACA-5 | Automatic SABRE | Noisy | 5 | 8 | 24 | 12 |
+| PACA-5 | Fixed K4 core | Noisy | 5 | 8 | 24 | 12 |
+| PACA-9 | Automatic SABRE | Ideal | 9 | 16 | 24 | 12 |
+| PACA-9 | Fixed K4 core | Ideal | 9 | 16 | 24 | 12 |
+| PACA-9 | Automatic SABRE | Noisy | 9 | 16 | 24 | 12 |
+| PACA-9 | Fixed K4 core | Noisy | 9 | 16 | 24 | 12 |
 
-Against the required noisy reference results, PACA-5 with fixed K4 layout yields 13.75% optimal sampling versus 13.38% for Reference A, while PACA-9 yields 13.75% versus 14.01% for Reference B. Both custom graphs compile to depth 24 and 12 CX gates in the recorded runs, but the comparison must be interpreted alongside sampling quality and the fact that PACA-9 has 16 edges versus 12 in Reference B. No hardware-performance or quantum-advantage claim follows from these simulations.
+#### Sampling results
 
-Machine-readable artifacts: [`paca_layout_comparison.csv`](results/tables/paca_layout_comparison.csv), [`topology_experiment.csv`](results/tables/topology_experiment.csv), and [`topology_experiment_metadata.json`](results/tables/topology_experiment_metadata.json). The companion static figure is [`paca_layout_comparison.png`](results/figures/paca_layout_comparison.png).
+| Custom topology | Layout strategy | Mode | Valid-portfolio probability | Optimal-portfolio probability |
+|---|---|---|---:|---:|
+| PACA-5 | Automatic SABRE | Ideal | 54.05% | 13.87% |
+| PACA-5 | Fixed K4 core | Ideal | 54.42% | 14.26% |
+| PACA-5 | Automatic SABRE | Noisy | 52.69% | 13.11% |
+| PACA-5 | Fixed K4 core | Noisy | 53.49% | 13.75% |
+| PACA-9 | Automatic SABRE | Ideal | 54.42% | 14.26% |
+| PACA-9 | Fixed K4 core | Ideal | 54.42% | 14.26% |
+| PACA-9 | Automatic SABRE | Noisy | 53.49% | 13.75% |
+| PACA-9 | Fixed K4 core | Noisy | 53.49% | 13.75% |
 
+The seed-42 noisy run shows PACA-5's observed optimal-portfolio probability moving from 13.11% with automatic SABRE to 13.75% with fixed K4 placement, a difference of about +0.64 percentage points. PACA-9 records 13.75% with either layout in this run. All eight recorded custom topology/layout/mode combinations compile to depth 24 and 12 CX gates in these runs.
 
-## Compilation protocol
+These are single-seed, finite-shot observations. The difference in sampled percentages is not evidence of statistically significant improvement, and the equality in depth/CX means the fixed-layout experiment did not reduce those compiled-resource counts relative to automatic layout in the recorded runs. The extra PACA edges define the graph but do not by themselves establish that peripheral edges are exercised by this four-logical-qubit circuit. The results are simulation measurements, not hardware results.
 
-- QAOA p=1; same logical circuit and optimized angles for both processors.
-- Basis gates `{rz, sx, x, cx}`; optimization level 1; SABRE layout/routing; transpiler seed 42; 4096 shots.
-- Noise model: one-qubit depolarizing 0.001; CX depolarizing 0.005. The guide only gives a 1% readout error rate, not a confusion matrix; this implementation models it as symmetric 1% bit-flip and records that assumption. Ideal and noisy runs are reported separately.
-- SWAP count comes from a separate diagnostic transpilation with SWAP retained; it is not the native-basis circuit's literal SWAP count.
+Machine-readable artifacts: [`topology_experiment.csv`](results/tables/topology_experiment.csv), [`paca_layout_comparison.csv`](results/tables/paca_layout_comparison.csv), and [`topology_experiment_metadata.json`](results/tables/topology_experiment_metadata.json). The companion figure is [`paca_layout_comparison.png`](results/figures/paca_layout_comparison.png).
 
-## Interpretation and limitations
+### Ten-seed noisy robustness across reference and custom graphs
 
-- Four assets yield only 16 bitstrings and can be solved exactly classically; no quantum advantage is claimed.
-- The best-sampled objective ratio equals 1 when at least one sample reaches the exact optimum; interpret it alongside optimal-portfolio probability, not as an average-quality or success-probability metric.
-- The numeric q is not specified in the Master Guide and was selected provisionally for this run; obtain organizer confirmation before treating it as official.
-- Penalty A is participant-selected and documented, not organizer-prescribed; exact enumeration validates the selected value for this instance and current q.
-- Decision variables: the organizer clarified that x_i are binary selection indicators in {0,1}, with exactly k=2 selected assets. A continuous-weight allocation is a different model and is not used here.
-- The required A/B baseline uses the documented reference edges. PACA-5 and PACA-9 are separately labelled participant-designed supplementary topologies; their results do not replace the baseline.
-- The synthetic noise results are Aer simulation measurements, not hardware measurements.
-- Generative AI assisted code drafting/review and documentation organization; the participant remains responsible for checking every assumption and result, subject to the event AI-use policy.
+The robustness artifact contains 40 trials: ten simulator seeds (`7, 21, 42, 84, 126, 168, 210, 252, 294, 336`) for Reference A, PACA-5 with automatic SABRE layout, Reference B, and PACA-9 with automatic SABRE layout. It does **not** provide a ten-seed robustness study of the fixed-K4 layout; that mapping comparison above uses seed 42. Each trial uses 4,096 shots. The intervals below are exploratory t intervals across simulator seeds, not hardware confidence intervals.
 
-## Reproducibility
+#### Valid-portfolio probability
 
-Run every code cell in `main.ipynb` from the repository root after setting `Q` in the configuration cell. Tables are regenerated under `results/tables/`, figures under `results/figures/`, and the report at `report.md`.
+| Configuration | Mean | Sample SD | 95% t interval |
+|---|---:|---:|---:|
+| Reference A | 52.18% | 0.81 pp | [51.60%, 52.76%] |
+| PACA-5, automatic SABRE | 52.09% | 0.84 pp | [51.50%, 52.69%] |
+| Reference B | 52.07% | 0.68 pp | [51.58%, 52.56%] |
+| PACA-9, automatic SABRE | 52.67% | 0.71 pp | [52.17%, 53.18%] |
 
+#### Optimal-portfolio probability
 
-## Supplementary experiments: topology, robustness, and parameter sensitivity
+| Configuration | Mean | Sample SD | 95% t interval |
+|---|---:|---:|---:|
+| Reference A | 12.99% | 0.46 pp | [12.66%, 13.32%] |
+| PACA-5, automatic SABRE | 13.27% | 0.48 pp | [12.93%, 13.61%] |
+| Reference B | 13.29% | 0.42 pp | [12.99%, 13.59%] |
+| PACA-9, automatic SABRE | 13.69% | 0.41 pp | [13.40%, 13.98%] |
 
-The four Processor A/B × ideal/noisy rows above remain the required Master Guide reference baseline. Separate supplementary outputs compare PACA-5 and PACA-9 with automatic SABRE and fixed K4-core placement. The 40-row robustness artifact covers ten simulator seeds for each of the two reference graphs and two custom graphs.
+### Paired robustness comparisons: reference Processor B minus Processor A
 
-### Reference topology and compiled-resource comparison
+The paired comparison uses the same ten simulator seeds for both reference graphs. All three paired-seed 95% t intervals include zero; these comparisons do not establish a statistically clear performance difference between the reference processors.
 
-| Processor | Topology | Mode | Edges | Diameter | Avg. shortest path | Depth | CX | SWAP diagnostic | Valid probability | Optimal probability |
-|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Processor A | Master Guide reference | ideal | 4 | 3 | 1.800 | 43 | 18 | 2 | 0.5396 | 0.1440 |
-| Processor A | Master Guide reference | noisy | 4 | 3 | 1.800 | 43 | 18 | 2 | 0.5266 | 0.1338 |
-| Processor B | Master Guide reference | ideal | 12 | 4 | 1.944 | 35 | 15 | 1 | 0.5403 | 0.1455 |
-| Processor B | Master Guide reference | noisy | 12 | 4 | 1.944 | 35 | 15 | 1 | 0.5266 | 0.1401 |
+| Metric | Mean paired difference | 95% paired t interval | Seed pairs |
+|---|---:|---:|---:|
+| Valid-portfolio probability | -0.11 pp | [-0.76, +0.54] pp | 10 |
+| Optimal-portfolio probability | +0.30 pp | [-0.04, +0.64] pp | 10 |
+| Mean utility among valid samples | +0.000317 | [-0.000515, +0.001150] | 10 |
 
-![Reference Processor A and B coupling graphs](results/figures/processor_topologies.png)
+### Paired-comparison interpretation
 
-### Noisy-seed robustness
+For the reference-only paired comparison, the means and intervals below describe variation across the same ten simulator seeds on A and B. The resource-cost difference does not by itself establish a solution-quality advantage.
 
-These summaries use simulator seeds (7, 21, 42, 84, 126, 168, 210, 252, 294, 336), with 4096 shots per run. Intervals describe this simulator experiment, not hardware uncertainty.
-
-| Processor | Seeds | Mean valid probability | SD across seeds | 95% t interval (valid probability) | Mean optimal probability | SD across seeds |
-|---|---:|---:|---:|---:|---:|---:|
-| Processor A | 10 | 0.5218 | 0.0081 | [0.5160, 0.5276] | 0.1299 | 0.0046 |
-| Processor B | 10 | 0.5207 | 0.0068 | [0.5158, 0.5256] | 0.1329 | 0.0042 |
-
-### Paired robustness comparisons between reference processors
-
-Each difference is Processor B minus Processor A, paired by the same ten simulator seeds. The 95% paired t intervals are exploratory simulator intervals, not hardware uncertainty intervals.
-
-| Comparison | Metric | Mean paired difference (95% CI) | Seed pairs |
-|---|---|---:|---:|
-| Processor B reference minus Processor A reference | Valid-portfolio probability | -0.11 pp [-0.76, +0.54] | 10 |
-| Processor B reference minus Processor A reference | Optimal-portfolio probability | +0.30 pp [-0.04, +0.64] | 10 |
-| Processor B reference minus Processor A reference | Mean utility among valid samples | +0.00032 [-0.00051, +0.00115] | 10 |
-
-![Paired robustness differences for reference Processor A vs B](results/figures/paired_robustness_differences.png)
-
-### Findings and architecture interpretation
-
-For this p=1 instance and these transpiler settings, reference Processor B compiles to depth 35 with 15 CX gates and 1 diagnostic SWAP, versus depth 43, 18 CX gates, and 2 diagnostic SWAPs for reference Processor A.
-
-All three paired-seed 95% t intervals for the reference A/B comparison include zero. Across ten fixed simulator seeds, these results do not establish a statistically clear performance difference. These findings are limited to this circuit, parameter choice, simulator noise model, and seed set.
+Artifact: [`paired_robustness_comparison.csv`](results/tables/paired_robustness_comparison.csv). Figure: [`paired_robustness_differences.png`](results/figures/paired_robustness_differences.png).
 
 ### Exact sensitivity to the unspecified q
 
-The Master Guide does not prescribe q. The following is a participant-created exact classical sensitivity analysis, not an inferred official value.
+The Master Guide does not prescribe a numeric \(q\). The values below are a participant-created exact classical sensitivity analysis—not an inferred official value.
 
 | q | Exact optimal feasible portfolio(s) | Best feasible utility |
 |---:|---|---:|
-| 0.25 | Asset_1 + Asset_4 | -0.055000 |
-| 0.50 | Asset_1 + Asset_4 | 0.030000 |
-| 0.75 | Asset_1 + Asset_4 | 0.115000 |
-| 1.00 | Asset_1 + Asset_4 | 0.200000 |
-| 1.25 | Asset_1 + Asset_4 | 0.285000 |
-| 1.50 | Asset_1 + Asset_4; Asset_2 + Asset_4 | 0.370000 |
-| 2.00 | Asset_2 + Asset_4 | 0.570000 |
+| 0.25 | Asset 1 + Asset 4 | -0.055000 |
+| 0.50 | Asset 1 + Asset 4 | 0.030000 |
+| 0.75 | Asset 1 + Asset 4 | 0.115000 |
+| 1.00 | Asset 1 + Asset 4 | 0.200000 |
+| 1.25 | Asset 1 + Asset 4 | 0.285000 |
+| 1.50 | Asset 1 + Asset 4; Asset 2 + Asset 4 (tie) | 0.370000 |
+| 2.00 | Asset 2 + Asset 4 | 0.570000 |
 
-![Portfolio objective sensitivity to q](results/figures/q_sensitivity.png)
+Figure: [`q_sensitivity.png`](results/figures/q_sensitivity.png). Table: [`q_sensitivity.csv`](results/tables/q_sensitivity.csv).
 
 ### Exact sensitivity to the cardinality penalty A
 
-For the current provisional q=1, exact enumeration gives a strict-feasibility threshold A > 0.01 for this four-asset instance under the implemented squared-cardinality penalty. This threshold is instance- and q-specific; it is not an organizer-prescribed value for A.
+For the current provisional \(q=1.0\), exact enumeration gives a strict-feasibility condition of \(A>0.01\) for this instance and the implemented squared-cardinality penalty. At exactly \(A=0.01\), a feasible state and an infeasible state tie for the minimum; the strict inequality is intentional. This is not an organizer-prescribed value or a universal threshold.
 
-| A | One optimal bitstring | Selected count | Feasible? | Infeasible optimum tie? |
-|---:|---|---:|---|---|
-| 0.001 | 1011 | 3 | no / tie | yes |
-| 0.005 | 1011 | 3 | no / tie | yes |
-| 0.01 | 1001 | 2 | no / tie | yes |
-| 0.02 | 1001 | 2 | yes | no |
-| 0.05 | 1001 | 2 | yes | no |
-| 0.1 | 1001 | 2 | yes | no |
-| 0.5 | 1001 | 2 | yes | no |
-| 1 | 1001 | 2 | yes | no |
-| 5 | 1001 | 2 | yes | no |
-| 20 | 1001 | 2 | yes | no |
+| Penalty A | Optimal bitstring(s) | Selected count(s) | Cardinality interpretation |
+|---:|---|---:|---|
+| 0.001 | `1011` | 3 | Best state is infeasible |
+| 0.005 | `1011` | 3 | Best state is infeasible |
+| 0.01 | `1001`, `1011` (tie) | 2, 3 | Feasible and infeasible states tie |
+| 0.02 | `1001` | 2 | All minimum-cost states are feasible |
+| 0.05 | `1001` | 2 | All minimum-cost states are feasible |
+| 0.1 | `1001` | 2 | All minimum-cost states are feasible |
+| 0.5 | `1001` | 2 | All minimum-cost states are feasible |
+| 1.0 | `1001` | 2 | All minimum-cost states are feasible |
+| 5.0 | `1001` | 2 | All minimum-cost states are feasible |
+| 20.0 | `1001` | 2 | All minimum-cost states are feasible |
 
-![Penalty sensitivity](results/figures/penalty_sensitivity.png)
+Figure: [`penalty_sensitivity.png`](results/figures/penalty_sensitivity.png). Table: [`penalty_sensitivity.csv`](results/tables/penalty_sensitivity.csv).
 
-### Reproducibility and limitations
+## Compilation protocol and noise assumptions
 
-- Only the documented Master Guide reference coupling graphs are used; no participant-designed alternative-topology experiment is included.
-- Ten seeds provide a supplementary simulator robustness check, not hardware-level confidence or generalization to other circuits.
-- q remains provisional pending organizer confirmation; A is a participant-selected and documented penalty, not an organizer-prescribed value.
-- These are simulator results for a four-variable, 16-state problem. No quantum-advantage claim is made.
-- Generative AI assisted with code drafting/review and documentation organization; the participant is responsible for verifying the final code and claims, subject to the event policy.
+- QAOA depth: \(p=1\); the logical QAOA parameters are shared across the compared processor/layout runs (`gamma ≈ 0.43801688`, `beta ≈ 2.76843709`).
+- Basis gates: `{rz, sx, x, cx}`; optimization level 1; SABRE layout/routing for automatic runs; transpiler seed 42; 4,096 shots per seed/configuration.
+- Synthetic noise: single-qubit depolarizing rate `0.001`, CX depolarizing rate `0.005`, and readout error rate `0.01` modeled as an independent symmetric bit-flip. The Master Guide gives the readout error rate but not a confusion matrix, so the symmetric bit-flip channel is an explicit simulation assumption.
+- The circuit's native-basis compilation reports zero native SWAP gates; the separately reported SWAP diagnostic comes from a diagnostic transpilation that retains SWAP gates.
+
+## Interpretation and limitations
+
+- The problem has only 16 states and is solved exactly classically. No quantum-advantage claim is made.
+- \(q=1.0\) remains provisional because the Master Guide does not prescribe a numerical value. Confirm it with the organizer before treating it as official.
+- \(A=0.02\) is participant-selected. Its feasibility threshold is exact for this four-asset instance and current \(q\), not a general rule.
+- PACA-5 and PACA-9 are custom participant-designed supplementary graphs, not official reference processor configurations. Their results are kept separate from the required reference baseline.
+- Single-seed layout results can show observed shot-count differences but cannot establish a statistically significant layout benefit. Ten-seed robustness covers automatic-SABRE layouts for reference A, PACA-5, reference B, and PACA-9; it does not cover fixed-K4 layouts across ten seeds.
+- Aer results are simulator outputs, not hardware measurements. The noise model is synthetic, and conclusions are limited to this circuit, parameter choice, transpiler configuration, and seed set.
+
+## Reproducibility and artifacts
+
+Run `main.ipynb` from the repository root using the project's `.venv` and pinned dependencies. The notebook is the end-to-end benchmark driver. Key artifacts are:
+
+- [`processor_comparison.csv`](results/tables/processor_comparison.csv) — required Processor A/B ideal/noisy baseline.
+- [`classical_solutions.json`](results/tables/classical_solutions.json) — exact enumeration of the 16 bitstrings.
+- [`topology_experiment.csv`](results/tables/topology_experiment.csv) — reference-versus-custom topology results.
+- [`paca_layout_comparison.csv`](results/tables/paca_layout_comparison.csv) — automatic SABRE versus fixed K4-core layout runs.
+- [`robustness_trials.csv`](results/tables/robustness_trials.csv) and [`robustness_summary.csv`](results/tables/robustness_summary.csv) — 40 noisy trials and four ten-seed summary groups.
+- [`paired_robustness_comparison.csv`](results/tables/paired_robustness_comparison.csv) — paired reference A/B comparison.
+- [`q_sensitivity.csv`](results/tables/q_sensitivity.csv) and [`penalty_sensitivity.csv`](results/tables/penalty_sensitivity.csv) — exact classical parameter sensitivities.
+- [`paca_topology_animation.gif`](assets/paca_topology_animation.gif) — white-and-blue supplementary workflow schematic with physical labels `q0`–`q8`.
+
+## AI assistance disclosure
+
+Generative AI tools assisted with code drafting/review, debugging, and documentation organization. The participant remains responsible for understanding and verifying the methods, assumptions, and results, subject to the event's official AI-use policy.
