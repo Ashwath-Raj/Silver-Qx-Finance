@@ -65,6 +65,36 @@ In this instance, Processor B compiles to a shallower circuit with fewer CX gate
 
 See [report.md](report.md) for the full results, robustness intervals, sensitivity analyses, and limitations.
 
+## Custom PACA topology experiments (supplementary)
+
+The Master Guide reference A/B × ideal/noisy table above remains the primary benchmark. PACA-5 and PACA-9 preserve their respective 5- and 9-qubit budgets but change the coupling graphs; they are participant-designed alternatives, not official reference processors. For each custom graph, the notebook compares the automatic SABRE layout with a fixed layout that maps logical qubits 0–3 to physical nodes 0–3, the K4 core. This is a controlled placement diagnostic, not a promise that fixed placement will always be better.
+
+After running the notebook, inspect [topology_experiment.csv](results/tables/topology_experiment.csv) for the reference-versus-custom baseline and [paca_layout_comparison.csv](results/tables/paca_layout_comparison.csv) for automatic-versus-fixed K4 placement. The matching figure is [paca_layout_comparison.png](results/figures/paca_layout_comparison.png). Circuit depth and CX count measure compiled resource cost; valid-portfolio and optimal-portfolio probabilities measure different aspects of sampled solution quality. Interpret them separately.
+
+| Processor | Topology | Mode | Edges | Depth | CX gates | Valid portfolio probability | Optimal portfolio probability |
+|---|---|---|---:|---:|---:|---:|---:|
+| A | Master Guide reference | Ideal | 4 | 43 | 18 | 53.96% | 14.40% |
+| A | Master Guide reference | Noisy | 4 | 43 | 18 | 52.66% | 13.38% |
+| A | PACA-5, automatic SABRE | Noisy | 8 | 24 | 12 | 52.69% | 13.11% |
+| B | Master Guide reference | Ideal | 12 | 35 | 15 | 54.03% | 14.55% |
+| B | Master Guide reference | Noisy | 12 | 35 | 15 | 52.66% | 14.01% |
+| B | PACA-9, automatic SABRE | Noisy | 16 | 24 | 12 | 53.49% | 13.75% |
+
+The table above reproduces the current automatic-layout baseline results. The fixed K4-core layout runs are recorded separately in `paca_layout_comparison.csv` so their measured values can be checked without overwriting the required baseline.
+
+### Measured automatic vs fixed K4-core layout results
+
+| Custom topology | Mode | Layout strategy | Depth | CX gates | Valid portfolio probability | Optimal portfolio probability |
+|---|---|---|---:|---:|---:|---:|
+| PACA-5 | Ideal | Automatic SABRE | 24 | 12 | 54.05% | 13.87% |
+| PACA-5 | Ideal | Fixed K4-core [0,1,2,3] | 24 | 12 | 54.42% | 14.26% |
+| PACA-5 | Noisy | Automatic SABRE | 24 | 12 | 52.69% | 13.11% |
+| PACA-5 | Noisy | Fixed K4-core [0,1,2,3] | 24 | 12 | 53.49% | 13.75% |
+| PACA-9 | Ideal | Automatic SABRE | 24 | 12 | 54.42% | 14.26% |
+| PACA-9 | Ideal | Fixed K4-core [0,1,2,3] | 24 | 12 | 54.42% | 14.26% |
+| PACA-9 | Noisy | Automatic SABRE | 24 | 12 | 53.49% | 13.75% |
+| PACA-9 | Noisy | Fixed K4-core [0,1,2,3] | 24 | 12 | 53.49% | 13.75% |
+
 ## Problem formulation
 
 Each decision variable represents whether an asset is selected:
@@ -91,9 +121,9 @@ Exact classical enumeration identifies **Asset 1 and Asset 4** as the optimal fe
 
 1. **Define the instance.** Load the four-asset returns and covariance matrix and encode the exactly-two-assets constraint.
 2. **Validate classically.** Enumerate all 16 bitstrings, compute the feasible optimum, and validate the QUBO/Ising formulation.
-3. **Build and compile QAOA.** Run the \(p=1\) circuit against the documented reference coupling maps using Qiskit transpilation.
+3. **Build and compile QAOA.** Run the required \(p=1\) baseline against the documented reference maps. Separately evaluate PACA custom maps using automatic SABRE layout and a fixed mapping of the four logical variables to the physical K4 core.
 4. **Simulate ideal and noisy cases.** Record feasibility, optimal-solution probability, utility, depth, CX count, and a separately computed SWAP diagnostic.
-5. **Test robustness and sensitivity.** Compare ten fixed simulator seeds for the two reference processors and perform exact classical sensitivity analyses for \(q\) and \(A\).
+5. **Test robustness and sensitivity.** Compare ten fixed simulator seeds for both reference and custom topologies, compare automatic and K4-core-constrained layouts on PACA graphs, and perform exact classical sensitivity analyses for \(q\) and \(A\).
 
 ## Reproducibility
 
@@ -129,7 +159,7 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 - **\(q=1.0\) is provisional.** The Master Guide's PS-O2 section does not prescribe a numeric \(q\). The repository includes exact sensitivity analysis over alternative values; organizer confirmation is needed before describing \(q=1.0\) as official.
 - **\(A=0.02\) is participant-selected.** Under the current \(q\) and squared-cardinality penalty, exact enumeration gives a strict-feasibility threshold of \(A>0.01\) for this particular instance. This is not a universal or organizer-prescribed threshold.
 - **Decision variables are binary.** The model selects exactly two assets; it is not a continuous-weight portfolio allocation.
-- **Processor maps are the documented references.** The analysis retains the Master Guide reference Processor A and B topologies and does not include participant-designed alternative-topology experiments.
+- **Reference maps remain the required baseline.** PACA-5 and PACA-9 are separately labelled participant-designed supplementary graphs. Their extra edges are evaluated empirically and do not imply better solution quality.
 - **Noise results are simulated.** Aer results are not measurements from quantum hardware. Ten seeds provide a limited simulator robustness check, not evidence of hardware uncertainty or broad generalization.
 - **No quantum-advantage claim is made.** Exact enumeration is the appropriate classical reference for this 16-state instance.
 
@@ -173,7 +203,7 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 
 <p align="center">
   <sub>Built by Team Coughing Baby · SRM University-AP × VIT University AP</sub>
-
+</p>
 
 ## Decision-variable interpretation
 

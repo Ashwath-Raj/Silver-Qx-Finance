@@ -213,7 +213,9 @@ def optimize_qaoa(instance: dict[str,Any], restarts: int=6, maxiter: int=300, se
             "best_expected_scaled_cost":best["expected_scaled_cost"],"restarts":runs,"cost_model":model}
 
 def sample_processor(instance: dict[str,Any], params: dict[str,Any], processor: dict[str,Any],
-                     mode: str="ideal", noise_model=None, shots: int=SHOTS, seed_simulator: int=TRANSPILER_SEED) -> dict[str,Any]:
+                     mode: str="ideal", noise_model=None, shots: int=SHOTS,
+                     seed_simulator: int=TRANSPILER_SEED,
+                     initial_layout: list[int] | None = None) -> dict[str,Any]:
     if mode not in {"ideal", "noisy"}:
         raise ValueError("mode must be either 'ideal' or 'noisy'.")
     if int(shots) < 1:
@@ -221,8 +223,8 @@ def sample_processor(instance: dict[str,Any], params: dict[str,Any], processor: 
     if mode == "noisy" and noise_model is None:
         raise ValueError("noisy mode requires an explicit noise_model.")
     logical=build_qaoa_circuit(params["gamma"],params["beta"],params["cost_model"],measured=True)
-    swap_count=swap_diagnostic(logical,processor)
-    compiled=compile_circuit(logical,processor)
+    swap_count=swap_diagnostic(logical,processor,initial_layout=initial_layout)
+    compiled=compile_circuit(logical,processor,initial_layout=initial_layout)
     simulator=AerSimulator(noise_model=noise_model) if mode=="noisy" else AerSimulator()
     result=simulator.run(compiled,shots=int(shots),seed_simulator=int(seed_simulator)).result()
     counts=result.get_counts(compiled); total=sum(counts.values())
@@ -245,8 +247,11 @@ def sample_processor(instance: dict[str,Any], params: dict[str,Any], processor: 
     exact=float(optimum["utility"]); bestu=None if best is None else float(best["utility"])
     ratio=(bestu/exact) if bestu is not None and exact>1e-12 and bestu>=0 else None
     return {"processor":processor["name"],"mode":mode,"processor_qubits":int(processor["num_qubits"]),
-            **circuit_metrics(compiled),"shots":int(shots),"layout_method":"sabre","routing_method":"sabre",
-            "optimization_level":OPTIMIZATION_LEVEL,"seed_transpiler":TRANSPILER_SEED,"seed_simulator":int(seed_simulator),"seed_simulator":int(seed_simulator),
+            **circuit_metrics(compiled),"shots":int(shots),
+            "layout_method":"fixed_initial_layout" if initial_layout is not None else "sabre",
+            "initial_layout":list(map(int, initial_layout)) if initial_layout is not None else None,
+            "routing_method":"sabre",
+            "optimization_level":OPTIMIZATION_LEVEL,"seed_transpiler":TRANSPILER_SEED,"seed_simulator":int(seed_simulator),
             "swap_count_diagnostic":int(swap_count),"valid_portfolio_probability":valid/total,
             "optimal_portfolio_probability":optimal/total,"sampled_expected_utility_all_outcomes":float(util_all),
             "sampled_expected_utility_given_valid":float(util_valid/valid) if valid else None,

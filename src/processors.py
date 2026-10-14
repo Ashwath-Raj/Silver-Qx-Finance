@@ -64,27 +64,6 @@ def topology_metrics(processor: dict[str, Any]) -> dict[str, Any]:
         "connected": True,
     }
 
-def make_topology_variant(processor: dict[str, Any], label: str, edges: list[list[int]] | list[tuple[int, int]]) -> dict[str, Any]:
-    """Create a validated in-memory alternative without mutating the baseline config."""
-    n = int(processor["num_qubits"])
-    normalized = sorted({tuple(sorted((int(edge[0]), int(edge[1])))) for edge in edges})
-    if len(normalized) != len(edges):
-        raise ValueError(f"{label}: duplicate or repeated undirected edges")
-    if any(u == v or u < 0 or v >= n for u, v in normalized):
-        raise ValueError(f"{label}: edge outside the {n}-qubit topology")
-    graph = nx.Graph()
-    graph.add_nodes_from(range(n))
-    graph.add_edges_from(normalized)
-    if not nx.is_connected(graph):
-        raise ValueError(f"{label}: topology must be connected")
-    variant = dict(processor)
-    variant["name"] = f"{processor['name']} — alternative: {label}"
-    variant["coupling_edges_undirected"] = [list(edge) for edge in normalized]
-    variant["topology_type"] = "participant_designed_alternative_supplementary"
-    variant["is_reference_graph"] = False
-    variant["topology_rationale"] = ALTERNATIVE_TOPOLOGIES.get(processor["name"], {}).get("rationale", label)
-    return variant
-
 # PACA-TOPOLOGY-SPECS-BEGIN
 # Participant-designed alternatives. These do NOT replace the Master Guide reference JSONs.
 PACA_TOPOLOGY_SPECS = {

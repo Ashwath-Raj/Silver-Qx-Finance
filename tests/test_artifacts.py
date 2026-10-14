@@ -33,6 +33,7 @@ def test_required_and_supplementary_tables_have_expected_shapes():
     expected_rows = {
         "results/tables/processor_comparison.csv": 4,
         "results/tables/topology_experiment.csv": 8,
+        "results/tables/paca_layout_comparison.csv": 8,
         "results/tables/robustness_trials.csv": 40,
         "results/tables/robustness_summary.csv": 4,
         "results/tables/paired_robustness_comparison.csv": 3,
@@ -108,17 +109,25 @@ def test_report_covers_reference_architecture_and_custom_topology_artifacts():
     assert "reference processor b compiles to depth 35" in report
     assert "do not establish a statistically clear performance difference" in report
     assert "all three paired-seed 95% t intervals" in report
-    # report.md is intentionally deferred. Validate custom topology labels in the
-    # machine-readable experiment artifact instead of requiring them in the report.
+    # report.md is intentionally deferred. Validate custom-topology claims in machine-readable outputs.
     topology_rows = table_rows("results/tables/topology_experiment.csv")
-    custom_rows = [
-        row for row in topology_rows
-        if row["topology_role"] == "CUSTOM_SUPPLEMENTARY_NOT_OFFICIAL_REFERENCE"
-    ]
+    custom_rows = [row for row in topology_rows if row["topology_role"] == "CUSTOM_SUPPLEMENTARY_NOT_OFFICIAL_REFERENCE"]
     assert len(custom_rows) == 4
     custom_labels = [row["topology_label"].lower() for row in custom_rows]
     assert any("paca-5" in label for label in custom_labels)
     assert any("paca-9" in label for label in custom_labels)
     assert all(label.startswith("custom (not reference):") for label in custom_labels)
+
+    layout_rows = table_rows("results/tables/paca_layout_comparison.csv")
+    assert len(layout_rows) == 8
+    assert {row["layout_strategy"] for row in layout_rows} == {"automatic_sabre", "fixed_k4_core"}
+    assert {row["mode"] for row in layout_rows} == {"ideal", "noisy"}
+    for row in layout_rows:
+        assert int(row["num_qubits"]) == (5 if row["processor_family"] == "Processor A" else 9)
+        assert int(row["shots"]) == 4096
+    fixed_rows = [row for row in layout_rows if row["layout_strategy"] == "fixed_k4_core"]
+    assert len(fixed_rows) == 4
+    assert all(json.loads(row["initial_layout"]) == [0, 1, 2, 3] for row in fixed_rows)
+
     assert "alternative linear chain" not in report
     assert "balanced ring with chords" not in report
