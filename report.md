@@ -61,12 +61,34 @@ Exact enumeration of all \(2^4=16\) bitstrings identifies Asset 1 + Asset 4 as t
 
 ## Controlled Processor A/B results
 
-| Processor | Mode | Qubits | Depth | CX | SWAP diagnostic | Valid probability | Optimal probability | Mean utility (all samples) | Mean utility (valid only) | Best sampled valid objective | Best-sample ratio | Gap |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Processor A | ideal | 5 | 43 | 18 | 2 | 0.5396 | 0.1440 | 0.16359619 | 0.15805430 | 0.20000000 | 1.000000 | 0.00000000 |
-| Processor A | noisy | 5 | 43 | 18 | 2 | 0.5266 | 0.1338 | 0.16114746 | 0.15665276 | 0.20000000 | 1.000000 | 0.00000000 |
-| Processor B | ideal | 9 | 35 | 15 | 1 | 0.5403 | 0.1455 | 0.16387695 | 0.15810212 | 0.20000000 | 1.000000 | 0.00000000 |
-| Processor B | noisy | 9 | 35 | 15 | 1 | 0.5266 | 0.1401 | 0.16186768 | 0.15772833 | 0.20000000 | 1.000000 | 0.00000000 |
+The tables below separate compiled circuit resources, portfolio sampling probabilities, and sampled utility metrics. All probabilities are fractions of 4,096 simulator shots. The SWAP count is a separate diagnostic transpilation, not the literal SWAP count of the native-basis circuit.
+
+### Compiled circuit resources
+
+| Processor | Mode | Qubits | Depth | CX gates | SWAP diagnostic |
+|---|---|---:|---:|---:|---:|
+| Processor A | Ideal | 5 | 43 | 18 | 2 |
+| Processor A | Noisy | 5 | 43 | 18 | 2 |
+| Processor B | Ideal | 9 | 35 | 15 | 1 |
+| Processor B | Noisy | 9 | 35 | 15 | 1 |
+
+### Portfolio sampling probabilities
+
+| Processor | Mode | Valid portfolio probability | Optimal portfolio probability |
+|---|---|---:|---:|
+| Processor A | Ideal | 0.5396 | 0.1440 |
+| Processor A | Noisy | 0.5266 | 0.1338 |
+| Processor B | Ideal | 0.5403 | 0.1455 |
+| Processor B | Noisy | 0.5266 | 0.1401 |
+
+### Sampled utility and objective gap
+
+| Processor | Mode | Mean utility (all samples) | Mean utility (valid only) | Best sampled valid objective | Best-sample ratio | Gap |
+|---|---|---:|---:|---:|---:|---:|
+| Processor A | Ideal | 0.16359619 | 0.15805430 | 0.20000000 | 1.000000 | 0.00000000 |
+| Processor A | Noisy | 0.16114746 | 0.15665276 | 0.20000000 | 1.000000 | 0.00000000 |
+| Processor B | Ideal | 0.16387695 | 0.15810212 | 0.20000000 | 1.000000 | 0.00000000 |
+| Processor B | Noisy | 0.16186768 | 0.15772833 | 0.20000000 | 1.000000 | 0.00000000 |
 
 ## Supplementary experiment — PACA-5/PACA-9 custom topologies and layout mapping
 
