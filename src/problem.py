@@ -246,7 +246,7 @@ def sample_processor(instance: dict[str,Any], params: dict[str,Any], processor: 
     ratio=(bestu/exact) if bestu is not None and exact>1e-12 and bestu>=0 else None
     return {"processor":processor["name"],"mode":mode,"processor_qubits":int(processor["num_qubits"]),
             **circuit_metrics(compiled),"shots":int(shots),"layout_method":"sabre","routing_method":"sabre",
-            "optimization_level":OPTIMIZATION_LEVEL,"seed_transpiler":TRANSPILER_SEED,"seed_simulator":int(seed_simulator),
+            "optimization_level":OPTIMIZATION_LEVEL,"seed_transpiler":TRANSPILER_SEED,"seed_simulator":int(seed_simulator),"seed_simulator":int(seed_simulator),
             "swap_count_diagnostic":int(swap_count),"valid_portfolio_probability":valid/total,
             "optimal_portfolio_probability":optimal/total,"sampled_expected_utility_all_outcomes":float(util_all),
             "sampled_expected_utility_given_valid":float(util_valid/valid) if valid else None,

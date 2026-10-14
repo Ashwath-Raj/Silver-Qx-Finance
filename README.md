@@ -175,3 +175,18 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 <sub>Roster status in the supplied screenshot: 4 confirmed members out of a 2–6 member team. Two teammate display names are shown with ellipses because the screenshot truncates them; their full registered names should replace these shortened labels when confirmed.</sub>
 
 <p align="center"><sub>QFF SRM AP 2026 · Quantum Optimization · PS-O2</sub></p>
+
+
+## Decision-variable interpretation
+
+The organizer clarified that each `x_i` is a binary asset-selection indicator (`x_i ∈ {0,1}`), with exactly `k=2` of the four assets selected. This is a discrete selection QUBO, not a continuous-weight allocation model.
+
+
+## Supplementary experiments
+
+The notebook preserves the required Master Guide reference A/B × ideal/noisy comparison. It additionally runs a separately labelled topology experiment using PACA-5 (a K4 portfolio core plus two peripheral links) and PACA-9 (a K4 portfolio core plus a five-node peripheral ring). They preserve the 5- and 9-qubit budgets but intentionally change edge counts and connectivity. Ten-seed noisy robustness results, exact q sensitivity, and exact cardinality-penalty sensitivity are exported under `results/tables/`; figures are exported under `results/figures/`. These studies do not replace the required baseline.
+
+
+## AI assistance disclosure
+
+Generative AI tools assisted with code drafting/review, debugging, and documentation organization for this project. The participant remains responsible for understanding and verifying all methods, assumptions, and results. This disclosure should be checked against the Hackathon & Competitions Cell's official AI-use policy.

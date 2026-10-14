@@ -84,3 +84,47 @@ def make_topology_variant(processor: dict[str, Any], label: str, edges: list[lis
     variant["is_reference_graph"] = False
     variant["topology_rationale"] = ALTERNATIVE_TOPOLOGIES.get(processor["name"], {}).get("rationale", label)
     return variant
+
+# PACA-TOPOLOGY-SPECS-BEGIN
+# Participant-designed alternatives. These do NOT replace the Master Guide reference JSONs.
+PACA_TOPOLOGY_SPECS = {
+    "Processor A": {
+        "label": "PACA-5 — custom K4 core + two peripheral links",
+        "edges": [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3), (0, 4), (2, 4)],
+        "rationale": "PACA-5 is a participant-designed 5-qubit supplementary topology. Physical nodes 0–3 form a K4 clique that can support direct pairwise interactions among four logical asset variables when the transpiler maps them to that core; node 4 is a peripheral node linked to nodes 0 and 2. Layout is selected by the configured transpiler, so the core is a design hypothesis rather than a guarantee of better performance. Not an official Master Guide reference graph.",
+    },
+    "Processor B": {
+        "label": "PACA-9 — custom K4 core + five-node peripheral ring",
+        "edges": [
+            (0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3),
+            (4, 5), (5, 6), (6, 7), (7, 8), (4, 8),
+            (0, 4), (1, 5), (2, 6), (3, 7), (0, 8),
+        ],
+        "rationale": "PACA-9 is a participant-designed 9-qubit supplementary topology. Nodes 0–3 form a K4 clique, nodes 4–8 form a ring, and five links connect the core to the ring. It has 16 edges and deliberately is not edge-count-matched to the 12-edge reference B graph. Layout is selected by the configured transpiler; additional connectivity does not guarantee lower circuit cost or better noisy solution quality. Not an official Master Guide reference graph.",
+    },
+}
+ALTERNATIVE_TOPOLOGIES = PACA_TOPOLOGY_SPECS
+# PACA-TOPOLOGY-SPECS-END
+
+# PACA-MAKE-TOPOLOGY-VARIANT-BEGIN
+def make_topology_variant(processor, label, edges):
+    """Create a validated custom topology in memory; reference configs remain unchanged."""
+    n = int(processor["num_qubits"])
+    normalized = sorted({tuple(sorted((int(edge[0]), int(edge[1])))) for edge in edges})
+    if len(normalized) != len(edges):
+        raise ValueError(f"{label}: duplicate or repeated undirected edges")
+    if any(u == v or u < 0 or v >= n for u, v in normalized):
+        raise ValueError(f"{label}: edge outside the {n}-qubit topology")
+    graph = nx.Graph()
+    graph.add_nodes_from(range(n))
+    graph.add_edges_from(normalized)
+    if not nx.is_connected(graph):
+        raise ValueError(f"{label}: topology must be connected")
+    variant = dict(processor)
+    variant["name"] = f"{processor['name']} — custom supplementary: {label}"
+    variant["coupling_edges_undirected"] = [list(edge) for edge in normalized]
+    variant["topology_type"] = "participant_designed_custom_supplementary"
+    variant["is_reference_graph"] = False
+    variant["topology_rationale"] = ALTERNATIVE_TOPOLOGIES.get(processor["name"], {}).get("rationale", label)
+    return variant
+# PACA-MAKE-TOPOLOGY-VARIANT-END

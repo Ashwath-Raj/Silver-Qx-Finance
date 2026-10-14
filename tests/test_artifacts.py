@@ -32,9 +32,9 @@ def test_problem_and_benchmark_metadata_are_consistent():
 def test_required_and_supplementary_tables_have_expected_shapes():
     expected_rows = {
         "results/tables/processor_comparison.csv": 4,
-        "results/tables/topology_experiment.csv": 4,
-        "results/tables/robustness_trials.csv": 20,
-        "results/tables/robustness_summary.csv": 2,
+        "results/tables/topology_experiment.csv": 8,
+        "results/tables/robustness_trials.csv": 40,
+        "results/tables/robustness_summary.csv": 4,
         "results/tables/paired_robustness_comparison.csv": 3,
         "results/tables/q_sensitivity.csv": 7,
         "results/tables/penalty_sensitivity.csv": 10,
@@ -43,7 +43,28 @@ def test_required_and_supplementary_tables_have_expected_shapes():
         rows = table_rows(filename)
         assert len(rows) == expected, f"{filename} expected {expected} rows; got {len(rows)}"
     topology_rows = table_rows("results/tables/topology_experiment.csv")
-    assert all(row["topology_label"] == "Master Guide reference" for row in topology_rows)
+    reference_rows = [row for row in topology_rows if row["topology_role"] == "reference_baseline"]
+    custom_rows = [row for row in topology_rows if row["topology_role"] == "CUSTOM_SUPPLEMENTARY_NOT_OFFICIAL_REFERENCE"]
+    expected_modes = {
+        ("Processor A", "ideal"), ("Processor A", "noisy"),
+        ("Processor B", "ideal"), ("Processor B", "noisy"),
+    }
+    assert len(reference_rows) == len(custom_rows) == 4
+    assert {(row["processor_family"], row["mode"]) for row in reference_rows} == expected_modes
+    assert {(row["processor_family"], row["mode"]) for row in custom_rows} == expected_modes
+    assert all(row["topology_label"] == "Master Guide reference" for row in reference_rows)
+    assert all(row["topology_label"].startswith("Custom (not reference):") for row in custom_rows)
+    custom_edges = {
+        row["processor_family"]: int(row["edge_count"])
+        for row in custom_rows if row["mode"] == "ideal"
+    }
+    assert custom_edges == {"Processor A": 8, "Processor B": 16}
+    trials = table_rows("results/tables/robustness_trials.csv")
+    assert len(trials) == 40
+    assert {row["topology_role"] for row in trials} == {
+        "reference_baseline", "CUSTOM_SUPPLEMENTARY_NOT_OFFICIAL_REFERENCE"
+    }
+    assert len(table_rows("results/tables/robustness_summary.csv")) == 4
 
 
 def test_baseline_probabilities_and_gate_metrics_are_valid():
@@ -81,11 +102,13 @@ def test_paired_robustness_figure_exists():
     figure = ROOT / "results/figures/paired_robustness_differences.png"
     assert figure.is_file() and figure.stat().st_size > 10_000
 
-def test_report_covers_reference_architecture_tradeoffs_without_alternative_topologies():
+def test_report_covers_reference_and_custom_architecture_tradeoffs():
     report = (ROOT / "report.md").read_text(encoding="utf-8").lower()
     assert "findings and architecture interpretation" in report
     assert "reference processor b compiles to depth 35" in report
     assert "do not establish a statistically clear performance difference" in report
     assert "all three paired-seed 95% t intervals" in report
+    assert "paca-5" in report and "paca-9" in report
+    assert "not official/reference processor configurations" in report
     assert "alternative linear chain" not in report
     assert "balanced ring with chords" not in report
