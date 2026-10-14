@@ -243,7 +243,3 @@ Run `main.ipynb` from the repository root using the project's `.venv` and pinned
 - [`paired_robustness_comparison.csv`](results/tables/paired_robustness_comparison.csv) — paired reference A/B comparison.
 - [`q_sensitivity.csv`](results/tables/q_sensitivity.csv) and [`penalty_sensitivity.csv`](results/tables/penalty_sensitivity.csv) — exact classical parameter sensitivities.
 - [`paca_topology_animation.gif`](assets/paca_topology_animation.gif) — white-and-blue supplementary workflow schematic with physical labels `q0`–`q8`.
-
-## AI assistance disclosure
-
-Generative AI tools assisted with code drafting/review, debugging, and documentation organization. The participant remains responsible for understanding and verifying the methods, assumptions, and results, subject to the event's official AI-use policy.
