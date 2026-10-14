@@ -72,9 +72,9 @@ Exact enumeration of all \(2^4=16\) bitstrings identifies Asset 1 + Asset 4 as t
 
 This is an **extra participant-designed topology and mapping experiment**, not a replacement for the required Master Guide Processor A/B reference benchmark. The official `processors/processor_A.json` and `processors/processor_B.json` files are unchanged.
 
-<p align="center"><img src="assets/paca_topology_animation.gif" alt="Animated PACA-5 and PACA-9 supplementary topology workflow" width="100%"></p>
+<p align="center"><img src="assets/paca_topology_animation.gif" alt="PACA-5 and PACA-9 coupling maps labelled with physical qubit identifiers q0 through q8; white-and-blue model, map, compile and sample workflow" width="100%"></p>
 
-<p align="center"><sub>Supplementary workflow: logical interactions → custom coupling graph → automatic or fixed K4-core layout → native-basis compilation → noisy sampling.</sub></p>
+<p align="center"><sub>Workflow schematic with explicit physical-qubit IDs q0–q8. It does not depict quantum-state evolution or individual measurement shots. Full metrics and equations are provided in the following sections.</sub></p>
 
 ### Graph design and structural metrics
 

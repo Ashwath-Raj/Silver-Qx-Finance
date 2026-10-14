@@ -33,8 +33,8 @@
 <p><sub>Actual Qiskit-transpiled gate activity · Reference Processor A vs Processor B</sub></p>
 
 <!-- PACA-CUSTOM-TOPOLOGY-ANIMATION -->
-<p align="center"><img src="assets/paca_topology_animation.gif" alt="PACA custom topology animation showing the four-variable QUBO, custom K4-core coupling maps, transpilation and noisy result comparison" width="100%"></p>
-<p align="center"><sub>Additional experiment · PACA-5/PACA-9 custom topologies and fixed K4-core mapping · separate from the required baseline.</sub></p>
+<p align="center"><img src="assets/paca_topology_animation.gif" alt="PACA-5 and PACA-9 coupling maps with every physical node labelled q0 through q8, animated through model, map, compile and sample stages" width="100%"></p>
+<p align="center"><sub>Additional experiment · q-labels identify physical qubits. This clean topology/workflow schematic is not a literal quantum-state trajectory; the measured values and equations are documented below.</sub></p>
 <!-- /PACA-CUSTOM-TOPOLOGY-ANIMATION -->
 
 </div>
