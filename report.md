@@ -17,6 +17,48 @@
 - Bitstring (asset 4 … asset 1): `1001`
 - Best feasible unpenalized objective: `0.2000000000`
 
+## Mathematical formulation and variable definitions
+
+Let the four binary selection variables be
+
+\[
+ x_i \in \{0,1\},\qquad i=1,\ldots,4,\qquad \sum_{i=1}^{4}x_i=2.
+\]
+
+Here, \(x_i=1\) means asset \(i\) is selected; \(x_i=0\) means it is not. The task selects exactly two assets—it is not a continuous portfolio-weight allocation.
+
+The implemented penalized QUBO minimizes
+
+\[
+\boxed{\min_{x\in\{0,1\}^{4}}\; x^{\mathsf T}\Sigma x-q\,\mu^{\mathsf T}x+A\left(\sum_{i=1}^{4}x_i-2\right)^2}
+\]
+
+where \(\mu\) is the expected-return vector, \(\Sigma\) is the risk/covariance matrix, \(q\) controls the return-versus-risk scaling, and \(A\) is the participant-selected penalty for violating the cardinality constraint. For feasible portfolios, the reported utility (maximization orientation) is
+
+\[
+U(x)=q\,\mu^{\mathsf T}x-x^{\mathsf T}\Sigma x,\qquad \text{when }\sum_i x_i=2.
+\]
+
+The instance uses
+
+\[
+\mu=\begin{bmatrix}0.12&0.18&0.10&0.22\end{bmatrix}^{\mathsf T},\qquad q=1.0,\qquad A=0.02,
+\]
+
+with \(q=1.0\) provisional and \(A=0.02\) explicitly participant-selected, not organizer-prescribed. The risk matrix from the Master Guide is
+
+\[
+\Sigma=\begin{bmatrix}
+0.04&0.01&0.02&0.01\\
+0.01&0.09&0.01&0.03\\
+0.02&0.01&0.05&0.02\\
+0.01&0.03&0.02&0.08
+\end{bmatrix}.
+\]
+
+Exact enumeration of all \(2^4=16\) bitstrings identifies Asset 1 + Asset 4 as the best feasible portfolio at the current provisional settings, with utility \(U=0.20\). The numeric \(q\) and penalty \(A\) remain visible experiment assumptions; the sensitivity tables below document how they affect the optimization formulation.
+
+
 ## Controlled Processor A/B results
 
 | Processor | Mode | Qubits | Depth | CX | SWAP diagnostic | Valid probability | Optimal probability | Mean utility (all samples) | Mean utility (valid only) | Best sampled valid objective | Best-sample ratio | Gap |
@@ -25,6 +67,45 @@
 | Processor A | noisy | 5 | 43 | 18 | 2 | 0.5266 | 0.1338 | 0.16114746 | 0.15665276 | 0.20000000 | 1.000000 | 0.00000000 |
 | Processor B | ideal | 9 | 35 | 15 | 1 | 0.5403 | 0.1455 | 0.16387695 | 0.15810212 | 0.20000000 | 1.000000 | 0.00000000 |
 | Processor B | noisy | 9 | 35 | 15 | 1 | 0.5266 | 0.1401 | 0.16186768 | 0.15772833 | 0.20000000 | 1.000000 | 0.00000000 |
+
+## Supplementary experiment — PACA-5/PACA-9 custom topologies and layout mapping
+
+This is an **extra participant-designed topology and mapping experiment**, not a replacement for the required Master Guide Processor A/B reference benchmark. The official `processors/processor_A.json` and `processors/processor_B.json` files are unchanged.
+
+<p align="center"><img src="assets/paca_topology_animation.gif" alt="Animated PACA-5 and PACA-9 supplementary topology workflow" width="100%"></p>
+
+<p align="center"><sub>Supplementary workflow: logical interactions → custom coupling graph → automatic or fixed K4-core layout → native-basis compilation → noisy sampling.</sub></p>
+
+### Graph design and structural metrics
+
+| Graph | Physical qubits | Edges | Construction | Diameter | Average shortest path |
+|---|---:|---:|---|---:|---:|
+| Reference A | 5 | 4 | Master Guide reference graph | 3 | 1.800 |
+| PACA-5 | 5 | 8 | K4 core on physical qubits 0–3 + two peripheral links to qubit 4 | 2 | 1.200 |
+| Reference B | 9 | 12 | Master Guide reference graph | 4 | 1.944 |
+| PACA-9 | 9 | 16 | K4 core on physical qubits 0–3 + five-node peripheral ring and five core/ring links | 2 | 1.556 |
+
+The four logical variables interact pairwise in the QUBO. Each PACA graph's K4 core therefore offers a physical subgraph containing all six pairwise connections among four mapped qubits. This is a structural design rationale; the fixed-layout run tests that mapping explicitly rather than assuming automatic SABRE chooses it.
+
+### Noisy layout comparison
+
+The fixed-core strategy sets `initial_layout=[0, 1, 2, 3]`, mapping logical input qubits 0–3 onto physical core qubits 0–3. The automatic strategy delegates initial placement to SABRE. Both use the same logical p=1 QAOA parameters, optimization level 1, basis gates `{rz, sx, x, cx}`, transpiler seed 42, 4,096 shots, and the same synthetic noise model.
+
+| Configuration | Layout | Qubits | Edges | Depth | CX | Valid portfolios | Optimal portfolio |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Processor A · Master Guide reference | SABRE | 5 | 4 | 43 | 18 | 52.66% | 13.38% |
+| Custom (not reference): PACA-5 | PACA · automatic SABRE | 5 | 8 | 24 | 12 | 52.69% | 13.11% |
+| Custom (not reference): PACA-5 | PACA · fixed K4 core | 5 | 8 | 24 | 12 | 53.49% | 13.75% |
+| Processor B · Master Guide reference | SABRE | 9 | 12 | 35 | 15 | 52.66% | 14.01% |
+| Custom (not reference): PACA-9 | PACA · automatic SABRE | 9 | 16 | 24 | 12 | 53.49% | 13.75% |
+| Custom (not reference): PACA-9 | PACA · fixed K4 core | 9 | 16 | 24 | 12 | 53.49% | 13.75% |
+
+For the noisy runs, the fixed K4 layout raises PACA-5's observed optimal-portfolio probability from 13.11% to 13.75% (+0.64 percentage points) without changing its 24-depth/12-CX compiled-resource count. PACA-9's automatic and fixed layouts both yield 13.75% optimal-portfolio probability in this seed-42 run. These are finite-shot simulator observations—not a general claim that one layout or topology is universally superior.
+
+Against the required noisy reference results, PACA-5 with fixed K4 layout yields 13.75% optimal sampling versus 13.38% for Reference A, while PACA-9 yields 13.75% versus 14.01% for Reference B. Both custom graphs compile to depth 24 and 12 CX gates in the recorded runs, but the comparison must be interpreted alongside sampling quality and the fact that PACA-9 has 16 edges versus 12 in Reference B. No hardware-performance or quantum-advantage claim follows from these simulations.
+
+Machine-readable artifacts: [`paca_layout_comparison.csv`](results/tables/paca_layout_comparison.csv), [`topology_experiment.csv`](results/tables/topology_experiment.csv), and [`topology_experiment_metadata.json`](results/tables/topology_experiment_metadata.json). The companion static figure is [`paca_layout_comparison.png`](results/figures/paca_layout_comparison.png).
+
 
 ## Compilation protocol
 
@@ -40,7 +121,7 @@
 - The numeric q is not specified in the Master Guide and was selected provisionally for this run; obtain organizer confirmation before treating it as official.
 - Penalty A is participant-selected and documented, not organizer-prescribed; exact enumeration validates the selected value for this instance and current q.
 - Decision variables: the organizer clarified that x_i are binary selection indicators in {0,1}, with exactly k=2 selected assets. A continuous-weight allocation is a different model and is not used here.
-- Coupling graphs are reference architectures. The included A/B runs use the documented reference edges; any participant-designed topology must be reported separately.
+- The required A/B baseline uses the documented reference edges. PACA-5 and PACA-9 are separately labelled participant-designed supplementary topologies; their results do not replace the baseline.
 - The synthetic noise results are Aer simulation measurements, not hardware measurements.
 - Generative AI assisted code drafting/review and documentation organization; the participant remains responsible for checking every assumption and result, subject to the event AI-use policy.
 
@@ -49,9 +130,9 @@
 Run every code cell in `main.ipynb` from the repository root after setting `Q` in the configuration cell. Tables are regenerated under `results/tables/`, figures under `results/figures/`, and the report at `report.md`.
 
 
-## Supplementary experiments: reference robustness and parameter sensitivity
+## Supplementary experiments: topology, robustness, and parameter sensitivity
 
-The four Processor A/B × ideal/noisy rows above remain the required Master Guide reference baseline. The supplementary robustness experiment uses the same two reference coupling maps and ten simulator seeds per processor; it does not include participant-designed alternative topologies.
+The four Processor A/B × ideal/noisy rows above remain the required Master Guide reference baseline. Separate supplementary outputs compare PACA-5 and PACA-9 with automatic SABRE and fixed K4-core placement. The 40-row robustness artifact covers ten simulator seeds for each of the two reference graphs and two custom graphs.
 
 ### Reference topology and compiled-resource comparison
 

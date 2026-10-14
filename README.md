@@ -32,6 +32,11 @@
 
 <p><sub>Actual Qiskit-transpiled gate activity · Reference Processor A vs Processor B</sub></p>
 
+<!-- PACA-CUSTOM-TOPOLOGY-ANIMATION -->
+<p align="center"><img src="assets/paca_topology_animation.gif" alt="PACA custom topology animation showing the four-variable QUBO, custom K4-core coupling maps, transpilation and noisy result comparison" width="100%"></p>
+<p align="center"><sub>Additional experiment · PACA-5/PACA-9 custom topologies and fixed K4-core mapping · separate from the required baseline.</sub></p>
+<!-- /PACA-CUSTOM-TOPOLOGY-ANIMATION -->
+
 </div>
 ---
 
@@ -94,6 +99,26 @@ The table above reproduces the current automatic-layout baseline results. The fi
 | PACA-9 | Ideal | Fixed K4-core [0,1,2,3] | 24 | 12 | 54.42% | 14.26% |
 | PACA-9 | Noisy | Automatic SABRE | 24 | 12 | 53.49% | 13.75% |
 | PACA-9 | Noisy | Fixed K4-core [0,1,2,3] | 24 | 12 | 53.49% | 13.75% |
+
+## Supplementary experiment: PACA custom topology and layout mapping
+
+This is an **additional participant-designed experiment** alongside—not instead of—the required Master Guide Processor A/B baseline. The custom graphs preserve the A/B qubit budgets but intentionally change connectivity and edge count. They are not official/reference processor configurations.
+
+The animation above shows the complete workflow. The table below records the seed-42 noisy run in numeric form; detailed ideal/noisy results and all seeds remain in the CSV artifacts.
+
+| Configuration | Layout | Qubits | Edges | Depth | CX | Valid portfolios | Optimal portfolio |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Processor A · Master Guide reference | SABRE | 5 | 4 | 43 | 18 | 52.66% | 13.38% |
+| Custom (not reference): PACA-5 | PACA · automatic SABRE | 5 | 8 | 24 | 12 | 52.69% | 13.11% |
+| Custom (not reference): PACA-5 | PACA · fixed K4 core | 5 | 8 | 24 | 12 | 53.49% | 13.75% |
+| Processor B · Master Guide reference | SABRE | 9 | 12 | 35 | 15 | 52.66% | 14.01% |
+| Custom (not reference): PACA-9 | PACA · automatic SABRE | 9 | 16 | 24 | 12 | 53.49% | 13.75% |
+| Custom (not reference): PACA-9 | PACA · fixed K4 core | 9 | 16 | 24 | 12 | 53.49% | 13.75% |
+
+**What this tests.** PACA-5 uses a K4 core plus two peripheral links (8 edges); PACA-9 uses a K4 core plus a five-node peripheral ring (16 edges). The fixed layout explicitly maps logical variables 0–3 to physical qubits `[0, 1, 2, 3]`; the automatic run leaves placement to SABRE. Both use the same logical p=1 QAOA parameters, transpiler seed 42, 4,096 shots, and the documented synthetic noise rates.
+
+**Interpretation.** Lower compiled depth and CX count indicate lower compiled resource cost for this instance, not automatically better sampling quality. The noisy optimal-portfolio probability depends on both topology and layout; these finite-shot simulator results do not establish hardware performance or quantum advantage. See [`results/tables/paca_layout_comparison.csv`](results/tables/paca_layout_comparison.csv) and [`results/figures/paca_layout_comparison.png`](results/figures/paca_layout_comparison.png) for the machine-readable comparison and companion figure.
+
 
 ## Problem formulation
 
@@ -185,6 +210,8 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 - [processor_gate_schedule.csv](results/tables/processor_gate_schedule.csv) — events used in the gate animation
 - [paired_robustness_comparison.csv](results/tables/paired_robustness_comparison.csv) — paired ten-seed Processor B minus A comparisons
 - [q_sensitivity.csv](results/tables/q_sensitivity.csv) and [penalty_sensitivity.csv](results/tables/penalty_sensitivity.csv) — exact parameter sensitivity tables
+- [topology_experiment.csv](results/tables/topology_experiment.csv) and [paca_layout_comparison.csv](results/tables/paca_layout_comparison.csv) — reference-vs-custom topology results and automatic-vs-fixed K4 layout comparison
+- [paca_topology_animation.gif](assets/paca_topology_animation.gif) — animated PACA supplementary experiment overview
 
 ---
 
