@@ -66,7 +66,7 @@ The same logical QAOA circuit and optimized angles are used for both processor c
 
 <sub>*The SWAP diagnostic comes from a separate diagnostic transpilation that retains SWAP operations; it is not the literal SWAP count of the native-basis circuit.</sub>
 
-In this instance, Processor B compiles to a shallower circuit with fewer CX gates and has a slightly higher noisy optimal-portfolio probability. The supplementary ten-seed comparison is more cautious: the 95% paired t-intervals for all three reported metrics include zero, so these runs do not establish a statistically clear performance difference.
+In this instance, Processor B compiles to a shallower circuit with fewer CX gates and has a slightly higher noisy optimal-portfolio probability in the baseline run. However, the ten-seed paired comparison of the two reference processors has 95% paired t-intervals that include zero for all three reported metrics. These runs do not establish a statistically clear performance difference between Processor A and Processor B.
 
 See [report.md](report.md) for the full results, robustness intervals, sensitivity analyses, and limitations.
 
@@ -134,8 +134,7 @@ The reported economic utility for feasible portfolios is
 
 <p align="center"><img src="assets/equations/economic_utility.png" alt="Economic utility equals expected return contribution minus portfolio risk" width="100%"></p>
 
-The expected-return vector and covariance matrix are transcribed from **QFF SRM APPhase 1 Master Guide.pdf, page 4**. The numeric \(q\) and penalty \(A\) are experiment settings, not official values prescribed by the guide.
-
+The expected-return vector and risk/covariance matrix are taken from `QFF_Phase_1_Master_Guide.pdf`, page 4. The numerical \(q\) and penalty \(A\) are experiment settings, not official values prescribed by the guide.
 Exact classical enumeration identifies **Asset 1 and Asset 4** as the optimal feasible portfolio at the current provisional parameters:
 
 <p align="center">
@@ -229,16 +228,6 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
 <p align="center">
   <sub>Built by Team Coughing Baby · SRM University-AP × VIT University AP</sub>
 </p>
-
-## AI-assistance disclosure
-
-AI-based tools were used as support during development for interpreting
-requirements, reviewing and drafting code, troubleshooting, and improving
-technical documentation. The team remains responsible for the submitted
-implementation, experimental design, results, and conclusions. The team should
-review and validate the code and reported outputs against the Master Guide.
-AI assistance does not replace the classical reference, simulator measurements,
-or the limitations stated in this report.
 
 ## Decision-variable interpretation
 
