@@ -12,23 +12,38 @@
 
 ## Mathematical formulation
 
-Let \(x_i=1\) mean asset \(i\) is selected, and \(x_i=0\) otherwise. The required cardinality is
+Let \(x_i\in\{0,1\}\) denote whether asset \(i\) is selected: \(x_i=1\) indicates selection and \(x_i=0\) indicates exclusion. The problem requires selecting exactly two of the four assets:
 
 $$
- x_i\in\{0,1\},\quad i=1,\ldots,4,\qquad \sum_{i=1}^{4}x_i=2.
+x_i\in\{0,1\},\quad i=1,\ldots,4,\qquad
+\sum_{i=1}^{4}x_i=2.
 $$
 
-The implemented penalized QUBO minimizes
+The binary decision variables are encoded as a Quadratic Unconstrained Binary Optimization (QUBO) problem by incorporating the cardinality constraint into the objective as a squared penalty:
 
 $$
-\boxed{\min_{x\in\{0,1\}^{4}}\; x^{\mathsf T}\Sigma x-q\,\mu^{\mathsf T}x+A\left(\sum_{i=1}^{4}x_i-2\right)^2}
+\boxed{
+\min_{x\in\{0,1\}^{4}}
+\left[
+x^{\mathsf T}\Sigma x
+-q\,\mu^{\mathsf T}x
++A\left(\sum_{i=1}^{4}x_i-2\right)^2
+\right]
+}
 $$
 
-where \(\mu\) is the expected-return vector, \(\Sigma\) is the risk/covariance matrix, \(q\) scales the return term against risk, and \(A\) penalizes violations of the cardinality constraint. The instance uses \(q=1.0\) and \(A=0.02\), both explicit experiment choices rather than official parameters.
+Here, \(\mu\) is the expected-return vector, \(\Sigma\) is the risk/covariance matrix, \(q\) scales the contribution of expected return relative to risk, and \(A\) penalizes solutions that violate the requirement to select exactly two assets. The formulation therefore remains a **binary asset-selection problem**, rather than a continuous portfolio-weight optimization problem.
+
+The instance uses the following input data:
 
 $$
-\mu=\begin{bmatrix}0.12&0.18&0.10&0.22\end{bmatrix}^{\mathsf T},\qquad
-\Sigma=\begin{bmatrix}
+\mu=
+\begin{bmatrix}
+0.12&0.18&0.10&0.22
+\end{bmatrix}^{\mathsf T},
+\qquad
+\Sigma=
+\begin{bmatrix}
 0.04&0.01&0.02&0.01\\
 0.01&0.09&0.01&0.03\\
 0.02&0.01&0.05&0.02\\
@@ -36,14 +51,17 @@ $$
 \end{bmatrix}.
 $$
 
-For any bitstring, the code can calculate the unpenalized score
+The experiment uses \(q=1.0\) and \(A=0.02\). These are **participant-selected experimental parameters**, not values prescribed by the QFF Master Guide. The guide does not specify a numerical value for \(q\) or a mandatory method for choosing the penalty strength \(A\).
+
+For this instance, exact classical enumeration shows that \(A>0.01\) is required for the minimum-cost QUBO state to be strictly feasible under the implemented squared-cardinality penalty. At \(A=0.01\), a feasible and an infeasible state tie for the minimum; the selected value \(A=0.02\) clears this threshold. This is an instance-specific feasibility justification, not a claim that \(A=0.02\) is the universally optimal penalty or QAOA parameter.
+
+For evaluating sampled bitstrings, the implementation also calculates the unpenalized score
 
 $$
 U(x)=q\,\mu^{\mathsf T}x-x^{\mathsf T}\Sigma x.
 $$
 
-This score is interpreted as portfolio utility when \(\sum_i x_i=2\). For infeasible sampled bitstrings, it is a diagnostic score only; feasibility is reported separately.
-
+For feasible bitstrings satisfying \(\sum_i x_i=2\), this score represents the objective's return-minus-risk utility under the selected \(q\). For infeasible bitstrings, it is reported only as a diagnostic value; feasibility is assessed separately by checking the cardinality constraint. This distinction prevents a high unpenalized score from being mistaken for a valid portfolio.
 ## Exact classical reference
 
 Exact enumeration of all \(2^4=16\) bitstrings identifies **Asset 1 + Asset 4** as the best feasible portfolio at the current provisional settings. With the report's bit order of Asset 4 through Asset 1, the bitstring is `1001`, and the feasible utility is `0.20`. Since the state space contains only 16 bitstrings, this is a classical exact benchmark, not evidence of quantum advantage.
