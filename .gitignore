@@ -7,3 +7,6 @@ __pycache__/
 # Local safety backups
 *.before-penalty-update
 main.ipynb.before-penalty-fix-*
+
+# Generated submission archives
+dist/*.zip

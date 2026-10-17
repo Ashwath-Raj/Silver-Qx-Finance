@@ -1,0 +1,29 @@
+{
+  "status": "awaiting_official_specifications",
+  "problem": "PS-O2",
+  "enhanced_problem_statement": {
+    "received": false,
+    "source": null,
+    "sha256": null
+  },
+  "processor_c": {
+    "received": false,
+    "qubit_count": null,
+    "coupling_edges": null,
+    "basis_gates": null,
+    "noise_model": null,
+    "source": null
+  },
+  "processor_d": {
+    "implemented": false,
+    "qubit_count": null,
+    "connectivity_constraints": null,
+    "basis_gates": null,
+    "noise_model": null,
+    "source": null
+  },
+  "execution_gate": {
+    "official_start_confirmed": false,
+    "c_d_execution_allowed": false
+  }
+}
