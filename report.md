@@ -231,6 +231,28 @@ Figure: [`penalty_sensitivity.png`](results/figures/penalty_sensitivity.png). Ta
 - Single-seed layout results can show observed shot-count differences but cannot establish a statistically significant layout benefit. Ten-seed robustness covers automatic-SABRE layouts for reference A, PACA-5, reference B, and PACA-9; it does not cover fixed-K4 layouts across ten seeds.
 - Aer results are simulator outputs, not hardware measurements. The noise model is synthetic, and conclusions are limited to this circuit, parameter choice, transpiler configuration, and seed set.
 
+## Proposed Processor D — design concept only
+
+**Status:** conceptual proposal only. Processor D was not implemented, executed,
+or evaluated in Phase 1. The measured results remain the reference Processor A/B
+runs and the separately labelled supplementary topology experiments.
+
+A candidate starting point for a future custom Processor D is a fully connected
+four-qubit core (the six pairwise edges of a K4 graph). This can directly represent
+all pairwise asset interactions for the four-asset PS-O2 problem when the physical
+coupling map and qubit placement support the embedding. Additional qubits should
+have a documented purpose, such as providing alternative routing paths. More qubits
+or edges alone do not demonstrate improved performance.
+
+Before implementation, document the target backend or synthetic coupling map,
+qubit roles, mapping, and noise assumptions. Compare against A/B using matched
+QUBO parameters, shot counts, transpilation settings, noise assumptions, and seeds.
+Measure feasible-portfolio probability, optimal-portfolio probability, compiled
+depth, two-qubit-gate count, routing overhead, and multi-seed uncertainty.
+
+This is a design proposal, not an implemented or tested processor. Processor D
+is outside the Phase 1 execution scope.
+
 ## Reproducibility and artifacts
 
 Run `main.ipynb` from the repository root using the project's `.venv` and pinned dependencies. The notebook is the end-to-end benchmark driver. Key artifacts are:

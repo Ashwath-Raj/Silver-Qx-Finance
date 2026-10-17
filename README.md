@@ -230,6 +230,16 @@ The guide specifies a 1% readout error rate but does not provide a readout confu
   <sub>Built by Team Coughing Baby · SRM University-AP × VIT University AP</sub>
 </p>
 
+## AI-assistance disclosure
+
+AI-based tools were used as support during development for interpreting
+requirements, reviewing and drafting code, troubleshooting, and improving
+technical documentation. The team remains responsible for the submitted
+implementation, experimental design, results, and conclusions. The team should
+review and validate the code and reported outputs against the Master Guide.
+AI assistance does not replace the classical reference, simulator measurements,
+or the limitations stated in this report.
+
 ## Decision-variable interpretation
 
 This is a discrete selection QUBO, not a continuous-weight allocation model.
