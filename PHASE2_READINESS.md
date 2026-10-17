@@ -4,9 +4,12 @@ Project: Silver-Qx-Finance
 Problem: PS-O2 — Portfolio Optimization with QAOA
 
 ## Current scope
-This is a preparation scaffold, not a completed Phase 2 implementation.
-Processor C, custom Processor D, and enhanced problem requirements remain
-pending the official specifications and start authorization.
+This is a Phase 2 preparation scaffold, not a claim of completed Phase 2 work.
+The generic processor loader and routing path accept additional processor definitions.
+The official Drive directions are linked from the learning workspace, but their
+contents have not yet been ingested into this repository. Processor C's exact
+specification, custom Processor D constraints, and enhanced PS-O2 rules remain
+unintegrated; no official C/D topology or performance is invented.
 
 ## Preserve
 - Processor A/B definitions and baseline results.

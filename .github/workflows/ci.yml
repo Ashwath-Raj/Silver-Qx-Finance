@@ -2,7 +2,7 @@ name: QFF repository checks
 
 on:
   push:
-    branches: [main]
+    branches: [main, phase2/readiness-scaffold]
   pull_request:
   workflow_dispatch:
 

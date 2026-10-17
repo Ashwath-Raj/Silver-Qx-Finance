@@ -12,25 +12,72 @@ REFERENCE_EDGES = {
 }
 
 def load_processor(path: str | Path) -> dict[str, Any]:
+    """Load and validate any processor JSON; apply fixed size rules only to reference A/B."""
     with Path(path).open("r", encoding="utf-8") as f:
         item = json.load(f)
-    n = int(item["num_qubits"])
-    edges = {tuple(sorted(map(int, edge))) for edge in item["coupling_edges_undirected"]}
-    if len(edges) != len(item["coupling_edges_undirected"]):
-        raise ValueError(f"{path}: duplicate coupling edge")
-    if any(u < 0 or v >= n or u == v for u, v in edges):
-        raise ValueError(f"{path}: edge outside {n}-qubit graph")
+
+    if not isinstance(item, dict):
+        raise ValueError(f"{path}: processor definition must be a JSON object")
+
+    name = item.get("name")
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError(f"{path}: processor name must be a non-empty string")
+
+    try:
+        raw_n = item["num_qubits"]
+        n = int(raw_n)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"{path}: num_qubits must be a positive integer") from exc
+    if isinstance(raw_n, bool) or n < 1 or (isinstance(raw_n, float) and not raw_n.is_integer()):
+        raise ValueError(f"{path}: num_qubits must be a positive integer")
+
+    raw_edges = item.get("coupling_edges_undirected")
+    if not isinstance(raw_edges, list):
+        raise ValueError(f"{path}: coupling_edges_undirected must be a list")
+
+    edges: set[tuple[int, int]] = set()
+    for index, edge in enumerate(raw_edges):
+        if not isinstance(edge, (list, tuple)) or len(edge) != 2:
+            raise ValueError(f"{path}: coupling edge {index} must contain exactly two qubit indices")
+        try:
+            raw_u, raw_v = edge
+            u, v = int(raw_u), int(raw_v)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"{path}: coupling edge {index} contains a non-integer qubit index") from exc
+        if (
+            isinstance(raw_u, bool) or isinstance(raw_v, bool)
+            or (isinstance(raw_u, float) and not raw_u.is_integer())
+            or (isinstance(raw_v, float) and not raw_v.is_integer())
+        ):
+            raise ValueError(f"{path}: coupling edge {index} contains a non-integer qubit index")
+        if u < 0 or v < 0 or u >= n or v >= n or u == v:
+            raise ValueError(f"{path}: coupling edge {index} is outside the {n}-qubit graph or is a self-loop")
+        normalized = tuple(sorted((u, v)))
+        if normalized in edges:
+            raise ValueError(f"{path}: duplicate coupling edge {normalized}")
+        edges.add(normalized)
+
     graph = nx.Graph()
     graph.add_nodes_from(range(n))
     graph.add_edges_from(edges)
     if not nx.is_connected(graph):
         raise ValueError(f"{path}: coupling graph must be connected")
-    if item["name"] == "Processor A" and n != 5:
+
+    if name == "Processor A" and n != 5:
         raise ValueError("Processor A must contain 5 qubits")
-    if item["name"] == "Processor B" and n != 9:
+    if name == "Processor B" and n != 9:
         raise ValueError("Processor B must contain 9 qubits")
-    item["topology_type"] = "reference_architecture"
-    item["is_reference_graph"] = edges == REFERENCE_EDGES[item["name"]]
+
+    # The official A/B graphs are the only reference maps currently encoded here.
+    # New processor names (including a future Processor C) remain unclassified until
+    # their official topology and status are supplied; never index REFERENCE_EDGES blindly.
+    if name in REFERENCE_EDGES:
+        item["topology_type"] = "reference_architecture"
+        item["is_reference_graph"] = edges == REFERENCE_EDGES[name]
+    else:
+        item.setdefault("topology_type", "unclassified_processor")
+        item["is_reference_graph"] = False
+
     return item
 
 def build_synthetic_noise_model() -> NoiseModel:

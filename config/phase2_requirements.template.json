@@ -1,5 +1,5 @@
 {
-  "status": "awaiting_official_specifications",
+  "status": "awaiting_official_specification_ingestion",
   "problem": "PS-O2",
   "enhanced_problem_statement": {
     "received": false,
@@ -25,5 +25,10 @@
   "execution_gate": {
     "official_start_confirmed": false,
     "c_d_execution_allowed": false
+  },
+  "workspace_dossier": {
+    "linked_in_learning_workspace": true,
+    "content_ingested": false,
+    "source": "QFF SRMAP learning workspace > PS-O2 > Open Official Directions (Google Drive)"
   }
 }

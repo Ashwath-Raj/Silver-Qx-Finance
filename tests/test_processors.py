@@ -105,3 +105,30 @@ def test_invalid_explicit_layouts_are_rejected(bad_layout):
     variant = make_topology_variant(processor, "test", ALTERNATIVE_TOPOLOGIES["Processor A"]["edges"])
     with pytest.raises(ValueError, match="initial_layout"):
         compile_circuit(QuantumCircuit(4), variant, initial_layout=bad_layout)
+
+
+def test_unrecognized_processor_name_loads_as_unclassified_without_reference_lookup(tmp_path):
+    """Future processor definitions must not be forced into the A/B registry."""
+    data = {
+        "name": "Processor C",
+        "num_qubits": 4,
+        "coupling_edges_undirected": [[0, 1], [1, 2], [2, 3], [3, 0]],
+        "basis_gates": ["rz", "sx", "x", "cx"],
+        "noise_model": {
+            "one_qubit_depolarizing": 0.001,
+            "cx_depolarizing": 0.005,
+            "readout_error": 0.01,
+        },
+    }
+    path = tmp_path / "processor_C.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+    processor = load_processor(path)
+    metrics = topology_metrics(processor)
+
+    assert processor["name"] == "Processor C"
+    assert processor["topology_type"] == "unclassified_processor"
+    assert processor["is_reference_graph"] is False
+    assert metrics["connected"] is True
+    assert metrics["num_qubits"] == 4
+    assert metrics["edge_count"] == 4
