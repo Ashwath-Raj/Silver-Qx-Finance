@@ -482,9 +482,21 @@ def main() -> int:
         ("pair_distance","Distance"),("XX","XX"),("YY","YY"),("ZZ","ZZ"),
         ("fidelity","Fidelity"),("fidelity_se","Fidelity SE")
     ])
-    readme_table = markdown_table(condition_rows, [
+    # The README uses percentage formatting and a compact table; the full-precision
+    # decimal metrics remain available in the CSVs and the detailed report.
+    readme_rows = []
+    for row in condition_rows:
+        view = dict(row)
+        view["selected_F"] = f"{float(row['selected_F']):.2f}"
+        view["objective_ratio_selected_valid"] = f"{float(row['objective_ratio_selected_valid']):.3f}"
+        view["valid_solution_frequency"] = f"{float(row['valid_solution_frequency']):.2%}"
+        view["p_opt"] = f"{float(row['p_opt']):.2%}"
+        for key in ("cx", "depth", "swaps"):
+            view[key] = str(row[key])
+        readme_rows.append(view)
+    readme_table = markdown_table(readme_rows, [
         ("processor","Processor"),("condition","Condition"),("selected_portfolio_x0_to_x3","Selected"),
-        ("selected_F","F"),("objective_ratio_selected_valid","Ratio"),("valid_solution_frequency","Valid"),
+        ("selected_F","F(x)"),("objective_ratio_selected_valid","F/F*"),("valid_solution_frequency","Valid"),
         ("p_opt","P(opt)"),("cx","CX"),("depth","Depth"),("swaps","SWAPs")
     ])
     readme_generated = (

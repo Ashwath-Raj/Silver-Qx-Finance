@@ -1,150 +1,173 @@
 <div align="center">
-  <table border="0" cellpadding="8">
-    <tr>
-      <td align="center" valign="middle" bgcolor="#F5F1E2">
-        <img src="Phase%20One/assets/branding/srm-ap-logo.png" alt="SRM University-AP" width="160">
-      </td>
-      <td align="center" valign="middle" bgcolor="#F5F1E2">
-        <img src="Phase%20One/assets/branding/qiskit-fall-fest-2026-badge-crop.png" alt="Qiskit Fall Fest 2026" width="84">
-      </td>
-    </tr>
-  </table>
-  <p><sub>QFF 2026 · QUANTUM OPTIMIZATION · PHASE 2</sub></p>
-  <h1>Silver-Qx-Finance</h1>
-  <h3>PS-O2 · Constraint-Aware Portfolio Selection</h3>
-  <p><sub>TEAM: Coughing Baby · SRM University-AP × VIT-AP</sub></p>
+
+<table align="center" border="0" cellpadding="6">
+  <tr>
+    <td align="center" valign="middle" bgcolor="#F5F1E2">
+      <img src="Phase%20One/assets/branding/srm-ap-logo.png" alt="SRM University-AP" width="165">
+    </td>
+    <td align="center" valign="middle" bgcolor="#F5F1E2">
+      <img src="Phase%20One/assets/branding/qiskit-fall-fest-2026-badge-crop.png" alt="Qiskit Fall Fest 2026" width="82">
+    </td>
+  </tr>
+</table>
+
+<p><sub>QFF SRM AP 2026 · QUANTUM OPTIMIZATION</sub></p>
+<h1>Portfolio Optimization with QAOA</h1>
+<h3>PS-O2 · Phase 2 Benchmark</h3>
+<h2>✦ C O U G H I N G &nbsp; B A B Y ✦</h2>
+<p><sub>TEAM PROJECT · SRM UNIVERSITY-AP × VIT-AP</sub></p>
+<p>
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white" alt="Python 3.12">
+  <img src="https://img.shields.io/badge/Qiskit-QAOA-6929C4?style=flat-square" alt="Qiskit QAOA">
+  <img src="https://img.shields.io/badge/QFF-Phase%202-2F6F44?style=flat-square" alt="QFF Phase 2">
+  <img src="https://img.shields.io/badge/Processor%20D-D1%20Selected-B32025?style=flat-square" alt="Processor D1 selected">
+</p>
+<p><img src="results/figures/processor_d_top3_comparison.png" alt="Top three Processor D coupling graphs compared during the final selection" width="100%"></p>
+<p><sub>Measured candidate sweep · K4 asset core · selected six-qubit D1 architecture</sub></p>
+
 </div>
 
 ---
 
-## Project status
+## At a glance
 
-**Processor D1 is selected and installed in the finalization bundle.** The six-qubit K4-tail graph was chosen after a three-candidate benchmark with the unchanged organizer utilities. The runner below regenerates the final A/B/D comparisons, Processor D Bell measurements, the full D penalty sweep, figures, tables, and this repository's generated result summary.
+| Item | Final result |
+|---|---|
+| Exact classical optimum | **$F^*=4.75$** · bitstring `1100` · assets 0 and 1 |
+| D1 compiled resources | **12 CX · depth 23 · 0 SWAPs** |
+| Noisy valid-portfolio frequency | A: 44.87% · B: 45.56% · D1: **45.92%** |
+| Noisy optimal-portfolio probability | A: 24.39% · B: **24.61%** · D1: 24.07% |
+| Experimental protocol | $p=1$ QAOA · 4,096 shots · five optimization starts |
+| Scientific scope | Synthetic-noise simulation; no quantum-advantage claim |
 
-The benchmark is still a synthetic-noise simulation, not a real-device result. Small Bell-fidelity differences between candidates are not treated as statistically significant. No quantum-advantage claim is made: the PS-O2 instance has only four binary variables and can be solved exactly by enumerating 16 states.
+This is a small, controlled optimization study. Four binary decision variables produce only 16 bitstrings, so exact classical enumeration is the ground-truth reference. The strongest measured result for D1 is its compiled-resource reduction, not a universal improvement in every solution-quality metric.
 
 ## Key results
 
 <!-- BEGIN GENERATED RESULTS -->
 
-### Reference penalty (λ = 2)
+### Processor A/B/D at the reference penalty ($\lambda=2$)
 
-| Processor | Condition | Selected | F | Ratio | Valid | P(opt) | CX | Depth | SWAPs |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Processor A | ideal | 1100 | 4.7500 | 1.0000 | 0.4673 | 0.2739 | 18 | 42 | 2 |
-| Processor A | noisy | 1100 | 4.7500 | 1.0000 | 0.4487 | 0.2439 | 18 | 42 | 2 |
-| Processor B | ideal | 1100 | 4.7500 | 1.0000 | 0.4739 | 0.2734 | 15 | 34 | 1 |
-| Processor B | noisy | 1100 | 4.7500 | 1.0000 | 0.4556 | 0.2461 | 15 | 34 | 1 |
-| Processor D | ideal | 1100 | 4.7500 | 1.0000 | 0.4675 | 0.2590 | 12 | 23 | 0 |
-| Processor D | noisy | 1100 | 4.7500 | 1.0000 | 0.4592 | 0.2407 | 12 | 23 | 0 |
+| Processor | Condition | Selected | $F(x)$ | $F/F^*$ | Valid | $P_{\mathrm{opt}}$ | CX | Depth | SWAPs |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| A | Ideal | `1100` | 4.75 | 1.000 | 46.73% | 27.39% | 18 | 42 | 2 |
+| A | Noisy | `1100` | 4.75 | 1.000 | 44.87% | 24.39% | 18 | 42 | 2 |
+| B | Ideal | `1100` | 4.75 | 1.000 | 47.39% | 27.34% | 15 | 34 | 1 |
+| B | Noisy | `1100` | 4.75 | 1.000 | 45.56% | 24.61% | 15 | 34 | 1 |
+| D1 | Ideal | `1100` | 4.75 | 1.000 | 46.75% | 25.90% | 12 | 23 | 0 |
+| D1 | Noisy | `1100` | 4.75 | 1.000 | 45.92% | 24.07% | 12 | 23 | 0 |
 
-### Selected Processor D
+### Selected Processor D1
 
-- **Architecture:** D1, six-qubit K4 core plus two-edge tail; eight couplers.
-- **Noisy valid-solution frequency:** 45.9229%.
-- **Noisy optimal-portfolio probability:** 24.0723%.
-- **Compiled CX / depth / SWAPs:** 12 / 23 / 0.
-- Processor D is selected based on the measured three-candidate sweep and the stated deterministic ranking rule. The small Bell-fidelity differences are not treated as statistically significant.
+- **Architecture:** six qubits; K4 core plus two-edge tail; eight couplers.
+- **Noisy feasible-objective yield:** 0.406366.
+- **Compiled resource footprint:** 12 CX gates, depth 23, two-qubit depth 10, zero routing SWAPs.
+- **Selection caveat:** D1 ranked first under the predeclared deterministic rule. Its Bell-fidelity lead over D2 is smaller than the reported uncertainty and is not statistically decisive.
+
+<sub>This block is regenerated by `scripts/run_final_ps_o2.py` from the benchmark CSV outputs.</sub>
 
 <!-- END GENERATED RESULTS -->
 
-## Locked PS-O2 formulation
+## Problem formulation
 
-Select exactly \(k=2\) of four assets to maximize
+The locked instance selects exactly $k=2$ of four binary asset variables. The expected-return vector is $\mu=[5,3,4,2]$, the risk-aversion coefficient is $q=0.5$, and the symmetric risk matrix $\Sigma$ comes from `data/instances.json`.
 
-\[
-F(x)=\mu^T x-qx^T\Sigma x,\qquad \sum_i x_i=2,
-\]
+The objective to maximize is
 
-where \(\mu=[5,3,4,2]\), \(q=0.5\), and the locked symmetric risk matrix \(\Sigma\) is read from `data/instances.json`. The QUBO minimizes
+$$
+F(x)=\mu^{\mathsf T}x-qx^{\mathsf T}\Sigma x,
+\qquad x_i\in\{0,1\},
+\qquad \sum_{i=0}^{3}x_i=2.
+$$
 
-\[
-E_\lambda(x)=-F(x)+\lambda\left(\sum_i x_i-2\right)^2.
-\]
+The constrained problem is encoded as a QUBO by minimizing
 
-The reference penalty is \(\lambda=2\). The required sensitivity sweep is \([0,0.5,1,2,5,10]\). The exact classical optimum is \(F^*=4.75\), attained by bitstring `1100` in the documented \(x_0,x_1,x_2,x_3\) order (assets 0 and 1).
+$$
+E_\lambda(x)=-F(x)+\lambda\left(\sum_{i=0}^{3}x_i-2\right)^2.
+$$
 
-The uniform-random baseline is **37.5% valid portfolios**, **6.25% optimal-portfolio probability**, and a mean feasible-objective ratio of **0.76316**. These are exact enumeration baselines, not measured QAOA results.
+The reference penalty is $\lambda=2$; the required sensitivity sweep is $\lambda\in\{0,0.5,1,2,5,10\}$. The six feasible portfolios and reference QUBO matrix are included in the full [technical report](report.md) and machine-readable tables.
 
-## Processor D1
+## Selected architecture: Processor D1
 
-![Selected Processor D topology](results/figures/processor_d_topology.png)
+![Selected Processor D1 topology](results/figures/processor_d_topology.png)
 
-D1 has six physical qubits and eight couplers. Qubits 0–3 form a complete \(K_4\) core, which places every pairwise asset interaction on a direct physical edge. The two-edge tail `0–4–5` extends the graph diameter to three and supplies the farthest pair for the Bell experiment. In the three-candidate sweep, D1 compiled the four-logical-qubit p=1 circuit with 12 CX gates, zero routing CX overhead, zero SWAPs, depth 23, and two-qubit depth 10. These are measured under the official simulator/transpiler configuration; actual hardware behavior may differ.
+The four logical asset qubits occupy a complete $K_4$ core, giving a direct physical coupling for each of the six pairwise QUBO interactions. The tail `0–4–5` extends the graph diameter to three for the required farthest-pair Bell verification. D1 satisfies the organizer's PS-O2 constraints: six qubits, connected graph, maximum degree four, the required basis-gate set, and the official noise floors.
 
-Candidate selection also compared K4 + two leaves (D2) and K4 + bridge + leaf (D3). All three had the same measured QAOA quality and compilation resources in the selected run. D1 ranked first by the predeclared deterministic rule because its observed farthest-pair Bell fidelity was highest (0.9491 versus 0.9481 and 0.9476). That small difference is not statistically decisive; D1 is preferred as the simplest candidate that matches the measured resource minima.
+D1 was selected over D2 (K4 plus two leaves) and D3 (K4 plus bridge and leaf). In the candidate run, all three had the same compiled QAOA resource metrics and portfolio statistics. D1 won the predeclared ranking through the highest *point estimate* for farthest-pair Bell fidelity, while using eight couplers rather than D3's nine. The small Bell differences do not prove a statistically reliable fidelity improvement.
+
+![D1, D2 and D3 architecture comparison](results/figures/processor_d_top3_comparison.png)
 
 ## Reproducible setup
 
-The organizer package supports Python 3.10–3.12. The validated project environment used Python 3.12; exact package versions are pinned in `requirements.txt`.
-
-On a fresh clone:
+The tested workflow uses Python 3.12 with package versions pinned in `requirements.txt`. From the repository root:
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-```
-
-Then validate and run:
-
-```bash
 python scripts/validate_final.py
+python scripts/validate_markdown_docs.py
 python -m pytest -q
-jupyter lab main.ipynb
 ```
 
-Run `main.ipynb` from the repository root, top to bottom. Alternatively, run the final benchmark directly:
+Run the complete benchmark and refresh the result tables, plots, README result block, and report result block:
 
 ```bash
 python scripts/run_final_ps_o2.py
 ```
 
-The runner checks SHA-256 hashes of `qff_phase2.py` and `data/instances.json`, verifies that `data/instance.json` matches the locked PS-O2 section, and runs the organizer's `validate_processor_d()` on D1 before experiments. It does not edit the official helper or locked inputs.
+The notebook equivalent is `main.ipynb`; open it from the repository root and run the cells from top to bottom. The runner checks the organizer file hashes and validates D1 before sampling. It does not edit `qff_phase2.py` or `data/instances.json`.
 
 ## Benchmark protocol
 
-- QAOA depth \(p=1\), using explicit Hadamard, RZ, CX and RX operations from `src/qaoa_circuit.py`.
-- COBYLA, five initializations using `numpy.default_rng(seed)` with seeds 0–4, angle starts uniform on \([0,\pi]\), at most 200 objective evaluations per start.
-- Exact Qiskit statevector expected QUBO energy is used for optimization; the best run at each \(\lambda\) is selected by minimum final expected energy, with seed as deterministic tie-break.
-- At \(\lambda=2\), the selected ideal angles are reused unchanged on official Processors A, B and D under ideal and noisy simulation.
-- For the Processor D sensitivity experiment, the ideal statevector optimization is repeated independently for each required \(\lambda\), then those angles are evaluated in ideal and noisy runs.
-- Final evaluation uses 4,096 shots and the exact basis gates, transpiler level, seeds and noise rates in the unmodified `qff_phase2.py`.
-- Bell verification measures XX, YY and ZZ on one adjacent physical pair and one farthest pair, ideal and noisy, using the organizer's `bell_experiment()`.
+| Setting | Value |
+|---|---|
+| QAOA depth | $p=1$ |
+| Basis gates | `rz`, `sx`, `x`, `cx` |
+| Transpiler optimization level | 1 |
+| Transpiler / simulator seed | 42 / 42 |
+| Shots per condition | 4,096 |
+| One-qubit depolarizing rate | 0.001 |
+| CX depolarizing rate | 0.005 |
+| Symmetric readout bit-flip probability | 0.01 |
+| Optimizer | COBYLA; seeds 0–4; up to 200 evaluations per start |
+
+At $\lambda=2$, the best exact-statevector angles are reused on A/B/D for the ideal/noisy comparison. For the D sensitivity experiment, the five starts are re-optimized separately for each penalty value, and the selected angles are evaluated in ideal and noisy conditions.
 
 ## Output map
 
-| Path | Contents |
+| Artifact | Purpose |
 |---|---|
-| `main.ipynb` | End-to-end reproducible notebook |
-| `processors/processor_D.json` | Selected D1 K4-tail architecture |
-| `results/tables/results.csv` | Organizer-schema A/B/D rows at reference \(\lambda=2\), plus D rows for other sweep penalties |
-| `results/tables/bell.csv` | Official D adjacent/farthest Bell results, ideal and noisy |
-| `results/tables/processor_conditions.csv` | Detailed portfolio metrics at \(\lambda=2\) |
-| `results/tables/processor_resources.csv` | Official A/B/D circuit resources |
-| `results/tables/processor_d_lambda_sweep.csv` | Six-penalty D sensitivity results, ideal/noisy |
-| `results/tables/lambda_optimization_trials.csv` | Five COBYLA starts for every \(\lambda\) |
-| `results/tables/classical_solutions.csv` | Six feasible portfolios and exact objective values |
+| `main.ipynb` | Executed, end-to-end Phase 2 notebook |
+| `processors/processor_D.json` | Selected D1 K4-tail graph |
+| `results/tables/results.csv` | Organizer-schema processor rows and D penalty rows |
+| `results/tables/bell.csv` | Adjacent/farthest D Bell results, ideal/noisy |
+| `results/tables/processor_conditions.csv` | Portfolio metrics at reference $\lambda=2$ |
+| `results/tables/processor_resources.csv` | Compiled A/B/D resource metrics |
+| `results/tables/processor_d_lambda_sweep.csv` | D penalty sensitivity |
+| `results/tables/lambda_optimization_trials.csv` | Five optimization starts per penalty |
+| `results/tables/classical_solutions.csv` | Exact feasible portfolios and objective values |
 | `results/tables/qubo_matrix_lambda_2.csv` | Reference-penalty QUBO matrix |
-| `results/figures/` | Comparison, D topology and penalty-sensitivity plots |
-| `results/evidence/processor_d_sweep/` | Archived evidence from the three-candidate D selection run, when available |
-| `report.md` | Technical report, refreshed from generated data |
+| `results/figures/` | Processor, topology and penalty figures |
+| `report.md` | Full technical report, results and limitations |
 
-`results/tables/results.csv` follows the organizer's metric columns and adds a `lambda` column for PS-O2 sensitivity rows. Detailed valid frequency and selected-portfolio metrics live in `processor_conditions.csv` and `processor_d_lambda_sweep.csv`.
+## Interpretation and limitations
 
-## Repository layout and source integrity
-
-- `qff_phase2.py` is the organizer's shared measurement/transpilation/noise utility. Keep it byte-for-byte unchanged.
-- `data/instances.json` is the locked source of truth. Do not edit it.
-- `data/instance.json` is the derived PS-O2 view and must remain consistent with the locked source.
-- `processors/processor_A.json` and `processor_B.json` remain the official reference maps.
-- Phase 1 content is preserved under `Phase One/`; its numeric problem data must not be reused for Phase 2.
+- **Finite shots:** small differences at 4,096 shots should not be overinterpreted.
+- **Synthetic noise:** the uniform noise model does not include device-specific calibration, crosstalk, or drift.
+- **Small instance:** all 16 bitstrings are exactly enumerable; no quantum-advantage claim is made.
+- **Architecture comparison:** the K4 core reduces measured routing overhead but does not guarantee higher $P_{\mathrm{opt}}$ on every run or real device.
 
 ## AI-use disclosure
 
-AI assistance was used for planning, architecture enumeration and comparison, code drafting, report/documentation drafting, and test design. The team ran the benchmark locally using the organizer's helper functions and is responsible for reviewing the code, validating the artifacts, and ensuring report values match the generated files.
+AI assistance was used for architecture search and ranking, mathematical review, code and notebook drafting, documentation, and test design. The team is responsible for reviewing the implementation, validating the outputs, and ensuring the report matches the generated artifacts.
 
-## Attribution and scope
+---
 
-QFF 2026 Phase 2 requirements, locked PS-O2 inputs, benchmark configuration, Processor D constraints and result definitions are taken from the organizer's `QFF2026_Optimization_Track (1).zip`, especially the Phase 2 Challenge Kit and Starter Pack. The Phase 2 data supersedes any Phase 1 formulation.
+<div align="center">
+  <h2>✦ C O U G H I N G &nbsp; B A B Y ✦</h2>
+  <p><sub>QFF SRM AP 2026 · QUANTUM OPTIMIZATION · PS-O2</sub></p>
+  <p><sub>Built by Team Coughing Baby · SRM University-AP × VIT University-AP</sub></p>
+</div>
