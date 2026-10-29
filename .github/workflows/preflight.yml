@@ -1,4 +1,4 @@
-name: Phase 2 preflight
+name: Phase 2 clean-clone validation
 
 on:
   push:
@@ -10,22 +10,59 @@ permissions:
   contents: read
 
 jobs:
-  preflight:
+  clean-clone:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Check out the exact submitted commit
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: requirements.txt
-      - run: python -m pip install -r requirements.txt
-      - run: python scripts/validate_processor_d.py
-      - run: python scripts/run_official_processor_validation.py
-      - run: python scripts/run_classical_reference.py
-      - run: python scripts/run_qaoa_ideal_prototype.py
-      - run: python scripts/plot_classical_reference.py
-      - run: python scripts/plot_processor_D.py
-      - run: python scripts/plot_qaoa_seed_comparison.py
-      - run: python -m pytest -q
+
+      - name: Install pinned project environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Validate locked inputs and selected D1
+        run: python scripts/validate_final.py
+
+      - name: Run unit tests
+        run: python -m pytest -q
+
+      - name: Smoke-test Processor D plotting (including q5)
+        run: python scripts/plot_processor_D.py
+
+      - name: Execute the submitted notebook from a clean checkout
+        run: |
+          jupyter nbconvert --to notebook --execute \
+            --output main.executed.ipynb \
+            --ExecutePreprocessor.timeout=1800 main.ipynb
+          rm -f main.executed.ipynb
+
+      - name: Validate the organizer result contract and evidence coverage
+        run: python scripts/validate_results_contract.py
+
+      - name: Validate documentation, links and math delimiters
+        run: python scripts/validate_markdown_docs.py
+
+      - name: Confirm generated numeric artifacts reproduce the committed results
+        run: |
+          git diff --exit-code -- \
+            README.md report.md \
+            results/tables/results.csv \
+            results/tables/bell.csv \
+            results/tables/processor_conditions.csv \
+            results/tables/processor_resources.csv \
+            results/tables/processor_d_lambda_sweep.csv \
+            results/tables/lambda_optimization_trials.csv \
+            results/tables/classical_solutions.csv \
+            results/tables/qubo_matrix_lambda_2.csv
+
+      - name: Check whitespace errors
+        run: git diff --check

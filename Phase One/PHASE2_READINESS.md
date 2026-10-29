@@ -1,33 +1,23 @@
-# QFF 2026 Phase 2 Readiness
+# Phase 2 readiness — historical checkpoint (superseded)
 
-Project: Silver-Qx-Finance
-Problem: PS-O2 — Portfolio Optimization with QAOA
+> **Archive note.** This document records an earlier preparation checkpoint and is retained in `Phase One/` for historical traceability. It is not the current status of the active Phase 2 submission.
 
-## Current scope
-This is a Phase 2 preparation scaffold, not a claim of completed Phase 2 work.
-The generic processor loader and routing path accept additional processor definitions.
-The official Drive directions are linked from the learning workspace, but their
-contents have not yet been ingested into this repository. Processor C's exact
-specification, custom Processor D constraints, and enhanced PS-O2 rules remain
-unintegrated; no official C/D topology or performance is invented.
+## Current Phase 2 project
 
-## Preserve
-- Processor A/B definitions and baseline results.
-- Portfolio input, QUBO parameters and classical reference.
-- Existing notebook, tests, figures and report.
-- Phase 1 Git commit: e2b9f25.
+The active Phase 2 project is at the repository root, not inside `Phase One/`.
 
-## Start gate
-Before implementing C/D, confirm:
-1. Team shortlisted for Phase 2.
-2. Enhanced PS-O2 problem statement received.
-3. Official Processor C topology and execution rules received.
-4. Processor D design constraints received.
-5. Official Phase 2 start confirmed.
+- [Current README](../README.md)
+- [Current technical report](../report.md)
+- [Finalization status](../PROOF_OF_WORK_STATUS.md)
+- [Processor D1 definition](../processors/processor_D.json)
+- [Official result table](../results/tables/results.csv)
+- [Bell verification table](../results/tables/bell.csv)
+- [Processor D penalty sweep](../results/tables/processor_d_lambda_sweep.csv)
 
-## Workflow
-1. Run scripts/phase2_preflight.py.
-2. Run scripts/phase2_validate.sh.
-3. Fill in config/phase2_requirements.template.json from official sources.
-4. Implement C/D only after the start gate is satisfied.
-5. Benchmark, test, document and package the results.
+The active root project has locally generated A/B/D ideal/noisy results, the six-value D penalty sweep, adjacent/farthest Bell experiments, and a 10-test suite. Processor D1 is the selected six-qubit K4-tail architecture.
+
+## Reproducibility status
+
+A successful local run is recorded in the root status file. **Clean-clone reproducibility is not considered verified until the current Phase 2 GitHub Actions workflow completes green on the final commit.** The release-hardening patch updates the active workflow to execute the submitted notebook, validate result semantics and cross-artifact consistency, and check that the Processor D plotting script handles all six D1 qubits.
+
+This historical note does not alter or supersede the Phase 1 benchmark data. Phase 2 values come only from the locked `data/instances.json` and the organizer's unchanged `qff_phase2.py`.

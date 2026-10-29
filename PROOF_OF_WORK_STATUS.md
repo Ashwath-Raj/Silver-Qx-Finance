@@ -1,30 +1,33 @@
-# QFF 2026 Phase 2 — finalization status
+# QFF 2026 Phase 2 — release verification status
 
 <div align="center">
   <p><sub>PS-O2 · CONSTRAINT-AWARE PORTFOLIO SELECTION · TEAM COUGHING BABY</sub></p>
-  <h2>✦ D1 SELECTED · BENCHMARK ARTIFACTS GENERATED ✦</h2>
+  <h2>✦ D1 SELECTED · FINAL ARTIFACTS GENERATED ✦</h2>
 </div>
 
-## Verified in the local project run
+## Confirmed in the local project run
 
-- The organizer's `qff_phase2.py` and locked `data/instances.json` passed SHA-256 checks before and after the final benchmark.
-- `processors/processor_D.json` contains the selected six-qubit D1 K4-tail topology and passes the organizer's `validate_processor_d()` rules.
-- The automated suite passed: **10 tests**.
-- The saved `main.ipynb` executed all six code cells without a saved cell error.
-- The final runner generated `results/tables/results.csv` (16 rows), `results/tables/bell.csv` (4 rows), and `results/tables/processor_d_lambda_sweep.csv` (12 rows), along with processor-condition/resource tables, optimization-trial rows, figures and `results/run_metadata_final.json`.
-- `git diff --check` passed after installation.
+- The organizer's `qff_phase2.py` and locked `data/instances.json` passed SHA-256 checks before and after the final run.
+- `processors/processor_D.json` contains D1, the six-qubit K4 core with a two-edge tail, and passes `validate_processor_d()`.
+- **10 automated tests passed.**
+- `main.ipynb` completed with all six code cells executed and no saved cell errors.
+- The benchmark generated `results/tables/results.csv` (16 rows), `results/tables/bell.csv` (4 rows), `results/tables/processor_d_lambda_sweep.csv` (12 rows), and the companion condition, resource, classical-reference, QUBO, optimization-trial and metadata files.
+- The reference-penalty resource comparison is A: 18 CX / depth 42 / 2 SWAPs; B: 15 CX / depth 34 / 1 SWAP; D1: 12 CX / depth 23 / 0 SWAPs.
+- At the reference penalty, D1's noisy valid-solution frequency is 45.92% and optimal-portfolio probability is 24.07%. Processor B's noisy optimal probability is 24.61%, so D1 is not claimed to dominate every solution-quality metric.
 
-## Scientific reading of the result
+## Release-hardening actions
 
-D1's strongest demonstrated advantage is compiled resource cost: 12 CX gates, circuit depth 23, two-qubit depth 10, no SWAPs and zero CX routing overhead in the measured run. Its noisy valid-solution frequency is 45.92%; its noisy optimal-portfolio probability is 24.07%. Processor B's noisy optimal-portfolio probability is 24.61%, so the evidence does not support a claim that D1 wins every quality metric.
+- `scripts/plot_processor_D.py` now creates a position for every physical qubit, including D1's q5.
+- The CI workflow executes the submitted notebook in a clean checkout, then validates all required run combinations and artifact consistency.
+- `results/tables/results.csv` preserves the organizer's 18 required columns in order. For PS-O2, `quality_metric=valid_solution_frequency` and `quality_value` equals that value; the selected-portfolio objective ratio and uniform-random baselines are explicit extension columns.
+- The technical report includes five-start exact-statevector sensitivity summaries per penalty, clearly distinguished from finite-shot noisy repetitions.
 
-The candidate sweep ranks D1 first by a predeclared deterministic rule. Its farthest-pair Bell-fidelity point estimate is highest, but differences between D1/D2/D3 are smaller than the reported uncertainty and are not statistically decisive. The instance has only 16 states; **no quantum-advantage claim is made**.
+## What is not yet asserted
 
-## Source integrity and reproducibility
+A green local test suite is not the same as a green GitHub Actions run. The corrective workflow must complete successfully on the pushed commit before clean-clone reproduction is described as verified. The notebook/runner uses the official synthetic noise model, not a calibrated device model. The four-variable instance has only 16 bitstrings; no quantum-advantage claim is made.
 
-- Keep `qff_phase2.py` and `data/instances.json` byte-for-byte unchanged.
-- Keep `data/instance.json` consistent with the official PS-O2 fields.
-- `results/tables/results.csv` and `results/tables/bell.csv` are now present because the required final run completed; do not restore the archived pre-D candidate Bell table over the final file.
-- The previous local workspace backup is retained outside the repository. Git commit/push is a separate publishing step.
+## Submission-critical constraints
 
-For the full methodology, candidate rationale, benchmark tables, figures and limitations, see [report.md](report.md). For setup and the artifact map, see [README.md](README.md).
+Keep `qff_phase2.py` and `data/instances.json` byte-for-byte unchanged. Keep `data/instance.json` consistent with the locked PS-O2 values. `results/tables/results.csv` and `results/tables/bell.csv` are generated benchmark evidence and must not be replaced with the archived pre-D candidate table.
+
+For the formulation, resource trade-offs, Bell results, penalty analysis and limitations, see [report.md](report.md). For setup and the artifact map, see [README.md](README.md).

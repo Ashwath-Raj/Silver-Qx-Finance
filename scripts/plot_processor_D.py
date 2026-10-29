@@ -1,21 +1,75 @@
 #!/usr/bin/env python3
-"""Render a labelled Processor D graph for mentor discussion and report."""
-from pathlib import Path
+"""Render the selected Processor D graph without assuming a fixed qubit count.
+
+This script intentionally derives every node label and position from the JSON. The
+former five-position map raised KeyError for D1's sixth physical qubit (q5).
+"""
+from __future__ import annotations
+
 import json
+from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import networkx as nx
-ROOT=Path(__file__).resolve().parents[1]
-p=json.loads((ROOT/'processors/processor_D.json').read_text())
-G=nx.Graph();G.add_nodes_from(range(p['num_qubits']));G.add_edges_from([tuple(e) for e in p['edges']])
-pos={0:(0.0,0.0), 1:(1.0,1.8), 2:(2.0,0.0), 3:(1.0,0.65), 4:(1.0,-1.2)}
-fig,ax=plt.subplots(figsize=(7.6,4.7))
-core=[0,1,2,3]
-nx.draw_networkx_edges(G,pos,ax=ax,width=2,edge_color='#4f6f8f')
-nx.draw_networkx_nodes(G,pos,nodelist=core,node_size=1500,node_color='#dcecf7',edgecolors='#264b69',linewidths=1.8,ax=ax)
-nx.draw_networkx_nodes(G,pos,nodelist=[4],node_size=1500,node_color='#f7e6cf',edgecolors='#8f5821',linewidths=1.8,ax=ax)
-nx.draw_networkx_labels(G,pos,labels={i:(f'q{i}\nasset {i}' if i<4 else 'q4\nauxiliary') for i in G.nodes},font_size=9,font_weight='bold',ax=ax)
-ax.set_title('Candidate Processor D — K4 asset core + auxiliary physical node')
-ax.text(1.0,-1.85,'5 qubits  •  8 edges  •  max degree 4  •  connected',ha='center',fontsize=10)
-ax.axis('off');fig.tight_layout()
-fig.savefig(ROOT/'results/figures/processor_D_candidate.png',dpi=180,bbox_inches='tight');plt.close(fig)
-print('Wrote results/figures/processor_D_candidate.png')
+
+ROOT = Path(__file__).resolve().parents[1]
+processor_path = ROOT / "processors" / "processor_D.json"
+processor = json.loads(processor_path.read_text(encoding="utf-8"))
+n_qubits = int(processor["num_qubits"])
+edges = [tuple(map(int, edge)) for edge in processor["edges"]]
+G = nx.Graph()
+G.add_nodes_from(range(n_qubits))
+G.add_edges_from(edges)
+
+# Keep a purpose-built D1 layout for readability. Other valid processor graphs use
+# a deterministic spring layout and therefore never index an incomplete position map.
+D1_EDGES = {
+    (0, 1), (0, 2), (0, 3), (0, 4), (1, 2), (1, 3), (2, 3), (4, 5)
+}
+normalized_edges = {tuple(sorted(edge)) for edge in edges}
+if n_qubits == 6 and normalized_edges == D1_EDGES:
+    pos = {
+        0: (0.0, 0.0), 1: (1.1, 1.15), 2: (2.2, 0.0), 3: (1.1, -1.15),
+        4: (-1.1, 0.0), 5: (-2.2, -0.72),
+    }
+else:
+    pos = nx.spring_layout(G, seed=42, k=max(0.8, 1.7 / max(n_qubits, 1)))
+
+core = [q for q in G.nodes if q < min(4, n_qubits)]
+auxiliary = [q for q in G.nodes if q not in core]
+labels = {
+    q: (f"q{q}\nasset {q}" if q < 4 else f"q{q}\nauxiliary")
+    for q in G.nodes
+}
+max_degree = max(dict(G.degree()).values(), default=0)
+connected = (n_qubits > 0 and nx.is_connected(G))
+
+fig, ax = plt.subplots(figsize=(8.4, 5.4))
+nx.draw_networkx_edges(G, pos, ax=ax, width=2.1, edge_color="#4F6F8F")
+if core:
+    nx.draw_networkx_nodes(
+        G, pos, nodelist=core, node_size=1450, node_color="#DCECF7",
+        edgecolors="#264B69", linewidths=1.8, ax=ax,
+    )
+if auxiliary:
+    nx.draw_networkx_nodes(
+        G, pos, nodelist=auxiliary, node_size=1450, node_color="#F7E6CF",
+        edgecolors="#8F5821", linewidths=1.8, ax=ax,
+    )
+nx.draw_networkx_labels(G, pos, labels=labels, font_size=9, font_weight="bold", ax=ax)
+ax.set_title("Selected Processor D1 — K4 asset core + two-edge tail", fontsize=13, fontweight="bold")
+status = "connected" if connected else "disconnected"
+ax.text(
+    0.5, -0.09,
+    f"{n_qubits} physical qubits  •  {G.number_of_edges()} couplers  •  max degree {max_degree}  •  {status}",
+    transform=ax.transAxes, ha="center", fontsize=9.5,
+)
+ax.axis("off")
+fig.tight_layout()
+output = ROOT / "results" / "figures" / "processor_d_topology.png"
+output.parent.mkdir(parents=True, exist_ok=True)
+fig.savefig(output, dpi=180, bbox_inches="tight")
+plt.close(fig)
+print(f"Wrote {output.relative_to(ROOT)} ({n_qubits} qubits, {G.number_of_edges()} couplers)")

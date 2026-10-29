@@ -74,7 +74,8 @@ def write_json(path: Path, data: Any) -> None:
     path.write_text(json.dumps(data, indent=2, allow_nan=False) + "\n", encoding="utf-8")
 
 
-def markdown_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]], precision: int = 4) -> str:
+def markdown_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]], precision: int = 4,
+                    percent_fields: set[str] | None = None) -> str:
     lines = ["| " + " | ".join(label for _, label in columns) + " |",
              "| " + " | ".join("---" for _ in columns) + " |"]
     for row in rows:
@@ -82,7 +83,10 @@ def markdown_table(rows: list[dict[str, Any]], columns: list[tuple[str, str]], p
         for key, _ in columns:
             value = row.get(key, "")
             if isinstance(value, float):
-                value = f"{value:.{precision}f}" if math.isfinite(value) else ""
+                if percent_fields and key in percent_fields:
+                    value = f"{100.0 * value:.2f}%" if math.isfinite(value) else ""
+                else:
+                    value = f"{value:.{precision}f}" if math.isfinite(value) else ""
             if isinstance(value, (list, tuple)):
                 value = ", ".join(map(str, value))
             cells.append(str(value).replace("|", "\\|").replace("\n", " "))
@@ -333,9 +337,9 @@ def main() -> int:
                 "logical_qubits":resources["logical_qubits"], "physical_qubits":resources["physical_qubits"],
                 "logical_cx":resources["logical_cx"], "cx":resources["cx"], "depth":resources["depth"],
                 "two_q_depth":resources["two_q_depth"], "swaps":resources["swaps"], "cx_overhead":resources["cx_overhead"],
-                "shots":qff.SHOTS, "quality_metric":"objective_ratio_selected_valid",
-                "quality_value":metrics["objective_ratio_selected_valid"], "p_opt":metrics["p_opt"],
-                "classical_optimum":F_star, "random_baseline":random_baseline_ratio,
+                "shots":qff.SHOTS, "quality_metric":"valid_solution_frequency",
+                "quality_value":metrics["valid_solution_frequency"], "p_opt":metrics["p_opt"],
+                "classical_optimum":F_star, "random_baseline":float(ref["uniform_random_baseline"]["valid_frequency"]),
                 "gamma":gamma, "beta":beta,
                 "random_baseline_valid_frequency":float(ref["uniform_random_baseline"]["valid_frequency"]),
                 "random_baseline_p_opt":float(ref["uniform_random_baseline"]["p_opt"]),
@@ -346,7 +350,9 @@ def main() -> int:
             result_rows.append({k0: row.get(k0, "") for k0 in [
                 "problem_id","processor","condition","executable","logical_qubits","physical_qubits",
                 "logical_cx","cx","depth","two_q_depth","swaps","cx_overhead","shots",
-                "quality_metric","quality_value","p_opt","classical_optimum","random_baseline","lambda"
+                "quality_metric","quality_value","p_opt","classical_optimum","random_baseline","lambda",
+                "valid_solution_frequency","objective_ratio_selected_valid",
+                "random_baseline_valid_frequency","random_baseline_p_opt","random_baseline_objective_ratio"
             ]})
             print(f"{p_name} {condition}: valid={metrics['valid_solution_frequency']:.6f} "
                   f"P_opt={metrics['p_opt']:.6f} selected={metrics['selected_portfolio_x0_to_x3']} "
@@ -408,9 +414,15 @@ def main() -> int:
                     "logical_qubits":resources["logical_qubits"],"physical_qubits":resources["physical_qubits"],
                     "logical_cx":resources["logical_cx"],"cx":resources["cx"],"depth":resources["depth"],
                     "two_q_depth":resources["two_q_depth"],"swaps":resources["swaps"],"cx_overhead":resources["cx_overhead"],
-                    "shots":qff.SHOTS,"quality_metric":"objective_ratio_selected_valid",
-                    "quality_value":metrics["objective_ratio_selected_valid"],"p_opt":metrics["p_opt"],
-                    "classical_optimum":F_star,"random_baseline":random_baseline_ratio,"lambda":lam,
+                    "shots":qff.SHOTS,"quality_metric":"valid_solution_frequency",
+                    "quality_value":metrics["valid_solution_frequency"],"p_opt":metrics["p_opt"],
+                    "classical_optimum":F_star,
+                    "random_baseline":float(ref["uniform_random_baseline"]["valid_frequency"]),"lambda":lam,
+                    "valid_solution_frequency":metrics["valid_solution_frequency"],
+                    "objective_ratio_selected_valid":metrics["objective_ratio_selected_valid"],
+                    "random_baseline_valid_frequency":float(ref["uniform_random_baseline"]["valid_frequency"]),
+                    "random_baseline_p_opt":float(ref["uniform_random_baseline"]["p_opt"]),
+                    "random_baseline_objective_ratio":random_baseline_ratio,
                 })
             print(f"D λ={lam:g} {condition}: QUBO-min-valid={exact_sweep_row['all_minima_valid']} "
                   f"valid={metrics['valid_solution_frequency']:.6f} P_opt={metrics['p_opt']:.6f} "
@@ -421,7 +433,9 @@ def main() -> int:
     write_csv(TABLES / "results.csv", result_rows, [
         "problem_id","processor","condition","executable","logical_qubits","physical_qubits",
         "logical_cx","cx","depth","two_q_depth","swaps","cx_overhead","shots",
-        "quality_metric","quality_value","p_opt","classical_optimum","random_baseline","lambda"
+        "quality_metric","quality_value","p_opt","classical_optimum","random_baseline","lambda",
+        "valid_solution_frequency","objective_ratio_selected_valid",
+        "random_baseline_valid_frequency","random_baseline_p_opt","random_baseline_objective_ratio"
     ])
     write_csv(TABLES / "bell.csv", bell_rows)
     write_csv(TABLES / "processor_conditions.csv", condition_rows)
@@ -477,6 +491,28 @@ def main() -> int:
         ("selected_portfolio_x0_to_x3","Selected"),("objective_ratio_selected_valid","Objective ratio"),
         ("selected_seed","Seed"),("gamma","γ"),("beta","β")
     ])
+    # Summarize all five optimizer starts per penalty; these are exact-statevector diagnostics,
+    # not separate finite-shot noisy benchmark repetitions.
+    restart_summary_rows = []
+    for lam in lambda_values:
+        group = [r for r in trials_all if math.isclose(float(r["lambda"]), float(lam), abs_tol=1e-12)]
+        if len(group) != 5:
+            raise RuntimeError(f"Expected five optimizer starts at lambda={lam}; got {len(group)}")
+        energies = sorted(float(r["expected_qubo_energy"]) for r in group)
+        p_valid = sorted(float(r["valid_probability_ideal_statevector"]) for r in group)
+        p_opt_sv = sorted(float(r["p_opt_ideal_statevector"]) for r in group)
+        restart_summary_rows.append({
+            "lambda": float(lam), "selected_seed": int(best_by_lambda[float(lam)]["seed"]),
+            "energy_min": energies[0], "energy_median": float(np.median(energies)), "energy_max": energies[-1],
+            "p_valid_min": p_valid[0], "p_valid_max": p_valid[-1],
+            "p_opt_min": p_opt_sv[0], "p_opt_max": p_opt_sv[-1],
+        })
+    restart_table = markdown_table(restart_summary_rows, [
+        ("lambda","λ"),("selected_seed","Selected seed"),("energy_min","Best expected E"),
+        ("energy_median","Median expected E"),("energy_max","Worst expected E"),
+        ("p_valid_min","Min exact P(valid)"),("p_valid_max","Max exact P(valid)"),
+        ("p_opt_min","Min exact P(opt)"),("p_opt_max","Max exact P(opt)"),
+    ], precision=4)
     bell_table = markdown_table(bell_rows, [
         ("pair_type","Pair"),("physical_pair","Physical qubits"),("condition","Condition"),
         ("pair_distance","Distance"),("XX","XX"),("YY","YY"),("ZZ","ZZ"),
@@ -498,7 +534,7 @@ def main() -> int:
         ("processor","Processor"),("condition","Condition"),("selected_portfolio_x0_to_x3","Selected"),
         ("selected_F","F(x)"),("objective_ratio_selected_valid","F/F*"),("valid_solution_frequency","Valid"),
         ("p_opt","P(opt)"),("cx","CX"),("depth","Depth"),("swaps","SWAPs")
-    ])
+    ], percent_fields={"valid_solution_frequency", "p_opt"})
     readme_generated = (
         "### Reference penalty (λ = 2)\n\n" + readme_table +
         "\n\n### Selected Processor D\n\n" +
@@ -517,6 +553,8 @@ def main() -> int:
         "\n\n### Compiled resource comparison\n\n" + resource_table +
         "\n\n### Processor D Bell-state verification\n\n" + bell_table +
         "\n\n### Processor D penalty sensitivity (angles re-optimized for each λ)\n\n" + lambda_table +
+        "\n\n### Five-start optimizer sensitivity (exact statevector diagnostics)\n\n" + restart_table +
+        "\n\nThe ranges above summarize all five COBYLA starts at each penalty before finite-shot sampling. They show initialization sensitivity in the exact statevector distribution; they are not independent noisy-shot repetitions.\n\n" +
         "\n\n![A/B/D quality metrics](results/figures/processor_comparison_ps_o2.png)\n\n" +
         "![Processor D topology](results/figures/processor_d_topology.png)\n\n" +
         "![Processor D penalty sweep](results/figures/processor_d_lambda_sweep.png)\n"

@@ -42,7 +42,7 @@
     "qff_phase2.py": "04be4fa610ba60854a2b3b9237891df7e8ade62e2fcd9659076e36e794f077ab",
     "data/instances.json": "9b5738e6c6c13208599c63aae97ec0549bf993c810bcda278ff8795a684ad09d"
   },
-  "runtime_seconds": 8.967843288999575,
+  "runtime_seconds": 8.499586876001558,
   "no_quantum_advantage_claim": true,
   "ai_assistance_disclosed_in_readme": true
 }

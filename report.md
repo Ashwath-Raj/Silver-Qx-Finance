@@ -213,6 +213,21 @@ Rows and columns use asset order x0…x3. The constant offset is retained by the
 | 10.0000 | ideal | True | 0.7007 | 0.1177 | 0101 | 0.7368 | 3 | 0.2519 | 1.2951 |
 | 10.0000 | noisy | True | 0.6724 | 0.1155 | 0101 | 0.7368 | 3 | 0.2519 | 1.2951 |
 
+### Five-start optimizer sensitivity (exact statevector diagnostics)
+
+| λ | Selected seed | Best expected E | Median expected E | Worst expected E | Min exact P(valid) | Max exact P(valid) | Min exact P(opt) | Max exact P(opt) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0.0000 | 3 | -4.5125 | -4.5125 | -3.2080 | 0.2364 | 0.4438 | 0.0546 | 0.2506 |
+| 0.5000 | 0 | -3.3083 | -3.3083 | -2.7589 | 0.4538 | 0.5576 | 0.0443 | 0.1216 |
+| 1.0000 | 4 | -3.1324 | -2.9377 | -2.1875 | 0.3750 | 0.6366 | 0.0625 | 0.2547 |
+| 2.0000 | 0 | -2.5087 | -1.9603 | -1.3988 | 0.3646 | 0.6468 | 0.0476 | 0.2621 |
+| 5.0000 | 1 | -1.3736 | -0.6839 | 1.8125 | 0.3750 | 0.6392 | 0.0088 | 0.1637 |
+| 10.0000 | 3 | 0.0051 | 2.7564 | 3.4928 | 0.4052 | 0.6996 | 0.0665 | 0.1287 |
+
+The ranges above summarize all five COBYLA starts at each penalty before finite-shot sampling. They show initialization sensitivity in the exact statevector distribution; they are not independent noisy-shot repetitions.
+
+
+
 ![A/B/D quality metrics](results/figures/processor_comparison_ps_o2.png)
 
 ![Processor D topology](results/figures/processor_d_topology.png)
@@ -230,6 +245,8 @@ The D Bell experiment evaluates both one physically adjacent pair and a graph-fa
 The penalty sweep studies whether exact QUBO ground-state feasibility corresponds to the measured sampling distribution. At low $\lambda$, the exact QUBO minimum may be infeasible. At higher penalties, exact feasibility can be restored, but QAOA at $p=1$ still has finite probability mass on invalid bitstrings. The full curve and table must be interpreted together: no single penalty setting alone guarantees the highest value on every sampling metric.
 
 ## 8. Outputs and artifact map
+
+**Scorer-facing `results.csv` semantics.** Each PS-O2 row uses `quality_metric=valid_solution_frequency` and `quality_value` equal to the measured valid-solution frequency; `random_baseline` therefore equals the exact uniform baseline, $6/16=0.375$. The selected-portfolio ratio $F(x_{\mathrm{selected}})/F^*$ remains available as `objective_ratio_selected_valid`, and the exact uniform-random mean ratio $0.76316$ is separately recorded as `random_baseline_objective_ratio`. The organizer's first 18 columns remain in their specified order; `lambda` and explicit PS-O2 metric columns are appended.
 
 | Artifact | Purpose |
 |---|---|
