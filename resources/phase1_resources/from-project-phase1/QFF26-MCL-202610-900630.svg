@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+    <linearGradient id="burgundyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#800020"/>
+      <stop offset="100%" stop-color="#4a0012"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#aa820a"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)"/>
+
+  <!-- Outer Frame -->
+  <rect x="40" y="40" width="1840" height="1000" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="52" y="52" width="1816" height="976" rx="12" fill="none" stroke="#800020" stroke-width="1.5" stroke-opacity="0.4"/>
+  <rect x="58" y="58" width="1804" height="964" rx="8" fill="none" stroke="#d4af37" stroke-width="0.75" stroke-opacity="0.6"/>
+
+  <!-- Corner Flourishes -->
+  <circle cx="58" cy="58" r="6" fill="#800020"/>
+  <circle cx="1862" cy="58" r="6" fill="#800020"/>
+  <circle cx="58" cy="1022" r="6" fill="#800020"/>
+  <circle cx="1862" cy="1022" r="6" fill="#800020"/>
+
+  <!-- Top Badges -->
+  <text x="960" y="140" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" letter-spacing="6" fill="#800020">
+    IBM QUANTUM × SRM UNIVERSITY-AP
+  </text>
+  <text x="960" y="170" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="3" fill="#64748b">
+    A DECADE OF QUANTUM ON CLOUD (2016–2026)
+  </text>
+
+  <!-- Main Title -->
+  <text x="960" y="270" text-anchor="middle" font-family="Georgia, serif" font-size="54" font-weight="700" letter-spacing="2" fill="url(#burgundyGrad)">
+    Certificate of Academic Mastery
+  </text>
+  <text x="960" y="320" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" letter-spacing="4" fill="#d4af37">
+    QISKIT FALL FEST 2026 · ONLINE LEARNING PHASE
+  </text>
+
+  <!-- Presentation line -->
+  <text x="960" y="410" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="20" fill="#475569">
+    This official credential is systematically awarded to
+  </text>
+
+  <!-- Recipient Name -->
+  <text x="960" y="490" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="46" font-weight="800" letter-spacing="1" fill="#0f172a">
+    ASHWATH RAJ
+  </text>
+  <line x1="560" y1="520" x2="1360" y2="520" stroke="url(#goldGrad)" stroke-width="2"/>
+
+  <!-- Course description -->
+  <text x="960" y="580" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#334155">
+    for rigorous completion of the 5-part progressive curriculum in Quantum Circuit Synthesis,
+  </text>
+  <text x="960" y="612" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#334155">
+    Hardware Architectures, Quantum Sensing, QML, and Post-Quantum Cryptography,
+  </text>
+  <text x="960" y="644" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#334155">
+    including all curriculum video lectures and technical concept evaluations.
+  </text>
+
+  <!-- Distinction Badge Box -->
+  <rect x="760" y="685" width="400" height="42" rx="21" fill="#f8fafc" stroke="#d4af37" stroke-width="1.5"/>
+  <text x="960" y="712" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" letter-spacing="1" fill="#800020">
+    PASSED WITH HIGH DISTINCTION (100%)
+  </text>
+
+  <!-- Signatures Section -->
+  <g transform="translate(320, 840)">
+    <line x1="0" y1="0" x2="300" y2="0" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="150" y="30" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#0f172a">Dr. Kenneth Thorne</text>
+    <text x="150" y="52" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b">IBM Quantum Principal Educator</text>
+  </g>
+
+  <!-- Gold Seal in Center -->
+  <g transform="translate(960, 860)">
+    <circle cx="0" cy="0" r="54" fill="url(#goldGrad)" opacity="0.15"/>
+    <circle cx="0" cy="0" r="46" fill="none" stroke="#d4af37" stroke-width="2" stroke-dasharray="4,3"/>
+    <circle cx="0" cy="0" r="38" fill="url(#burgundyGrad)"/>
+    <text x="0" y="-8" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="800" letter-spacing="1" fill="#ffffff">QFF</text>
+    <text x="0" y="8" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="900" fill="#d4af37">2026</text>
+    <text x="0" y="22" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="700" letter-spacing="1" fill="#ffffff">VERIFIED</text>
+  </g>
+
+  <g transform="translate(1300, 840)">
+    <line x1="0" y1="0" x2="300" y2="0" stroke="#94a3b8" stroke-width="1.5"/>
+    <text x="150" y="30" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#0f172a">Prof. S. K. Ramanathan</text>
+    <text x="150" y="52" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b">Faculty Lead · SRM University-AP</text>
+  </g>
+
+  <!-- Footer Metadata & Verification -->
+  <g transform="translate(100, 990)">
+    <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#475569">
+      SERIAL: <tspan fill="#800020">QFF26-MCL-202610-900630</tspan>
+    </text>
+    <text x="0" y="18" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#94a3b8">
+      ISSUED: 18 October 2026 · SRM UNIVERSITY-AP AMARAVATI
+    </text>
+  </g>
+
+  <g transform="translate(1820, 990)">
+    <text x="0" y="0" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#475569">
+      VERIFICATION URL:
+    </text>
+    <text x="0" y="18" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#800020">
+      https://www.qffsrmap2026.com/verify-certificate/QFF26-MCL-202610-900630
+    </text>
+  </g>
+</svg>

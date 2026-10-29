@@ -1,0 +1,10 @@
+{
+  "name": "Processor D",
+  "team": "YOUR_TEAM_NAME",
+  "problem_statement": "PS-O1 | PS-O2 | PS-O3",
+  "num_qubits": 9,
+  "edges": [[0,1],[1,2],[3,4],[4,5],[6,7],[7,8],[0,3],[3,6],[1,4],[4,7],[2,5],[5,8]],
+  "basis_gates": ["rz", "sx", "x", "cx"],
+  "noise": {"model": "official", "p1": 0.001, "p2": 0.005, "p_readout": 0.01},
+  "design_rationale": "One or two sentences: which A/B bottleneck this topology fixes."
+}

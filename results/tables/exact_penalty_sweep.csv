@@ -1,0 +1,7 @@
+lambda,min_qubo_energy,minimizing_bitstrings_x0_to_xn,all_minima_valid,any_minimum_valid,minimum_cardinality_values
+0.0,-5.5,1101,False,False,3
+0.5,-5.0,1101,False,False,3
+1.0,-4.75,1100,True,True,2
+2.0,-4.75,1100,True,True,2
+5.0,-4.75,1100,True,True,2
+10.0,-4.75,1100,True,True,2

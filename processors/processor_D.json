@@ -1,0 +1,53 @@
+{
+  "name": "Processor D",
+  "team": "Coughing Baby",
+  "problem_statement": "PS-O2",
+  "num_qubits": 5,
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      4
+    ]
+  ],
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "noise": {
+    "model": "official",
+    "p1": 0.001,
+    "p2": 0.005,
+    "p_readout": 0.01
+  },
+  "design_rationale": "The four logical asset qubits map to a fully connected K4 core so all pairwise interactions in the dense portfolio QUBO are physically adjacent, targeting routing overhead measured on the sparse reference graphs. A fifth connected qubit provides a distance-2 pair for the required Bell comparison; it is not assumed to improve the four-logical-qubit circuit automatically. Re-benchmark on the locked Phase 2 instance before claiming improvement."
+}

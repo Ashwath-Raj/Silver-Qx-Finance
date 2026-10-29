@@ -1,7 +1,7 @@
 {
   "name": "Processor A",
   "num_qubits": 5,
-  "coupling_edges_undirected": [
+  "edges": [
     [
       0,
       1
@@ -18,17 +18,5 @@
       3,
       4
     ]
-  ],
-  "basis_gates": [
-    "rz",
-    "sx",
-    "x",
-    "cx"
-  ],
-  "topology_status": "reference_architecture_from_Master_Guide_page_2; participant-designed alternatives are allowed",
-  "noise_model": {
-    "one_qubit_depolarizing": 0.001,
-    "cx_depolarizing": 0.005,
-    "readout_error": 0.01
-  }
+  ]
 }

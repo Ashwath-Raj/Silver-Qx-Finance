@@ -1,0 +1,10 @@
+QFF 2026 Phase 2 - Optimization track: START HERE
+
+1. Read the problem statement: OPTIMISATION_PS.docx
+2. Read the rules / locked inputs: QFF2026_Optimization_Challenge_Kit.docx (governs where the PS leaves something open)
+3. Set up and self-test (do this at the Day 1, 5:15-5:40 PM check): QFF2026_Phase2_Optimization_StarterPack/README.md, then: python example_usage.py
+4. Judging: QFF_2026_Phase2_Optimization_Judging_Rubric_2page.pdf (also Kit Section 11)
+
+Continue with the SAME team and SAME problem statement as Phase 1.
+Deadline: public GitHub repository URL on the hackathon portal before 5:40 PM IST on Day 2. The commit at the deadline is judged.
+Questions: Optimization help desk at the venue, or qiskitfallfest@srmap.edu.in

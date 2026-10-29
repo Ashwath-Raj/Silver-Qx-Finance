@@ -1,1 +1,1 @@
-"""QFF 2026 O2: constrained portfolio optimization and circuit benchmarking."""
+"""Project modules for Silver-Qx-Finance Phase 2."""

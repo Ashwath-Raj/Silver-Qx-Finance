@@ -1,12 +1,5 @@
-.venv/
 __pycache__/
-*.py[cod]
+.pytest_cache/
+.venv/
+opt-env/
 .ipynb_checkpoints/
-*.egg-info/
-
-# Local safety backups
-*.before-penalty-update
-main.ipynb.before-penalty-fix-*
-
-# Generated submission archives
-dist/*.zip

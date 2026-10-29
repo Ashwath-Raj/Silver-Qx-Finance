@@ -1,0 +1,8 @@
+# QFF 2026 Phase 2 - Optimization Track (tested 25 Oct 2026)
+qiskit>=1.4,<3          # tested on 1.4.6 and 2.6.1
+qiskit-aer>=0.17        # tested on 0.18.0
+numpy>=1.26
+scipy>=1.11
+networkx>=3.0
+matplotlib>=3.7
+jupyter

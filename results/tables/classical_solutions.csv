@@ -1,0 +1,17 @@
+bitstring_x0_to_xn,selected_indices,selected_count,valid,F
+0000,,0,False,0.0
+0001,3,1,False,1.5
+0010,2,1,False,2.25
+0011,2 3,2,True,3.25
+0100,1,1,False,2.25
+0101,1 3,2,True,3.5
+0110,1 2,2,True,4.0
+0111,1 2 3,3,False,4.75
+1000,0,1,False,3.0
+1001,0 3,2,True,4.0
+1010,0 2,2,True,2.25
+1011,0 2 3,3,False,2.75
+1100,0 1,2,True,4.75
+1101,0 1 3,3,False,5.5
+1110,0 1 2,3,False,3.5
+1111,0 1 2 3,4,False,3.75
