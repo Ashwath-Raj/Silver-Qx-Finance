@@ -1,0 +1,11 @@
+{
+  "status": "recommended candidate only; not frozen or installed as processors/processor_D.json",
+  "winner_candidate_id": "D1_K4_TAIL_6Q",
+  "ranked_by": "noisy feasible-objective yield; tie-break P_opt, valid frequency, lower CX overhead, lower CX, lower depth, higher farthest-pair Bell fidelity",
+  "observed_noisy_feasible_objective_yield": 0.4063656455592105,
+  "observed_noisy_p_opt": 0.24072265625,
+  "observed_noisy_valid_solution_frequency": 0.459228515625,
+  "official_shots_per_condition": 4096,
+  "simulator_seed": 42,
+  "transpiler_seed": 42
+}

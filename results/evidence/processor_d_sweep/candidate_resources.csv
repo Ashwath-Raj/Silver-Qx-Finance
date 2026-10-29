@@ -1,0 +1,4 @@
+candidate_id,candidate_name,processor,executable,logical_qubits,physical_qubits,logical_cx,cx,one_q_gates,depth,two_q_depth,swaps,cx_overhead
+D1_K4_TAIL_6Q,Processor D Candidate 1 - K4 Core + Two-Edge Tail,Processor D Candidate 1 - K4 Core + Two-Edge Tail,True,4,6,12,12,38,23,10,0,0
+D2_K4_TWO_LEAVES_6Q,Processor D Candidate 2 - K4 Core + Two Leaves,Processor D Candidate 2 - K4 Core + Two Leaves,True,4,6,12,12,38,23,10,0,0
+D3_K4_BRIDGE_LEAF_6Q,Processor D Candidate 3 - K4 Core + Bridge Leaf,Processor D Candidate 3 - K4 Core + Bridge Leaf,True,4,6,12,12,38,23,10,0,0

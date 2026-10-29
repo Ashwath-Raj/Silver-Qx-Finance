@@ -1,0 +1,48 @@
+{
+  "status": "FINAL_PS_O2_RUN",
+  "selected_processor_D": "D1_K4_TAIL_6Q",
+  "processor_D_path": "processors/processor_D.json",
+  "problem_id": "PS-O2",
+  "lambda_reference": 2.0,
+  "lambda_sweep": [
+    0.0,
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0
+  ],
+  "initialization_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "optimizer": "COBYLA",
+  "max_objective_evaluations_per_start": 200,
+  "angle_selection": "minimum exact expected QUBO energy; tie-break by initialization seed",
+  "selected_reference_seed": 0,
+  "gamma": 3.108236020048372,
+  "beta": 0.6998054268875787,
+  "shots": 4096,
+  "transpiler_seed": 42,
+  "simulator_seed": 42,
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "optimization_level": 1,
+  "p1_depolarizing": 0.001,
+  "p2_depolarizing_cx": 0.005,
+  "readout_probability": 0.01,
+  "official_source_sha256": {
+    "qff_phase2.py": "04be4fa610ba60854a2b3b9237891df7e8ade62e2fcd9659076e36e794f077ab",
+    "data/instances.json": "9b5738e6c6c13208599c63aae97ec0549bf993c810bcda278ff8795a684ad09d"
+  },
+  "runtime_seconds": 8.967843288999575,
+  "no_quantum_advantage_claim": true,
+  "ai_assistance_disclosed_in_readme": true
+}

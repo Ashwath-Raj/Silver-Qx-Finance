@@ -1,0 +1,4 @@
+problem_id,processor,executable,logical_qubits,physical_qubits,logical_cx,cx,one_q_gates,depth,two_q_depth,swaps,cx_overhead
+PS-O2,Processor A,true,4,5,12,18,38,42,18,2,6
+PS-O2,Processor B,true,4,9,12,15,38,34,15,1,3
+PS-O2,Processor D,true,4,6,12,12,38,23,10,0,0

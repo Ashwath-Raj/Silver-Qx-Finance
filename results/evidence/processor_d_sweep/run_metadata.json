@@ -1,0 +1,35 @@
+{
+  "scope": "temporary Processor D candidate comparison; does not change official processor D",
+  "candidates": [
+    "D1_K4_TAIL_6Q",
+    "D2_K4_TWO_LEAVES_6Q",
+    "D3_K4_BRIDGE_LEAF_6Q"
+  ],
+  "ranking_rule": "noisy feasible-objective yield; tie-break P_opt, valid frequency, lower CX overhead, lower CX, lower depth, higher farthest-pair Bell fidelity",
+  "winner_candidate_id": "D1_K4_TAIL_6Q",
+  "winner_file": "results/recommended_candidate_NOT_FROZEN.json",
+  "selection_metadata_file": "results/recommendation_metadata.json",
+  "official_source_sha256": {
+    "qff_phase2.py": "04be4fa610ba60854a2b3b9237891df7e8ade62e2fcd9659076e36e794f077ab",
+    "data/instances.json": "9b5738e6c6c13208599c63aae97ec0549bf993c810bcda278ff8795a684ad09d"
+  },
+  "shots": 4096,
+  "simulator_seed": 42,
+  "transpiler_seed": 42,
+  "basis_gates": [
+    "rz",
+    "sx",
+    "x",
+    "cx"
+  ],
+  "optimization_level": 1,
+  "p1_depolarizing": 0.001,
+  "p2_depolarizing": 0.005,
+  "readout_probability": 0.01,
+  "gamma": 3.108236020048372,
+  "beta": 0.6998054268875787,
+  "reference_lambda": 2.0,
+  "runtime_seconds": 1.009218340004736,
+  "processor_D_official_path_modified": false,
+  "official_results_files_modified": false
+}
