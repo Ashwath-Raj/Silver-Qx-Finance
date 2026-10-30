@@ -67,6 +67,18 @@ This is a small, controlled optimization study. Four binary decision variables p
 
 <!-- END GENERATED RESULTS -->
 
+<!-- BEGIN O2 ROBUSTNESS ADDENDUM -->
+
+## Robustness and uncertainty
+
+The benchmark now includes a reproducible addendum computed from the committed CSVs. At the reference penalty (λ = 2), the 95% Wilson intervals for noisy valid-solution frequency and P(opt) overlap across Processors A, B and D; the observed A/B/D differences therefore do not establish a statistically reliable quality advantage. The D penalty sweep shows that feasibility and optimal sampling are distinct: the exact QUBO minimum first becomes valid at λ = 1, while noisy valid frequency rises further at large λ even as P(opt) and the modal portfolio's objective ratio fall.
+
+The five-start sensitivity table reports mean and sample standard deviation of exact expected QUBO energy, the probability range across starts, and optimizer-budget exhaustion. **At λ = 10, 3/5 starts reach the 200-evaluation cap**, so that point is explicitly treated as budget-limited. The added intervals are finite-shot binomial uncertainty, not optimizer uncertainty or a hardware-calibration model.
+
+Artifacts: [optimizer seed summary](results/tables/optimizer_seed_summary.csv) · [finite-shot Wilson intervals](results/tables/finite_shot_wilson_ci.csv) · [five-start sensitivity figure](results/figures/optimizer_seed_sensitivity.png) · [full technical interpretation](report.md#finite-shot-uncertainty-at-the-reference-penalty-λ--2).
+
+<!-- END O2 ROBUSTNESS ADDENDUM -->
+
 ## Problem formulation
 
 The locked instance selects exactly $k=2$ of four binary asset variables. The expected-return vector is $\mu=[5,3,4,2]$, the risk-aversion coefficient is $q=0.5$, and the symmetric risk matrix $\Sigma$ comes from `data/instances.json`.

@@ -244,6 +244,56 @@ The D Bell experiment evaluates both one physically adjacent pair and a graph-fa
 
 The penalty sweep studies whether exact QUBO ground-state feasibility corresponds to the measured sampling distribution. At low $\lambda$, the exact QUBO minimum may be infeasible. At higher penalties, exact feasibility can be restored, but QAOA at $p=1$ still has finite probability mass on invalid bitstrings. The full curve and table must be interpreted together: no single penalty setting alone guarantees the highest value on every sampling metric.
 
+<!-- BEGIN O2 ROBUSTNESS ADDENDUM -->
+
+### Finite-shot uncertainty at the reference penalty (λ = 2)
+
+The intervals below are 95% Wilson score intervals for the saved binomial counts from one 4,096-shot noisy run per processor. They quantify finite-shot counting uncertainty only; they do not include optimizer-start variability, model uncertainty, or device-to-device variation.
+
+| Processor | Valid-solution frequency (95% CI) | P(opt) (95% CI) |
+|---|---:|---:|
+| Processor A | 44.87% [43.36%, 46.40%] | 24.39% [23.10%, 25.73%] |
+| Processor B | 45.56% [44.04%, 47.09%] | 24.61% [23.31%, 25.95%] |
+| Processor D | 45.92% [44.40%, 47.45%] | 24.07% [22.79%, 25.41%] |
+
+The noisy A/B/D intervals overlap for both metrics. Processor D's observed valid frequency (45.92%) is slightly higher than B's (45.56%), while its observed P(opt) (24.07%) is slightly lower than B's (24.61%). With one 4,096-shot draw per condition, these small differences should not be called statistically reliable architecture effects.
+
+### Penalty sweep: feasibility and solution quality are different metrics
+
+| λ | Exact QUBO minimum valid? | Noisy valid frequency (95% CI) | Noisy P(opt) (95% CI) | Modal valid portfolio | F/F* of modal portfolio |
+|---:|:---:|---:|---:|:---:|---:|
+| 0 | No | 25.76% [24.44%, 27.12%] | 8.74% [7.91%, 9.64%] | `1100` | 1.000 |
+| 0.5 | No | 46.68% [45.16%, 48.21%] | 11.69% [10.75%, 12.71%] | `0011` | 0.684 |
+| 1 | Yes | 45.00% [43.48%, 46.52%] | 23.68% [22.40%, 25.01%] | `1100` | 1.000 |
+| 2 | Yes | 45.92% [44.40%, 47.45%] | 24.07% [22.79%, 25.41%] | `1100` | 1.000 |
+| 5 | Yes | 61.96% [60.47%, 63.44%] | 15.70% [14.62%, 16.84%] | `1010` | 0.474 |
+| 10 | Yes | 67.24% [65.78%, 68.66%] | 11.55% [10.60%, 12.56%] | `0101` | 0.737 |
+
+Across the tested values, the exact QUBO minimum is invalid at λ = 0 and 0.5, and first becomes valid at λ = 1. The observed noisy valid-solution frequency then rises overall, reaching 67.24% at λ = 10; P(opt) does not rise with it. P(opt) is highest among these selected-start runs near λ = 2 (24.07%), then falls to 15.70% at λ = 5 and 11.55% at λ = 10. At λ = 5 the modal valid portfolio has F/F* = 0.474, despite a 61.96% valid frequency. Therefore, increasing λ improves feasibility pressure in this run but does not monotonically improve optimal-state sampling or the modal valid portfolio.
+
+A modal valid portfolio with F/F* = 1.0 does not imply a high P(opt): the former selects the most frequent bitstring *conditional on being valid*; the latter is the unconditional fraction of all shots that measured an optimal portfolio. These quantities must be read alongside valid frequency and the conditional mean objective.
+
+### Five-start optimizer variability
+
+The table summarizes the five exact-statevector COBYLA starts saved in `lambda_optimization_trials.csv`. Energy spread describes optimizer initialization sensitivity; probability ranges are exact statevector diagnostics before finite-shot sampling. The runs are not five noisy-shot replicates.
+
+| λ | Selected seed | Best E | Median E | Worst E | Mean E ± sample SD | Exact P(valid) range | Exact P(opt) range | Starts at 200-evaluation cap |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 3 | -4.512 | -4.512 | -3.208 | -4.099 ± 0.598 | 23.64%–44.38% | 5.46%–25.06% | 0/5 |
+| 0.5 | 0 | -3.308 | -3.308 | -2.759 | -3.146 ± 0.245 | 45.38%–55.76% | 4.43%–12.16% | 0/5 |
+| 1 | 4 | -3.132 | -2.938 | -2.187 | -2.818 ± 0.365 | 37.50%–63.66% | 6.25%–25.47% | 0/5 |
+| 2 | 0 | -2.509 | -1.960 | -1.399 | -1.980 ± 0.421 | 36.46%–64.68% | 4.76%–26.21% | 0/5 |
+| 5 | 1 | -1.374 | -0.684 | 1.812 | -0.361 ± 1.296 | 37.50%–63.92% | 0.88%–16.37% | 0/5 |
+| 10 | 3 | 0.005 | 2.756 | 3.493 | 2.279 ± 1.335 | 40.52%–69.96% | 6.65%–12.87% | 3/5 |
+
+**Budget caveat:** 3/5 starts at λ = 10 reached the 200-evaluation maximum (`MAXFUN`) before COBYLA declared convergence. The selected run is seed 3; it did not hit the cap, but three competing starts did. Treat the λ = 10 five-start spread and selected best as budget-limited evidence, not as a proof of convergence. The required benchmark outputs are preserved unchanged; a larger-budget sensitivity run would be a separately labelled follow-up.
+
+![Five-start optimizer variability and exact statevector probabilities](results/figures/optimizer_seed_sensitivity.png)
+
+The architecture decision also remains narrow: Processor D1 removes the measured routing overhead (12 compiled CX, 0 SWAPs, depth 23) but does not show a resolved noisy P(opt) gain over Processor B under the current finite-shot synthetic-noise experiment. Lower compiled cost and higher portfolio quality are distinct conclusions.
+
+<!-- END O2 ROBUSTNESS ADDENDUM -->
+
 ## 8. Outputs and artifact map
 
 **Scorer-facing `results.csv` semantics.** Each PS-O2 row uses `quality_metric=valid_solution_frequency` and `quality_value` equal to the measured valid-solution frequency; `random_baseline` therefore equals the exact uniform baseline, $6/16=0.375$. The selected-portfolio ratio $F(x_{\mathrm{selected}})/F^*$ remains available as `objective_ratio_selected_valid`, and the exact uniform-random mean ratio $0.76316$ is separately recorded as `random_baseline_objective_ratio`. The organizer's first 18 columns remain in their specified order; `lambda` and explicit PS-O2 metric columns are appended.
@@ -256,6 +306,9 @@ The penalty sweep studies whether exact QUBO ground-state feasibility correspond
 | `results/tables/processor_resources.csv` | Official compiled-circuit resource metrics |
 | `results/tables/processor_d_lambda_sweep.csv` | D penalty sweep in ideal/noisy conditions |
 | `results/tables/lambda_optimization_trials.csv` | Five COBYLA starts for each $\lambda$, including angle and evaluation metadata |
+| `results/tables/optimizer_seed_summary.csv` | Mean/SD, best/median/worst energy, statevector probability ranges and budget-cap count across five starts |
+| `results/tables/finite_shot_wilson_ci.csv` | 95% Wilson intervals for saved 4,096-shot valid-frequency and optimal-state counts |
+| `results/figures/optimizer_seed_sensitivity.png` | Five-start exact-statevector sensitivity by penalty |
 | `results/tables/classical_solutions.csv` | Exact feasible portfolios and objective scores |
 | `results/tables/qubo_matrix_lambda_2.csv` | Reference QUBO matrix |
 | `results/figures/processor_comparison_ps_o2.png` | A/B/D quality comparison |
